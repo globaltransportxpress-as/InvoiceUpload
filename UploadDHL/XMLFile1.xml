@@ -1,0 +1,205 @@
+﻿<?xml version = "1.0" encoding="UTF-8"?>
+<Invoice xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:ccts="urn:oasis:names:specification:ubl:schema:xsd:CoreComponentParameters-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:sdt="urn:oasis:names:specification:ubl:schema:xsd:SpecializedDatatypes-2" xmlns:udt="urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 UBL-Invoice-2.0.xsd">
+  <cbc:UBLVersionID>2.0</cbc:UBLVersionID>
+  <cbc:CustomizationID>OIOUBL-2.01</cbc:CustomizationID>
+  <cbc:ProfileID schemeAgencyID="320" schemeID="urn:oioubl:id:profileid-1.2">urn:www.nesubl.eu:profiles:profile5:ver2.0</cbc:ProfileID>
+  <cbc:ID>CPH1664951</cbc:ID>
+  <cbc:CopyIndicator>false</cbc:CopyIndicator>
+  <cbc:IssueDate>2018-10-08</cbc:IssueDate>
+  <cbc:InvoiceTypeCode listID="urn:oioubl:codelist:invoicetypecode-1.1" listAgencyID="320">380</cbc:InvoiceTypeCode>
+  <cbc:DocumentCurrencyCode>DKK</cbc:DocumentCurrencyCode>
+  <cac:OrderReference>
+    <cbc:ID>CPH1664951</cbc:ID>
+  </cac:OrderReference>
+  <cac:AccountingSupplierParty>
+    <cac:Party>
+      <cbc:EndpointID schemeDataURI="urn:oioubl:scheme:endpointid-1.0" schemeID="GLN">5790000110209</cbc:EndpointID>
+      <cac:PartyName>
+        <cbc:Name>DHL DK</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:AddressFormatCode listAgencyID="320" listID="urn:oioubl:codelist:addressformatcode-1.1">StructuredLax</cbc:AddressFormatCode>
+        <cbc:StreetName>Jydekrogen 14</cbc:StreetName>
+        <cbc:CityName>Vallensbæk</cbc:CityName>
+        <cbc:PostalZone>DK-2625</cbc:PostalZone>
+      </cac:PostalAddress>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>DHL DK</cbc:RegistrationName>
+        <cbc:CompanyID schemeDataURI="urn:oioubl:scheme:partyidentification-1.0" schemeID="DK:CVR">DK10154596</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+    </cac:Party>
+  </cac:AccountingSupplierParty>
+  <cac:AccountingCustomerParty>
+    <cac:Party>
+      <cbc:EndpointID schemeDataURI="urn:oioubl:scheme:endpointid-1.0" schemeID="ISO 6523">0</cbc:EndpointID>
+      <cac:PartyName>
+        <cbc:Name>GLOBAL TRANSPORT XPRESS A/S</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:AddressFormatCode listAgencyID="320" listID="urn:oioubl:codelist:addressformatcode-1.1">StructuredLax</cbc:AddressFormatCode>
+        <cbc:StreetName>Spotorno Alle 10</cbc:StreetName>
+        <cbc:PostalZone>2630</cbc:PostalZone>
+      </cac:PostalAddress>
+      <cac:Contact>
+        <cbc:ID>302611823</cbc:ID>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingCustomerParty>
+  <cac:PaymentMeans>
+    <cbc:ID>1</cbc:ID>
+    <cbc:PaymentMeansCode>93</cbc:PaymentMeansCode>
+    <cbc:PaymentDueDate>2018-11-22</cbc:PaymentDueDate>
+    <cbc:InstructionID>000000016649519</cbc:InstructionID>
+    <cbc:PaymentID schemeAgencyID="320" schemeID="urn:oioubl:id:paymentid-1.1">71</cbc:PaymentID>
+    <cac:CreditAccount>
+      <cbc:AccountID>85729322</cbc:AccountID>
+    </cac:CreditAccount>
+  </cac:PaymentMeans>
+  <cac:PaymentTerms>
+    <cbc:ID>1</cbc:ID>
+    <cbc:Amount currencyID="DKK">195129.82</cbc:Amount>
+  </cac:PaymentTerms>
+  <cac:TaxTotal>
+    <cbc:TaxAmount currencyID="DKK">24147.64</cbc:TaxAmount>
+    <cbc:RoundingAmount currencyID="DKK">-2.34</cbc:RoundingAmount>
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="DKK">96590.56</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="DKK">24149.98</cbc:TaxAmount>
+      <cac:TaxCategory>
+        <cbc:ID schemeID="urn:oioubl:id:taxcategoryid-1.1" schemeAgencyID="320">StandardRated</cbc:ID>
+        <cac:TaxScheme>
+          <cbc:ID schemeAgencyID="320" schemeID="urn:oioubl:id:taxschemeid-1.1">63</cbc:ID>
+          <cbc:Name>Moms</cbc:Name>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="DKK">74391.62</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="DKK">0.00</cbc:TaxAmount>
+      <cac:TaxCategory>
+        <cbc:ID schemeID="urn:oioubl:id:taxcategoryid-1.1" schemeAgencyID="320">ZeroRated</cbc:ID>
+        <cac:TaxScheme>
+          <cbc:ID schemeAgencyID="320" schemeID="urn:oioubl:id:taxschemeid-1.1">63</cbc:ID>
+          <cbc:Name>Moms</cbc:Name>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>
+  </cac:TaxTotal>
+  <cac:LegalMonetaryTotal>
+    <cbc:LineExtensionAmount currencyID="DKK">170982.18</cbc:LineExtensionAmount>
+    <cbc:TaxExclusiveAmount currencyID="DKK">24149.98</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="DKK">195129.82</cbc:TaxInclusiveAmount>
+    <cbc:PayableRoundingAmount currencyID="DKK">-2.34</cbc:PayableRoundingAmount>
+    <cbc:PayableAmount currencyID="DKK">195129.82</cbc:PayableAmount>
+  </cac:LegalMonetaryTotal>
+  <cac:InvoiceLine>
+    <cbc:ID>1</cbc:ID>
+    <cbc:UUID>1173945544</cbc:UUID>
+    <cbc:Note>O</cbc:Note>
+    <cbc:InvoicedQuantity unitCode="58">20.50</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="DKK">76.50</cbc:LineExtensionAmount>
+    <cac:Delivery>
+      <cbc:ActualDeliveryDate>2018-08-28</cbc:ActualDeliveryDate>
+      <cac:DeliveryLocation>
+        <cac:Address>
+          <cbc:AddressFormatCode listAgencyID="320" listID="urn:oioubl:codelist:addressformatcode-1.1">StructuredLax</cbc:AddressFormatCode>
+          <cbc:StreetName>Hagensvej 21</cbc:StreetName>
+          <cbc:MarkAttention>Liftup ApS</cbc:MarkAttention>
+          <cbc:CityName>9530</cbc:CityName>
+          <cbc:PostalZone>9530</cbc:PostalZone>
+        </cac:Address>
+      </cac:DeliveryLocation>
+      <cac:Despatch>
+        <cac:DespatchAddress>
+          <cac:AddressLine>
+            <cbc:Line>DK</cbc:Line>
+          </cac:AddressLine>
+          <cac:AddressLine>
+            <cbc:Line>AARHUS</cbc:Line>
+          </cac:AddressLine>
+          <cac:AddressLine>
+            <cbc:Line>AAR</cbc:Line>
+          </cac:AddressLine>
+        </cac:DespatchAddress>
+      </cac:Despatch>
+    </cac:Delivery>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="DKK">19.13</cbc:TaxAmount>
+      <cac:TaxSubtotal>
+        <cbc:TaxableAmount currencyID="DKK">76.50</cbc:TaxableAmount>
+        <cbc:TaxAmount currencyID="DKK">19.13</cbc:TaxAmount>
+        <cac:TaxCategory>
+          <cbc:ID schemeID="urn:oioubl:id:taxcategoryid-1.1" schemeAgencyID="320">StandardRated</cbc:ID>
+          <cbc:Percent>25.00000</cbc:Percent>
+          <cac:TaxScheme>
+            <cbc:ID schemeAgencyID="320" schemeID="urn:oioubl:id:taxschemeid-1.1">63</cbc:ID>
+            <cbc:Name>Moms</cbc:Name>
+          </cac:TaxScheme>
+        </cac:TaxCategory>
+      </cac:TaxSubtotal>
+    </cac:TaxTotal>
+    <cac:Item>
+      <cbc:Name>EXPRESS DOMESTIC</cbc:Name>
+      <cbc:AdditionalInformation>1</cbc:AdditionalInformation>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="DKK">3.73</cbc:PriceAmount>
+      <cbc:BaseQuantity unitCode="58">20.50</cbc:BaseQuantity>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>2</cbc:ID>
+    <cbc:UUID>1173945544</cbc:UUID>
+    <cbc:Note>O</cbc:Note>
+    <cbc:InvoicedQuantity unitCode="EA">20.50</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="DKK">13.39</cbc:LineExtensionAmount>
+    <cac:Delivery>
+      <cbc:ActualDeliveryDate>2018-08-28</cbc:ActualDeliveryDate>
+      <cac:DeliveryLocation>
+        <cac:Address>
+          <cbc:AddressFormatCode listAgencyID="320" listID="urn:oioubl:codelist:addressformatcode-1.1">StructuredLax</cbc:AddressFormatCode>
+          <cbc:StreetName>Hagensvej 21</cbc:StreetName>
+          <cbc:MarkAttention>Liftup ApS</cbc:MarkAttention>
+          <cbc:CityName>9530</cbc:CityName>
+          <cbc:PostalZone>9530</cbc:PostalZone>
+        </cac:Address>
+      </cac:DeliveryLocation>
+      <cac:Despatch>
+        <cac:DespatchAddress>
+          <cac:AddressLine>
+            <cbc:Line>DK</cbc:Line>
+          </cac:AddressLine>
+          <cac:AddressLine>
+            <cbc:Line>AARHUS</cbc:Line>
+          </cac:AddressLine>
+          <cac:AddressLine>
+            <cbc:Line>AAR</cbc:Line>
+          </cac:AddressLine>
+        </cac:DespatchAddress>
+      </cac:Despatch>
+    </cac:Delivery>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="DKK">3.35</cbc:TaxAmount>
+      <cac:TaxSubtotal>
+        <cbc:TaxableAmount currencyID="DKK">13.39</cbc:TaxableAmount>
+        <cbc:TaxAmount currencyID="DKK">3.35</cbc:TaxAmount>
+        <cac:TaxCategory>
+          <cbc:ID schemeID="urn:oioubl:id:taxcategoryid-1.1" schemeAgencyID="320">StandardRated</cbc:ID>
+          <cbc:Percent>25.00000</cbc:Percent>
+          <cac:TaxScheme>
+            <cbc:ID schemeAgencyID="320" schemeID="urn:oioubl:id:taxschemeid-1.1">63</cbc:ID>
+            <cbc:Name>Moms</cbc:Name>
+          </cac:TaxScheme>
+        </cac:TaxCategory>
+      </cac:TaxSubtotal>
+    </cac:TaxTotal>
+    <cac:Item>
+      <cbc:Name>BRÆNDSTOF-TILLÆG</cbc:Name>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="DKK">0.65</cbc:PriceAmount>
+      <cbc:BaseQuantity unitCode="EA">20.50</cbc:BaseQuantity>
+    </cac:Price>
+  </cac:InvoiceLine>
+
+</Invoice>
