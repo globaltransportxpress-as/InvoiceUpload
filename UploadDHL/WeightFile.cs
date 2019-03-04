@@ -39,7 +39,7 @@ namespace UploadDHL
                 using (StreamWriter outputFile =
                     new StreamWriter(filename))
                 {
-
+                    outputFile.WriteLine("awb;weight;trans;salesp;invoice;service;price");
                     foreach (var rec in list)
                     {
                         if (rec.BillWeight > 0 && rec.Price >= 0|| rec.AWB.StartsWith("#"))

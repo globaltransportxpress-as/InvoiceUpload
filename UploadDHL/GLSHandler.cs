@@ -34,166 +34,116 @@ namespace UploadDHL
         private Translation zTranslation = new Translation(Config.TranslationFilePDK);
         
         private static string zfixhead =
-                "Stregkode;Dato;Ordre;Ordrepos.;Materiale;Frankering;Momsbelagt;Grundpris;Ialt(excl.moms);Frapostnr;Tilpostnr;Fra-land;Til-land;Vægt;Volumenvægt;Faktureretvægt;Længde;Bredde;Højde;Navn1;Adresse;"
-            ;
+                "Fakturanr.;Linjenr.;Dato;Varenr.;Beskrivelse;Land;Pakkenr.;Vægt;Antal;Salgspris;Beløb;Beløb inkl. moms;Reference;Modtagernavn;Kundenr.;Kundenavn;Kundenavn2;Modtagerpostnr.;Modtagerby;Modtageradresse";
+            
         public GLSHandler()
         {
             Error = zTranslation.Error;
+
         }
-        public PDKrecord SetData(string[] da)
 
-
+        public bool Header(string head)
         {
-
+            return (head == zfixhead);
            
-            if (da[0] == "Kundenummer:")
-            {
+        }
+        public GLSrecord SetData(string[] da)
 
 
-                zCustomerNumber = da[2];
-                return null;
+        {   var pdkRec = new GLSrecord(da);
+           
+         //   if (!zTranslation.TranDictionary.ContainsKey(pdkRec.Material))
+         //   {
 
-            }
-            if (da[0] == "Fakturanummer:")
-            {
+         //       zTranslation.AddMissing(pdkRec.Material, "FRAGT");
+         //       Error = "Missing translation";
+         //       return null;
+         //   }
 
-
-                zFactura = da[2];
-                return null;
-
-            }
-            if (da[0] == "Fakturadato:")
-            {
-
-
-                zFacturaDate = DateTime.Parse(da[2]);
-                return null;
-
-            }
-
-
-            if (da[0] == "Stregkode")
-            {
-
-
-                Dic = MakeHeader(da);
-
-                return null;
-
-            }
-
-            if (string.IsNullOrEmpty(zCustomerNumber) || zFacturaDate.Year < 2000 || string.IsNullOrEmpty(zFactura) ||
-                Dic == null || string.IsNullOrEmpty(da[0]) || string.IsNullOrEmpty(da[1]))
-            {
-
-                DropLines = DropLines + 1;
-                return null;
-            }
+         //   var tr = zTranslation.TranDictionary[pdkRec.Material];
+         //   if (tr.KeyType != "GEBYR" && tr.KeyType != "FRAGT")
+         //   {
+         //       DropLines = DropLines + 1;
+         //       return null;
+         //   }
 
 
 
 
 
-            var pdkRec = new PDKrecord();
-            pdkRec.Factura = zFactura;
-            pdkRec.FacturaDate = zFacturaDate;
-            pdkRec.CustomerNumber = zCustomerNumber;
-            pdkRec.Services = new List<Service>();
-            pdkRec.AWB = CheckDigits(da[Dic["Stregkode"]]);
-            pdkRec.Price = SafeDecimal(da[Dic["Grundpris"]]);
-            pdkRec.Material = ReplaceList(da[Dic["Materiale"]].Trim().ToUpper(), " 12345678908()-.,");
-            if (!zTranslation.TranDictionary.ContainsKey(pdkRec.Material))
-            {
-
-                zTranslation.AddMissing(pdkRec.Material, "FRAGT");
-                Error = "Missing translation";
-                return null;
-            }
-
-            var tr = zTranslation.TranDictionary[pdkRec.Material];
-            if (tr.KeyType != "GEBYR" && tr.KeyType != "FRAGT")
-            {
-                DropLines = DropLines + 1;
-                return null;
-            }
+         //       if (tr.KeyType == "GEBYR")
+         //   {
+         //       var record = Records.FirstOrDefault(x => x.AWB == pdkRec.AWB);
+         //       if (record == null)
+         //       {
+         //           pdkRec.AWB = "#" + pdkRec.AWB;
 
 
+         //       }
+         //       else
+         //       {
+         //           pdkRec = record;
+         //       }
+
+         //       var sv = new Service();
+         //       sv.OrigalName = tr.Key;
+         //       sv.GTXCode = tr.GTXName;
+         //       sv.Price = pdkRec.Price;
+         //       pdkRec.Services.Add(sv);
+
+         //   }
+         //else
+         //   {
+         //       pdkRec.GTXMatrial = tr.GTXName;
+         //       pdkRec.GTXProduct = tr.GTXProduct;
+         //       pdkRec.GTXTransport = tr.GTXTransp;
+         //   }
 
 
+         //   pdkRec.Date = DateTime.Parse(da[Dic["Dato"]]);
+         //   pdkRec.Order = da[Dic["Ordre"]];
+         //   pdkRec.OrderLine = da[Dic["Ordrepos."]];
 
-                if (tr.KeyType == "GEBYR")
-            {
-                var record = Records.FirstOrDefault(x => x.AWB == pdkRec.AWB);
-                if (record == null)
-                {
-                    pdkRec.AWB = "#" + pdkRec.AWB;
+         //   pdkRec.Frankering = da[Dic["Frankering"]];
+         //   pdkRec.Vat = SafeLookUp(da,  "Momsbelagt","").Equals("X");
+         //   pdkRec.Price = SafeDecimal(da[Dic["Grundpris"]]);
+         //   pdkRec.PriceVat = SafeDecimal(da[Dic["Ialt(excl.moms)"]]);
+         //   pdkRec.FromZip = da[Dic["Frapostnr"]];
+         //   pdkRec.ToZip = da[Dic["Tilpostnr"]];
+         //   pdkRec.SenderCountry = da[Dic["Fra-land"]];
+         //   pdkRec.ReceiverCountry = da[Dic["Til-land"]];
+         //   pdkRec.Weight = SafeDecimal(da[Dic["Vægt"]]);
+         //   pdkRec.VolWeight = SafeDecimal(da[Dic["Volumenvægt"]]);
+         //   pdkRec.BillWeight = SafeDecimal(da[Dic["Faktureretvægt"]]);
+         //   pdkRec.Length = SafeDecimal(da[Dic["Længde"]]);
+         //   pdkRec.Width = SafeDecimal(da[Dic["Bredde"]]);
+         //   pdkRec.Height = SafeDecimal(da[Dic["Højde"]]);
+         //   pdkRec.Name = SafeLookUp(da,"Navn1","No name");
+         //   pdkRec.Address = SafeLookUp(da, "Adresse","No address");
 
+         //   foreach (var k in Dic.Keys)
+         //   {
 
-                }
-                else
-                {
-                    pdkRec = record;
-                }
+         //       if (!zfixhead.Contains(k + ";") && SafeDecimal(da[Dic[k]]) > 0)
+         //       {
+         //           var trans = zTranslation.TranDictionary[k];
+         //           if (trans.KeyType == "GEBYR")
+         //           {
+         //               var sv = new Service();
+         //               sv.OrigalName = k;
+         //               sv.GTXCode = trans.GTXName;
+         //               sv.Price = SafeDecimal(da[Dic[k]]);
 
-                var sv = new Service();
-                sv.OrigalName = tr.Key;
-                sv.GTXCode = tr.GTXName;
-                sv.Price = pdkRec.Price;
-                pdkRec.Services.Add(sv);
-
-            }
-         else
-            {
-                pdkRec.GTXMatrial = tr.GTXName;
-                pdkRec.GTXProduct = tr.GTXProduct;
-                pdkRec.GTXTransport = tr.GTXTransp;
-            }
-
-
-            pdkRec.Date = DateTime.Parse(da[Dic["Dato"]]);
-            pdkRec.Order = da[Dic["Ordre"]];
-            pdkRec.OrderLine = da[Dic["Ordrepos."]];
-
-            pdkRec.Frankering = da[Dic["Frankering"]];
-            pdkRec.Vat = SafeLookUp(da,  "Momsbelagt","").Equals("X");
-            pdkRec.Price = SafeDecimal(da[Dic["Grundpris"]]);
-            pdkRec.PriceVat = SafeDecimal(da[Dic["Ialt(excl.moms)"]]);
-            pdkRec.FromZip = da[Dic["Frapostnr"]];
-            pdkRec.ToZip = da[Dic["Tilpostnr"]];
-            pdkRec.SenderCountry = da[Dic["Fra-land"]];
-            pdkRec.ReceiverCountry = da[Dic["Til-land"]];
-            pdkRec.Weight = SafeDecimal(da[Dic["Vægt"]]);
-            pdkRec.VolWeight = SafeDecimal(da[Dic["Volumenvægt"]]);
-            pdkRec.BillWeight = SafeDecimal(da[Dic["Faktureretvægt"]]);
-            pdkRec.Length = SafeDecimal(da[Dic["Længde"]]);
-            pdkRec.Width = SafeDecimal(da[Dic["Bredde"]]);
-            pdkRec.Height = SafeDecimal(da[Dic["Højde"]]);
-            pdkRec.Name = SafeLookUp(da,"Navn1","No name");
-            pdkRec.Address = SafeLookUp(da, "Adresse","No address");
-
-            foreach (var k in Dic.Keys)
-            {
-
-                if (!zfixhead.Contains(k + ";") && SafeDecimal(da[Dic[k]]) > 0)
-                {
-                    var trans = zTranslation.TranDictionary[k];
-                    if (trans.KeyType == "GEBYR")
-                    {
-                        var sv = new Service();
-                        sv.OrigalName = k;
-                        sv.GTXCode = trans.GTXName;
-                        sv.Price = SafeDecimal(da[Dic[k]]);
-
-                        pdkRec.Services.Add(sv);
-                    }
+         //               pdkRec.Services.Add(sv);
+         //           }
                     
 
 
-                }
-            }
+         //       }
+         //   }
 
 
-            Records.Add(pdkRec);
+         //   Records.Add(pdkRec);
             return pdkRec;
 
 

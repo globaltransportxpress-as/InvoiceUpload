@@ -31,168 +31,225 @@ namespace UploadDHL
 
         public string VareNo
         {
-            get { return zCSVdata[2]; }
+            get { return zCSVdata[3]; }
         }
 
         public string Beskrivelse
         {
-            get { return zCSVdata[3]; }
+            get { return zCSVdata[4]; }
         }
 
         public string Land
         {
-            get { return zCSVdata[4]; }
-        }
-
-        public string Awb
-        {
             get { return zCSVdata[5]; }
         }
 
-        public decimal Weight
+        public string Pakkenr
         {
-            get { return SafeDecimal(zCSVdata[6]); }
+            get { return zCSVdata[6]; }
         }
 
-        public int NoPrs
+        public decimal Vægt
         {
-            get { return SafeInt(zCSVdata[7]); }
+            get { return SafeDecimal(zCSVdata[7]); }
         }
 
-        public decimal SalesPrice
+        public int Antal
         {
-            get { return SafeDecimal(zCSVdata[8]); }
+            get { return SafeInt(zCSVdata[8]); }
         }
-        public decimal Price
+
+        public decimal Salgspris
         {
             get { return SafeDecimal(zCSVdata[9]); }
         }
-        public decimal PriceVat
+        public decimal Beløb
         {
             get { return SafeDecimal(zCSVdata[10]); }
         }
-        public string Reference
+        public decimal Beløbinklmoms
         {
-            get { return zCSVdata[11]; }
+            get { return SafeDecimal(zCSVdata[11]); }
         }
-       
-        public string Recievername
+        public string Reference
         {
             get { return zCSVdata[12]; }
         }
-        public string CustomerNumber
+       
+        public string Modtagernavn
         {
             get { return zCSVdata[13]; }
         }
-        public string CustomerName
+        public string Kundenr
         {
             get { return zCSVdata[14]; }
         }
-
-        public string CustomerName2
-        {
-            get { return zCSVdata[15]; }
-        }
-        public string RecieverZip
-        {
-            get { return zCSVdata[13]; }
-        }
-        public string Reci
-        {
-            get { return zCSVdata[14]; }
-        }
-
-        public string CustomerNamXX
+        public string Kundenavn
         {
             get { return zCSVdata[15]; }
         }
 
+        public string Kundenavn2
+        {
+            get { return zCSVdata[16]; }
+        }
+        public string Modtagerpostnr
+        {
+            get { return zCSVdata[17]; }
+        }
+        public string Modtagerby
+        {
+            get { return zCSVdata[18]; }
+        }
 
-        //public TranslationRecord GTXTranslate { get; set; }
+        public string Modtageradresse
+        {
+            get { return zCSVdata[19]; }
+        }
+        public string Awb
+        {
+            get { return MakeCheckNumber(Pakkenr); }
+        }
+        public GLSrecord(string[] fields)
+        {
 
-        //public WeightFileRecord Convert()
-        //{
-        //    var wf = new WeightFileRecord();
-        //    wf.Services = Services;
-        //    wf.AWB = AWB;
-        //    wf.BillWeight = BillWeight;
-        //    wf.CreditorAccount = Factura;
-        //    wf.SalesProduct = GTXProduct;
-        //    wf.TransportProduct = GTXTransport;
-        //    wf.Price = Price;
-        //    return wf;
-
-
-        //}
-        //public InvoiceShipment StdConvert()
-        //{
-
-
-
-        //    if (GTXTranslate.KeyType == "FRAGT")
-        //    {
-
-        //        var wf = new InvoiceShipment
-        //        {
-
-        //            Status = 1,
-        //            Invoice = Factura,
-        //            InvoiceDate = FacturaDate,
-        //            VendorAccount = BillingAccount,
-
-        //            AWB = AWB,
-        //            Product = GTXTranslate.GTXProduct,
-        //            Transport = (byte)GTXTranslate.GTXTransp,
-        //            Shipdate = Date,
-        //            CustomerNumber = BillingAccount,
-        //            CompanyName = Name,
-        //            Address1 = "UnKnown",
-        //            Address2 = "UnKnown",
-        //            City = "Only Zip",
-        //            State = "",
-        //            Zip = FromZip,
-        //            Country_Iata = SenderCountry,
-        //            Reciever_CompanyName = Name,
-        //            Reciever_Address1 = "UnKnown",
-        //            Reciever_Address2 = "UnKnown",
-        //            Reciever_City = "Only Zip",
-        //            Reciever_State = "",
-        //            Reciever_Zip = ToZip,
-        //            Reciever_Country = ReceiverCountry,
-        //            Reciever_Country_Iata = ReceiverCountry,
-        //            Reciever_Phone = "00",
-        //            Reciever_Fax = "00",
-        //            Reciever_Email = "upload@gtx.nu",
-        //            Reciever_Reference = "",
-        //            NumberofCollies = (byte)1,
-        //            Reference = "",
-        //            Total_Weight = Weight,
-        //            Length = null,
-        //            Width = null,
-        //            Height = null,
-        //            Vol_Weight = VolWeight,
-        //            BilledWeight = BillWeight,
-        //            Customevalue = null,
-        //            PackValue = null,
-        //            PackValuta = null,
-        //            Description = "",
-        //            Costprice = Price,
-        //            Saleprice = null,
-        //            Oli = null
+           
+            zCSVdata = fields;
 
 
 
+        }
+        public List<Service> Services = new List<Service>();
 
-        //        };
+        public TranslationRecord GTXTranslate { get; set; }
 
-        //        return wf;
-        //    }
+        public WeightFileRecord Convert()
+        {
+            var wf = new WeightFileRecord();
+            wf.Services = Services;
+            wf.AWB = Awb;
+            wf.BillWeight = Vægt;
+            wf.CreditorAccount = Kundenr;
+            wf.SalesProduct = GTXTranslate.GTXProduct;
+            wf.TransportProduct = GTXTranslate.GTXTransp;
+            wf.Price = Beløb;
+            return wf;
 
 
-        //    return null;
+        }
+        public InvoiceShipment StdConvert()
+        {
 
-        //}
 
+
+            if (GTXTranslate.KeyType == "FRAGT")
+            {
+
+                var wf = new InvoiceShipment
+                {
+
+                    Status = 1,
+                    Invoice = Fakturanr,
+                    InvoiceDate = DateTime.Now,
+                    VendorAccount = Kundenr,
+
+                    AWB = Awb,
+                    Product = GTXTranslate.GTXProduct,
+                    Transport = (byte)GTXTranslate.GTXTransp,
+                    Shipdate = Dato,
+                    CustomerNumber = Kundenr,
+                    CompanyName = Kundenavn,
+                    Address1 = "UnKnown",
+                    Address2 = "UnKnown",
+                    City = "Only Zip",
+                    State = "",
+                    Zip = "0000",
+                    Country_Iata = "DK",
+                    Reciever_CompanyName = Modtagernavn,
+                    Reciever_Address1 = Modtageradresse,
+                    Reciever_Address2 = "UnKnown",
+                    Reciever_City = Modtagerby,
+                    Reciever_State = "",
+                    Reciever_Zip = Modtagerpostnr,
+                    Reciever_Country = Land,
+                    Reciever_Country_Iata = Land,
+                    Reciever_Phone = "00",
+                    Reciever_Fax = "00",
+                    Reciever_Email = "upload@gtx.nu",
+                    Reciever_Reference = "",
+                    NumberofCollies = (byte)1,
+                    Reference = "",
+                    Total_Weight = Vægt,
+                    Length = null,
+                    Width = null,
+                    Height = null,
+                    Vol_Weight = Vægt,
+                    BilledWeight = Vægt,
+                    Customevalue = null,
+                    PackValue = null,
+                    PackValuta = null,
+                    Description = "",
+                    Costprice = Beløb,
+                    Saleprice = null,
+                    Oli = null
+
+
+
+
+                };
+
+                return wf;
+            }
+
+
+            return null;
+
+        }
+
+        public string MakeCheckNumber( string number)
+        {
+            //  AwbNumber awbnumber = db().GetAwb(product, 1);
+
+            //string number =awbnumber.Prefix + awbnumber.Awb.ToString();
+            int addciffer = 0;
+            if (Land != "DK")
+            {
+                addciffer = 1;
+            }
+
+            int Even = 0;
+            int Uneven = 0;
+            char[] textnumber = new char[12];
+
+            for (int count = 0; count <= 11; count++)
+            {
+                textnumber[count] = '0';
+            }
+            textnumber = number.ToCharArray();
+            //Uneven
+            for (int count = 0; count <= textnumber.Length - 1; count = count + 2)
+            {
+                Uneven += int.Parse(textnumber[count].ToString());
+            }
+
+            //Even
+            for (int count = 1; count <= textnumber.Length - 1; count = count + 2)
+            {
+                Even += int.Parse(textnumber[count].ToString());
+            }
+
+            double TotalSum =( Even + (3 * Uneven) + addciffer)+0.5;
+
+
+            double Roundup = 10 * System.Convert.ToInt64(((TotalSum + 5) / 10));
+
+
+            var Check = Roundup - TotalSum;
+            if (Math.Abs(Check - 10) < 0.1)
+                Check = 0;
+
+            return number + Check.ToString(CultureInfo.InvariantCulture);
+        }
 
 
 

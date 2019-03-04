@@ -526,38 +526,29 @@ namespace UploadDHL
                 string[] columnNames = nfile.Columns.Cast<DataColumn>()
                     .Select(x => x.ColumnName)
                     .ToArray();
-              //  glsHandler.ReadHeadData(columnNames);
-
-                foreach (DataRow row in nfile.Rows)
+                if (glsHandler.Header(string.Join(";", columnNames).Replace(" ", "")))
                 {
-                    string[] fields = row.ItemArray.Select(field => field.ToString()).
-                        ToArray();
+                    foreach (DataRow row in nfile.Rows)
+                    {
+                        string[] fields = row.ItemArray.Select(field => field.ToString()).ToArray();
 
-                  //  glsHandler.SetData(fields);
+                        glsHandler.SetData(fields);
+
+                    }
+                }
+                else
+                {
+
+                    
+                    griddata.Status = "ERROR";
+                    griddata.Comment = "Header format not matching";
+
+
 
                 }
 
-
-
-
-
-                //using (StreamReader fileStream = new StreamReader(file))
-                //{
-
-
-
-
-                //    string line = fileStream.ReadLine();
-                //    while (line != null)
-                //    {
-                //        pdkHandler.SetData(line.Split(';'));
-
-
-                //        line = fileStream.ReadLine();
-
-                //    }
-
-                //}
+                
+               
                 if (glsHandler.Error != "")
                 {
                     Message.Text = "Translation missing ";
@@ -565,6 +556,7 @@ namespace UploadDHL
 
 
                 }
+               
                 else
                 {
                     if (glsHandler.Records.Count == 0)

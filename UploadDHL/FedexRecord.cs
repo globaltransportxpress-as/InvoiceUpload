@@ -673,7 +673,7 @@ namespace UploadDHL
 
                     AWB = awb,
                     BillWeight = Bill_Wt,
-                    Price = Freight_Amt,
+                    Price = Freight_Amt+Vol_Disc,
                     CreditorAccount = Invoice_Number,
                     SalesProduct = GTXTranslate.GTXProduct,
                     TransportProduct = GTXTranslate.GTXTransp,
@@ -777,7 +777,7 @@ namespace UploadDHL
 
 
 
-               var key = Svc + Pkg + "_" + Direction(Cntry1, Cntry2);
+               var key =Type+ Svc + Pkg + "_" + Direction(Cntry1, Cntry2);
                GTXTranslate = TranslateObj(key, "FRAGT");
 
                InvoiceName = Invoice_Number;

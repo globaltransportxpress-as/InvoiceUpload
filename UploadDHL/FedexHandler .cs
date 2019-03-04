@@ -164,7 +164,7 @@ namespace UploadDHL
                 
                
                 sb.AppendLine(zDhlXml.FillShipmentXml(record.Tracking_Number, record.Ref_1, record.Ship_Date,
-                    record.GTXTranslate.GTXName, record.Pcs, record.Bill_Wt, record.Net_Chrg,
+                    record.GTXTranslate.GTXName, record.Pcs, record.Bill_Wt, record.Freight_Amt+record.Vol_Disc,
                     record.Postal, record.Cntry1, record.Postal2, record.Cntry2, sb2.ToString()));
 
                 wfList.Add(record.Convert());
