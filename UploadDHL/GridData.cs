@@ -13,6 +13,7 @@ namespace UploadDHL
         public string Comment { get; set; }
 
         public int JumpLines { get; set; }
+        public List<string> JumpLineData { get; set; }
     }
     
 }

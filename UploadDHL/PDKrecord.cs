@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using nu.gtx.DbMain.Standard.PM;
+using UploadDHL.DataUploadWeb;
 
 namespace UploadDHL
 {
@@ -25,7 +26,7 @@ namespace UploadDHL
         public bool Vat { get; set; }
 
         public String Material { get; set; }
-        public String GTXMatrial { get; set; }
+      
         public int GTXProduct { get; set; }
         public int GTXTransport { get; set; }
 
@@ -50,19 +51,26 @@ namespace UploadDHL
 
         public WeightFileRecord Convert()
         {
+
+
+            var awbn = AWB;
+            if (GTXTranslate.KeyType == "GEBYR")
+            {
+                awbn = "#" + AWB;
+            }
             var wf = new WeightFileRecord();
             wf.Services = Services;
-            wf.AWB = AWB;
+            wf.AWB = awbn;
             wf.BillWeight = BillWeight;
             wf.CreditorAccount = Factura;
-            wf.SalesProduct = GTXProduct;
-            wf.TransportProduct = GTXTransport;
+            wf.SalesProduct = GTXTranslate.GTXProduct;
+            wf.TransportProduct = GTXTranslate.GTXTransp;
             wf.Price = Price;
             return wf;
 
 
         }
-        public InvoiceShipment StdConvert()
+        public InvoiceShipmentHolder StdConvert()
         {
 
             
@@ -70,7 +78,7 @@ namespace UploadDHL
                 if (GTXTranslate.KeyType == "FRAGT")
                 {
 
-                    var wf = new InvoiceShipment
+                    var wf = new InvoiceShipmentHolder
                     {
 
                         Status = 1,

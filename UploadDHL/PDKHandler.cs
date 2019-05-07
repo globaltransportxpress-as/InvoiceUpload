@@ -19,6 +19,7 @@ namespace UploadDHL
 
         private List<string> awbs = new List<string>();
         public string Error { get; set; }
+        public string ErrorWeight { get; set; }
         public int DropLines { get; set; }
 
         public string Factura
@@ -40,6 +41,7 @@ namespace UploadDHL
         public PdkHandler()
         {
             Error = zTranslation.Error;
+            ErrorWeight = "";
         }
         public PDKrecord SetData(string[] da)
 
@@ -87,7 +89,7 @@ namespace UploadDHL
                 Dic == null || string.IsNullOrEmpty(da[0]) || string.IsNullOrEmpty(da[1]))
             {
 
-                DropLines = DropLines + 1;
+                
                 return null;
             }
 
@@ -111,43 +113,11 @@ namespace UploadDHL
                 return null;
             }
 
-            var tr = zTranslation.TranDictionary[pdkRec.Material];
-            if (tr.KeyType != "GEBYR" && tr.KeyType != "FRAGT")
+             pdkRec.GTXTranslate = zTranslation.TranDictionary[pdkRec.Material];
+            if (pdkRec.GTXTranslate.KeyType != "GEBYR" && pdkRec.GTXTranslate.KeyType != "FRAGT")
             {
                 DropLines = DropLines + 1;
                 return null;
-            }
-
-
-
-
-
-            if (tr.KeyType == "GEBYR")
-            {
-                var record = Records.FirstOrDefault(x => x.AWB == pdkRec.AWB);
-                if (record == null)
-                {
-                    pdkRec.AWB = "#" + pdkRec.AWB;
-
-
-                }
-                else
-                {
-                    pdkRec = record;
-                }
-
-                var sv = new Service();
-                sv.OrigalName = tr.Key;
-                sv.GTXCode = tr.GTXName;
-                sv.Price = pdkRec.Price;
-                pdkRec.Services.Add(sv);
-
-            }
-            else
-            {
-                pdkRec.GTXMatrial = tr.GTXName;
-                pdkRec.GTXProduct = tr.GTXProduct;
-                pdkRec.GTXTransport = tr.GTXTransp;
             }
 
 
@@ -164,8 +134,20 @@ namespace UploadDHL
             pdkRec.SenderCountry = da[Dic["Fra-land"]];
             pdkRec.ReceiverCountry = da[Dic["Til-land"]];
             pdkRec.Weight = SafeDecimal(da[Dic["Vægt"]]);
+
+           
+
+
             pdkRec.VolWeight = SafeDecimal(da[Dic["Volumenvægt"]]);
             pdkRec.BillWeight = SafeDecimal(da[Dic["Faktureretvægt"]]);
+            if (pdkRec.BillWeight == 0)
+            {
+
+
+                ErrorWeight = ErrorWeight + "," + pdkRec.AWB;
+                return null;
+
+            }
             pdkRec.Length = SafeDecimal(da[Dic["Længde"]]);
             pdkRec.Width = SafeDecimal(da[Dic["Bredde"]]);
             pdkRec.Height = SafeDecimal(da[Dic["Højde"]]);
@@ -194,7 +176,42 @@ namespace UploadDHL
             }
 
 
-            Records.Add(pdkRec);
+
+            if (pdkRec.GTXTranslate.KeyType == "GEBYR")
+            {
+
+                var sv = new Service();
+                sv.OrigalName = pdkRec.GTXTranslate.Key;
+                sv.GTXCode = pdkRec.GTXTranslate.GTXName;
+                sv.Price = pdkRec.Price;
+               
+
+                var record = Records.FirstOrDefault(x => x.AWB == pdkRec.AWB);
+                if (record == null)
+                {
+
+                    pdkRec.Services.Add(sv);
+                    Records.Add(pdkRec);
+                }
+                else
+                {
+                    record.Services.Add(sv);
+                }
+
+
+
+
+            }
+            else
+            {
+                Records.Add(pdkRec);
+            }
+          
+
+
+           
+
+           
             return pdkRec;
 
 
@@ -350,10 +367,10 @@ namespace UploadDHL
                 var total = pdkRecord.Services.Sum(x => x.Price) + pdkRecord.PriceVat;
 
                 int count = 1;
-                if (!pdkRecord.AWB.StartsWith("#"))
+                if (pdkRecord.GTXTranslate.KeyType=="FRAGT")
                 {
 
-                    services.Append(dhlXml.FillServicesXml(pdkRecord.GTXMatrial, pdkRecord.Price));
+                    services.Append(dhlXml.FillServicesXml(pdkRecord.GTXTranslate.GTXName, pdkRecord.Price));
 
                 }
                 foreach (var service in pdkRecord.Services)
@@ -361,12 +378,8 @@ namespace UploadDHL
                     count++;
                     services.Append(dhlXml.FillServicesXml(service.GTXCode, service.Price));
                 }
-                var awb = pdkRecord.AWB;
-                if (awb.StartsWith("#"))
-                {
-                    awb = awb.Replace("#", "");
-                }
-                shipments.Append(dhlXml.FillShipmentXml(awb, "", pdkRecord.Date, pdkRecord.GTXMatrial, 1,
+                
+                shipments.Append(dhlXml.FillShipmentXml(pdkRecord.AWB, "", pdkRecord.Date, pdkRecord.GTXTranslate.GTXName, 1,
                     pdkRecord.BillWeight, pdkRecord.Price, pdkRecord.FromZip, pdkRecord.SenderCountry, pdkRecord.ToZip,
                     pdkRecord.ReceiverCountry, services.ToString()));
 

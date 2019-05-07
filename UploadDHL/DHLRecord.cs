@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.Remoting.Channels;
 using System.Text;
 using nu.gtx.DbMain.Standard.PM;
+using UploadDHL.DataUploadWeb;
 
 
 namespace UploadDHL
@@ -826,7 +827,7 @@ namespace UploadDHL
 
                     AWB = awb,
                     BillWeight = Weight_kg,
-                    Price = Weight_Charge - Weight_Tax_VAT,
+                    Price = Weight_Charge,
                     CreditorAccount = Invoice_Number,
                     SalesProduct = GTXTranslate.GTXProduct,
                     TransportProduct = GTXTranslate.GTXTransp,
@@ -853,7 +854,7 @@ namespace UploadDHL
             return def;
         }
 
-        public InvoiceShipment StdConvert()
+        public InvoiceShipmentHolder StdConvert()
         {
 
             if (GTXTranslate != null)
@@ -862,7 +863,7 @@ namespace UploadDHL
                 if (GTXTranslate.KeyType == "FRAGT")
                 {
 
-                    var wf = new InvoiceShipment
+                    var wf = new InvoiceShipmentHolder
                     {
 
                         Status = 1,

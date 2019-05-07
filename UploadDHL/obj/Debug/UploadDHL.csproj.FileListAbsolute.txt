@@ -20,3 +20,6 @@ C:\Development\UploadDHL\UploadDHL\UploadDHL\bin\Debug\nu.gtx.Common1.pdb
 C:\Development\UploadDHL\UploadDHL\UploadDHL\bin\Debug\nu.gtx.DbMain.Standard.PM.pdb
 C:\Development\UploadDHL\UploadDHL\UploadDHL\bin\Debug\nu.gtx.POCO.Contract.pdb
 C:\Development\UploadDHL\UploadDHL\UploadDHL\bin\Debug\Newtonsoft.Json.xml
+C:\Development\UploadDHL\UploadDHL\UploadDHL\bin\Debug\GemBox.Spreadsheet.dll
+C:\Development\UploadDHL\UploadDHL\UploadDHL\bin\Debug\GemBox.Spreadsheet.xml
+C:\Development\UploadDHL\UploadDHL\UploadDHL\bin\Debug\Newtonsoft.Json.pdb

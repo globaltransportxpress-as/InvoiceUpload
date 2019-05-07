@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using nu.gtx.DbMain.Standard.PM;
+using UploadDHL.DataUploadWeb;
 
 namespace UploadDHL
 {
@@ -197,20 +198,28 @@ namespace UploadDHL
                 }
             }
 
-
+            //if (1 != 1)
             if (lastrecord != null)
             {
-                WeightFile.CreateFile(Config.DHLRootFileDir, wfList, lastrecord.Invoice_Number);
+                WeightFileObj.CreateFile(Config.DHLRootFileDir, wfList, lastrecord.Invoice_Number);
+                var listInvShip = new List<InvoiceShipmentHolder>();
 
-                var context = new DbMainStandard();
-                context.InvoiceShipment.RemoveRange(context.InvoiceShipment.Where(x=>x.Invoice==lastrecord.Invoice_Number && x.InvoiceDate==lastrecord.Invoice_Date));
-                foreach (var record in DHLRecords.Where(x => x.Line_Type != "I" && x.Total_amount_excl_VAT>0).ToList())
+               
+               
+               
+                foreach (var record in DHLRecords.Where(x => x.Line_Type != "I" && x.Total_amount_excl_VAT>0 && x.GTXTranslate.KeyType=="FRAGT").ToList() )
                 {
 
-                    context.InvoiceShipment.Add(record.StdConvert());
-
+                    
+                    listInvShip.Add(record.StdConvert());
                 }
-                context.SaveChanges();
+
+                 var _service=   new InvoiceUploadSoapClient("InvoiceUploadSoap");
+                 var res = _service.ShipmentUpload(listInvShip.ToArray());
+                if (res != "OK")
+                {
+                    Error = true;
+                }
             }
 
            

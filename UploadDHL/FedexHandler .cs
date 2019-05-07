@@ -4,6 +4,9 @@ using System.Diagnostics.SymbolStore;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.Office.Interop.Excel;
+using nu.gtx.DbMain.Standard.PM;
+using UploadDHL.DataUploadWeb;
 
 namespace UploadDHL
 {
@@ -89,7 +92,7 @@ namespace UploadDHL
                     add = (record.GTXTranslate.KeyType == "GEBYR" || record.GTXTranslate.KeyType == "FRAGT");
                     if (record.GTXTranslate.KeyType == "GEBYR")
                     {
-                        var rec = FedexRecords.FirstOrDefault(x => x.Tracking_Number == record.Tracking_Number);
+                        var rec = FedexRecords.FirstOrDefault(x => x.Tracking_Number == record.Tracking_Number && x.Invoice_Number == record.Invoice_Number && x.GTXTranslate.KeyType == "FRAGT");
                         var lst = record.Services;
                         if (rec != null)
                         {
@@ -128,28 +131,29 @@ namespace UploadDHL
         {
             decimal oil = 0;
             FedexRecord privrec = null;
+            var context = new DbMainStandard();
+          
             var sb = new StringBuilder();
             var wfList = new List<WeightFileRecord>();
             foreach (var record in FedexRecords.OrderBy(x=>x.Invoice_Number).ToList())
             {
+                if (privrec == null || privrec.Invoice_Number != record.Invoice_Number)
+                {
+                    context.InvoiceShipment.RemoveRange(context.InvoiceShipment.Where(x => x.Invoice == record.Invoice_Number && x.InvoiceDate == record.Invoice_Date));
+                }
                 if (privrec != null && privrec.Invoice_Number != record.Invoice_Number)
                 {
-                    var xml = zDhlXml.FillFacturaXml(privrec.Invoice_Number, privrec.Invoice_Date, privrec.Invoice_Date.AddDays(30), privrec.Bill_To_Account, privrec.Total_Non_Tax_Amt, oil, privrec.Total_Tax_Amt, sb.ToString());
-                    
-
-                    using (StreamWriter xmlout =
-                        new StreamWriter(Config.FedexRootFileDir + "\\Xml\\X" + privrec.Invoice_Number + "_" + DateTime.Now.ToString("yyyyMMddmms") + ".xml", false))
-                    {
-                        xmlout.Write(xml);
-                    }
                    
+                    WriteXmlFile(privrec, oil, sb.ToString());
+                    sb = new StringBuilder();
                     oil = 0;
                    
 
                 }
 
-
                 var sb2 = new StringBuilder();
+                sb2.AppendLine(zDhlXml.FillServicesXml(record.GTXTranslate.GTXName, record.Freight_Amt + record.Vol_Disc));
+              
                 foreach (var service in record.Services)
                 {
                     if (service.GTXCode == "FOILE")
@@ -169,12 +173,45 @@ namespace UploadDHL
 
                 wfList.Add(record.Convert());
                 privrec = record;
+               
+                var listInvShip = new List<InvoiceShipmentHolder>();
 
+
+                if (record.GTXTranslate.KeyType == "FRAGT")
+                {
+
+                    listInvShip.Add(record.StdConvert());
+                }
+
+                
+
+                var _service = new InvoiceUploadSoapClient("InvoiceUploadSoap");
+                var res = _service.ShipmentUpload(listInvShip.ToArray());
             }
+            if (privrec != null)
+            {
+                WriteXmlFile(privrec, oil, sb.ToString());
+            }
+           
 
-            WeightFile.CreateFile(Config.FedexRootFileDir, wfList, filename);
+            WeightFileObj.CreateFile(Config.FedexRootFileDir, wfList, filename);
+            
+
+        }
 
 
+
+        private void WriteXmlFile(FedexRecord rec, decimal oil, string xmlrec)
+        {
+
+            var xml = zDhlXml.FillFacturaXml(rec.Invoice_Number, rec.Invoice_Date, rec.Invoice_Date.AddDays(30), rec.Bill_To_Account, rec.Total_Non_Tax_Amt, oil, rec.Total_Tax_Amt, xmlrec);
+
+
+            using (StreamWriter xmlout =
+                new StreamWriter(Config.FedexRootFileDir + "\\Xml\\X" + rec.Invoice_Number + "_" + DateTime.Now.ToString("yyyyMMddmms") + ".xml", false))
+            {
+                xmlout.Write(xml);
+            }
 
 
 

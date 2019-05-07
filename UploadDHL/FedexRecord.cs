@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.Remoting.Channels;
 using System.Text;
 using nu.gtx.DbMain.Standard.PM;
+using UploadDHL.DataUploadWeb;
 
 namespace UploadDHL
 {
@@ -690,7 +691,7 @@ namespace UploadDHL
 
         }
 
-        public InvoiceShipment StdConvert()
+        public InvoiceShipmentHolder StdConvert()
         {
 
             if (GTXTranslate != null)
@@ -699,7 +700,7 @@ namespace UploadDHL
                 if (GTXTranslate.KeyType == "FRAGT")
                 {
 
-                    var wf = new InvoiceShipment
+                    var wf = new InvoiceShipmentHolder
                     {
 
                         Status = 1,
@@ -777,7 +778,7 @@ namespace UploadDHL
 
 
 
-               var key =Type+ Svc + Pkg + "_" + Direction(Cntry1, Cntry2);
+               var key =Settle+ Svc + Pkg + "_" + Direction(Cntry1, Cntry2);
                GTXTranslate = TranslateObj(key, "FRAGT");
 
                InvoiceName = Invoice_Number;

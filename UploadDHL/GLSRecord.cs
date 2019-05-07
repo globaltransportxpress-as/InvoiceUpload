@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Office.Interop.Excel;
 using nu.gtx.DbMain.Standard.PM;
+using UploadDHL.DataUploadWeb;
 
 namespace UploadDHL
 {
@@ -16,6 +17,7 @@ namespace UploadDHL
         public bool TranslationError { get; set; }
         public bool FormatError { get; set; }
         public StringBuilder zReasonError;
+        
         public string Fakturanr
         {
             get { return zCSVdata[0]; }
@@ -44,6 +46,11 @@ namespace UploadDHL
             get { return zCSVdata[5]; }
         }
 
+        private string zCountry;
+        public string Country
+        {
+            get { return zCountry; }
+        }
         public string Pakkenr
         {
             get { return zCSVdata[6]; }
@@ -51,7 +58,8 @@ namespace UploadDHL
 
         public decimal Vægt
         {
-            get { return SafeDecimal(zCSVdata[7]); }
+            get { return zWeight; }
+            
         }
 
         public int Antal
@@ -63,9 +71,11 @@ namespace UploadDHL
         {
             get { return SafeDecimal(zCSVdata[9]); }
         }
+
+        private decimal zPrice;
         public decimal Beløb
         {
-            get { return SafeDecimal(zCSVdata[10]); }
+            get { return zPrice; }
         }
         public decimal Beløbinklmoms
         {
@@ -110,12 +120,34 @@ namespace UploadDHL
         {
             get { return MakeCheckNumber(Pakkenr); }
         }
-        public GLSrecord(string[] fields)
+
+        private decimal zWeight;
+        public GLSrecord(string[] fields, Translation translationhandler)
         {
 
            
             zCSVdata = fields;
+            GTXTranslate = translationhandler.DoTranslate(VareNo, "FRAGT");
+            zWeight = SafeDecimal(zCSVdata[7]);
+            zPrice = SafeDecimal(zCSVdata[10]);
+            if (Land == "")
+            {
+                zCountry = "DK";
+            }
+            else
+            {
+                var gtxtrans = translationhandler.DoTranslate(Land, "COUNTRY");
+                if (gtxtrans == null)
+                {
+                    GTXTranslate = null; // to indicate translation error
+                }
+                else
+                {
+                    zCountry = gtxtrans.GTXName;
 
+                }
+
+            }
 
 
         }
@@ -123,21 +155,33 @@ namespace UploadDHL
 
         public TranslationRecord GTXTranslate { get; set; }
 
+        public void AddWeight(decimal w)
+        {
+            zWeight = zWeight + w;
+        }
+        public void AddPrice(decimal w)
+        {
+            zPrice = zPrice + w;
+        }
+
         public WeightFileRecord Convert()
         {
+            var awbn = Awb;
+            if (GTXTranslate.KeyType == "GEBYR")
+            {
+                awbn = "#" + Awb;
+            }
             var wf = new WeightFileRecord();
             wf.Services = Services;
-            wf.AWB = Awb;
+            wf.AWB = awbn;
             wf.BillWeight = Vægt;
-            wf.CreditorAccount = Kundenr;
+            wf.CreditorAccount = Fakturanr;
             wf.SalesProduct = GTXTranslate.GTXProduct;
             wf.TransportProduct = GTXTranslate.GTXTransp;
             wf.Price = Beløb;
             return wf;
-
-
         }
-        public InvoiceShipment StdConvert()
+        public InvoiceShipmentHolder StdConvert()
         {
 
 
@@ -145,7 +189,7 @@ namespace UploadDHL
             if (GTXTranslate.KeyType == "FRAGT")
             {
 
-                var wf = new InvoiceShipment
+                var wf = new InvoiceShipmentHolder()
                 {
 
                     Status = 1,
@@ -171,12 +215,12 @@ namespace UploadDHL
                     Reciever_City = Modtagerby,
                     Reciever_State = "",
                     Reciever_Zip = Modtagerpostnr,
-                    Reciever_Country = Land,
-                    Reciever_Country_Iata = Land,
+                    Reciever_Country = Country,
+                    Reciever_Country_Iata = Country,
                     Reciever_Phone = "00",
                     Reciever_Fax = "00",
                     Reciever_Email = "upload@gtx.nu",
-                    Reciever_Reference = "",
+                    Reciever_Reference = " ",
                     NumberofCollies = (byte)1,
                     Reference = "",
                     Total_Weight = Vægt,
@@ -211,10 +255,14 @@ namespace UploadDHL
             //  AwbNumber awbnumber = db().GetAwb(product, 1);
 
             //string number =awbnumber.Prefix + awbnumber.Awb.ToString();
-            int addciffer = 0;
-            if (Land != "DK")
+            if (number == "")
             {
-                addciffer = 1;
+                return number;
+            }
+            int addciffer = 1;
+            if (VareNo.StartsWith("008"))
+            {
+                addciffer = 0;
             }
 
             int Even = 0;
@@ -238,7 +286,7 @@ namespace UploadDHL
                 Even += int.Parse(textnumber[count].ToString());
             }
 
-            double TotalSum =( Even + (3 * Uneven) + addciffer)+0.5;
+            double TotalSum =( Even + (3 * Uneven) + addciffer);
 
 
             double Roundup = 10 * System.Convert.ToInt64(((TotalSum + 5) / 10));
@@ -279,8 +327,8 @@ namespace UploadDHL
 
 
             DateTime dd;
-            if (DateTime.TryParse(data.Substring(0, 4) + "-" + data.Substring(4, 2) + "-" +
-                                  data.Substring(6, 2), out dd))
+            if (DateTime.TryParse(data
+                                  , out dd))
             {
                 return dd;
             }
@@ -297,7 +345,7 @@ namespace UploadDHL
                 return 0;
             }
 
-            if (decimal.TryParse(data, NumberStyles.Any, CultureInfo.InvariantCulture, out dec))
+            if (decimal.TryParse(data, NumberStyles.Any, CultureInfo.CurrentCulture, out dec))
             {
                 return dec;
             }

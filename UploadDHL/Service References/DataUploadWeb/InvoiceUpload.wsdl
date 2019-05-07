@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="HelloWorld">
+        <s:complexType />
+      </s:element>
+      <s:element name="HelloWorldResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="HelloWorldResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ShipmentUpload">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="data" type="tns:ArrayOfInvoiceShipmentHolder" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfInvoiceShipmentHolder">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="InvoiceShipmentHolder" nillable="true" type="tns:InvoiceShipmentHolder" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="InvoiceShipmentHolder">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="Status" type="s:unsignedByte" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="InvoiceDate" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="VendorAccount" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AWB" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Product" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Transport" type="s:unsignedByte" />
+          <s:element minOccurs="1" maxOccurs="1" name="Shipdate" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CompanyName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Address1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Address2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="City" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="State" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Zip" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Country_Iata" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Reciever_CompanyName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Reciever_Address1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Reciever_Address2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Reciever_City" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Reciever_State" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Reciever_Zip" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Reciever_Country" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Reciever_Country_Iata" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Reciever_Phone" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Reciever_Fax" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Reciever_Email" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Reciever_Reference" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="NumberofCollies" nillable="true" type="s:unsignedByte" />
+          <s:element minOccurs="0" maxOccurs="1" name="Reference" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Total_Weight" nillable="true" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Length" nillable="true" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Width" nillable="true" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Height" nillable="true" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Vol_Weight" nillable="true" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="BilledWeight" nillable="true" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Customevalue" nillable="true" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="PackValue" nillable="true" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="PackValuta" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Costprice" nillable="true" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Saleprice" nillable="true" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Oli" nillable="true" type="s:decimal" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ShipmentUploadResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ShipmentUploadResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="WeighFileUpload">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="wdata" type="tns:ArrayOfString" />
+            <s:element minOccurs="0" maxOccurs="1" name="batch" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="WeighFileUploadResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="WeighFileUploadResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="string" nillable="true" type="s:string" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="HelloWorldSoapIn">
+    <wsdl:part name="parameters" element="tns:HelloWorld" />
+  </wsdl:message>
+  <wsdl:message name="HelloWorldSoapOut">
+    <wsdl:part name="parameters" element="tns:HelloWorldResponse" />
+  </wsdl:message>
+  <wsdl:message name="ShipmentUploadSoapIn">
+    <wsdl:part name="parameters" element="tns:ShipmentUpload" />
+  </wsdl:message>
+  <wsdl:message name="ShipmentUploadSoapOut">
+    <wsdl:part name="parameters" element="tns:ShipmentUploadResponse" />
+  </wsdl:message>
+  <wsdl:message name="WeighFileUploadSoapIn">
+    <wsdl:part name="parameters" element="tns:WeighFileUpload" />
+  </wsdl:message>
+  <wsdl:message name="WeighFileUploadSoapOut">
+    <wsdl:part name="parameters" element="tns:WeighFileUploadResponse" />
+  </wsdl:message>
+  <wsdl:message name="HelloWorldHttpGetIn" />
+  <wsdl:message name="HelloWorldHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="HelloWorldHttpPostIn" />
+  <wsdl:message name="HelloWorldHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:portType name="InvoiceUploadSoap">
+    <wsdl:operation name="HelloWorld">
+      <wsdl:input message="tns:HelloWorldSoapIn" />
+      <wsdl:output message="tns:HelloWorldSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ShipmentUpload">
+      <wsdl:input message="tns:ShipmentUploadSoapIn" />
+      <wsdl:output message="tns:ShipmentUploadSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="WeighFileUpload">
+      <wsdl:input message="tns:WeighFileUploadSoapIn" />
+      <wsdl:output message="tns:WeighFileUploadSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="InvoiceUploadHttpGet">
+    <wsdl:operation name="HelloWorld">
+      <wsdl:input message="tns:HelloWorldHttpGetIn" />
+      <wsdl:output message="tns:HelloWorldHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="InvoiceUploadHttpPost">
+    <wsdl:operation name="HelloWorld">
+      <wsdl:input message="tns:HelloWorldHttpPostIn" />
+      <wsdl:output message="tns:HelloWorldHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="InvoiceUploadSoap" type="tns:InvoiceUploadSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="HelloWorld">
+      <soap:operation soapAction="http://tempuri.org/HelloWorld" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ShipmentUpload">
+      <soap:operation soapAction="http://tempuri.org/ShipmentUpload" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="WeighFileUpload">
+      <soap:operation soapAction="http://tempuri.org/WeighFileUpload" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="InvoiceUploadSoap12" type="tns:InvoiceUploadSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="HelloWorld">
+      <soap12:operation soapAction="http://tempuri.org/HelloWorld" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ShipmentUpload">
+      <soap12:operation soapAction="http://tempuri.org/ShipmentUpload" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="WeighFileUpload">
+      <soap12:operation soapAction="http://tempuri.org/WeighFileUpload" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="InvoiceUploadHttpGet" type="tns:InvoiceUploadHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="HelloWorld">
+      <http:operation location="/HelloWorld" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="InvoiceUploadHttpPost" type="tns:InvoiceUploadHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="HelloWorld">
+      <http:operation location="/HelloWorld" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="InvoiceUpload">
+    <wsdl:port name="InvoiceUploadSoap" binding="tns:InvoiceUploadSoap">
+      <soap:address location="http://localhost:55240/Services/Accounting/V4/InvoiceUpload.asmx" />
+    </wsdl:port>
+    <wsdl:port name="InvoiceUploadSoap12" binding="tns:InvoiceUploadSoap12">
+      <soap12:address location="http://localhost:55240/Services/Accounting/V4/InvoiceUpload.asmx" />
+    </wsdl:port>
+    <wsdl:port name="InvoiceUploadHttpGet" binding="tns:InvoiceUploadHttpGet">
+      <http:address location="http://localhost:55240/Services/Accounting/V4/InvoiceUpload.asmx" />
+    </wsdl:port>
+    <wsdl:port name="InvoiceUploadHttpPost" binding="tns:InvoiceUploadHttpPost">
+      <http:address location="http://localhost:55240/Services/Accounting/V4/InvoiceUpload.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

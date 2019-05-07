@@ -80,7 +80,19 @@ namespace UploadDHL
 
 
         }
+      
+        public TranslationRecord DoTranslate(string key, string keyType)
+        {
 
+            if(TranDictionary.ContainsKey(key))
+            {
+                return TranDictionary[key];
+            }
+            AddMissing(key, keyType);
+            return null;
+
+
+        }
 
         public void AddMissing(string key, string keytype)
         {

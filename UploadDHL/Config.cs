@@ -43,6 +43,22 @@ namespace UploadDHL
                 return ConfigurationManager.AppSettings["TranslationFileFedex"];
             }
         }
+        public static String TranslationFileGtx
+        {
+            get
+            {
+
+                return ConfigurationManager.AppSettings["TranslationFileGtx"];
+            }
+        }
+        public static String TranslationFileGLS
+        {
+            get
+            {
+
+                return ConfigurationManager.AppSettings["TranslationFileGLS"];
+            }
+        }
         public static String PDKRootFileDir
         {
             get
@@ -67,12 +83,28 @@ namespace UploadDHL
                 return ConfigurationManager.AppSettings["DHLRootFileDir"];
             }
         }
+        public static String GTXRootFileDir
+        {
+            get
+            {
+
+                return ConfigurationManager.AppSettings["GTXRootFileDir"];
+            }
+        }
         public static String FedexRootFileDir
         {
             get
             {
 
                 return ConfigurationManager.AppSettings["FedexRootFileDir"];
+            }
+        }
+        public static String ConvertFolder
+        {
+            get
+            {
+
+                return ConfigurationManager.AppSettings["ConvertFolder"];
             }
         }
         public static String LogFile
@@ -100,12 +132,19 @@ namespace UploadDHL
             }
         }
 
-        public static String OutputDir
+        public static String EndDir(string carrier)
+        {
+           
+                return ConfigurationManager.AppSettings[carrier+"EndDir"];
+            
+        }
+
+        public static String System
         {
             get
             {
 
-                return ConfigurationManager.AppSettings["OutputDir"];
+                return ConfigurationManager.AppSettings["System"];
             }
         }
     }

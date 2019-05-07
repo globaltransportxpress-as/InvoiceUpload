@@ -40,19 +40,25 @@
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net40\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="GemBox.Spreadsheet, Version=43.0.35.1111, Culture=neutral, PublicKeyToken=b1b72c69714d4847, processorArchitecture=MSIL">
+      <HintPath>..\packages\GemBox.Spreadsheet.43.0.0.1111\lib\net35\GemBox.Spreadsheet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="nu.gtx.Common1">
-      <HintPath>..\..\..\B1-release\backend\nu.gtx.DbMain.Standard.PM\bin\Release\nu.gtx.Common1.dll</HintPath>
+      <HintPath>..\..\..\Production\_Backend\nu.gtx.DbMain.Standard.PM\bin\Debug\nu.gtx.Common1.dll</HintPath>
     </Reference>
     <Reference Include="nu.gtx.DbMain.Standard.PM">
-      <HintPath>..\..\..\B1-release\backend\nu.gtx.DbMain.Standard.PM\bin\Release\nu.gtx.DbMain.Standard.PM.dll</HintPath>
+      <HintPath>..\..\..\Production\_Backend\nu.gtx.DbMain.Standard.PM\bin\Debug\nu.gtx.DbMain.Standard.PM.dll</HintPath>
     </Reference>
     <Reference Include="nu.gtx.POCO.Contract">
-      <HintPath>..\..\..\B1-release\backend\nu.gtx.DbMain.Standard.PM\bin\Release\nu.gtx.POCO.Contract.dll</HintPath>
+      <HintPath>..\..\..\Production\_Backend\nu.gtx.DbMain.Standard.PM\bin\Debug\nu.gtx.POCO.Contract.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -75,10 +81,17 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="GTXHandler.cs" />
+    <Compile Include="GLSRecord.cs" />
     <Compile Include="GridData.cs" />
     <Compile Include="GLSHandler.cs" />
-    <Compile Include="GLSRecord.cs" />
-    <Compile Include="WeightFile.cs" />
+    <Compile Include="GTXRecord.cs" />
+    <Compile Include="Service References\DataUploadWeb\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="WeightFileObj.cs" />
     <Compile Include="PDKHandler.cs" />
     <Compile Include="PDKrecord.cs" />
     <Compile Include="Program.cs" />
@@ -114,8 +127,16 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Service References\DataUploadWeb\InvoiceUpload.wsdl" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Service References\DataUploadWeb\InvoiceUpload.disco" />
+    <None Include="Service References\DataUploadWeb\configuration91.svcinfo" />
+    <None Include="Service References\DataUploadWeb\configuration.svcinfo" />
+    <None Include="Service References\DataUploadWeb\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="XMLFile1.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -148,6 +169,12 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\DataUploadWeb\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
