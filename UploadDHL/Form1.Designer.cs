@@ -61,6 +61,10 @@
             this.XuZeroCost = new System.Windows.Forms.Button();
             this.XuSplitWeigth = new System.Windows.Forms.Button();
             this.XuRasFileMaker = new System.Windows.Forms.Button();
+            this.XU_ArkName = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.XuFilterKey = new System.Windows.Forms.TextBox();
+            this.XuLabelFilter = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.XuMsgGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridDataBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.XuEditTranslationGrid)).BeginInit();
@@ -128,9 +132,9 @@
             this.commentDataGridViewTextBoxColumn,
             this.jumpLinesDataGridViewTextBoxColumn});
             this.XuMsgGrid.DataSource = this.gridDataBindingSource;
-            this.XuMsgGrid.Location = new System.Drawing.Point(432, 12);
+            this.XuMsgGrid.Location = new System.Drawing.Point(432, 80);
             this.XuMsgGrid.Name = "XuMsgGrid";
-            this.XuMsgGrid.Size = new System.Drawing.Size(658, 553);
+            this.XuMsgGrid.Size = new System.Drawing.Size(658, 485);
             this.XuMsgGrid.TabIndex = 6;
             this.XuMsgGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.XuMsgGrid_CellContentClick);
             // 
@@ -181,7 +185,7 @@
             // 
             // XuSaveTranslatioon
             // 
-            this.XuSaveTranslatioon.Location = new System.Drawing.Point(432, 572);
+            this.XuSaveTranslatioon.Location = new System.Drawing.Point(421, 858);
             this.XuSaveTranslatioon.Name = "XuSaveTranslatioon";
             this.XuSaveTranslatioon.Size = new System.Drawing.Size(197, 32);
             this.XuSaveTranslatioon.TabIndex = 8;
@@ -203,9 +207,9 @@
             this.gTXTranspDataGridViewTextBoxColumn,
             this.gTXProductDataGridViewTextBoxColumn});
             this.XuEditTranslationGrid.DataSource = this.translationRecordBindingSource;
-            this.XuEditTranslationGrid.Location = new System.Drawing.Point(432, 31);
+            this.XuEditTranslationGrid.Location = new System.Drawing.Point(432, 80);
             this.XuEditTranslationGrid.Name = "XuEditTranslationGrid";
-            this.XuEditTranslationGrid.Size = new System.Drawing.Size(658, 534);
+            this.XuEditTranslationGrid.Size = new System.Drawing.Size(658, 772);
             this.XuEditTranslationGrid.TabIndex = 9;
             // 
             // keyDataGridViewTextBoxColumn
@@ -310,15 +314,15 @@
             // 
             // XuJumpLines
             // 
-            this.XuJumpLines.Location = new System.Drawing.Point(432, 12);
+            this.XuJumpLines.Location = new System.Drawing.Point(432, 127);
             this.XuJumpLines.Multiline = true;
             this.XuJumpLines.Name = "XuJumpLines";
-            this.XuJumpLines.Size = new System.Drawing.Size(658, 553);
+            this.XuJumpLines.Size = new System.Drawing.Size(658, 725);
             this.XuJumpLines.TabIndex = 17;
             // 
             // XuClose
             // 
-            this.XuClose.Location = new System.Drawing.Point(893, 572);
+            this.XuClose.Location = new System.Drawing.Point(893, 858);
             this.XuClose.Name = "XuClose";
             this.XuClose.Size = new System.Drawing.Size(197, 32);
             this.XuClose.TabIndex = 18;
@@ -368,9 +372,47 @@
             this.XuRasFileMaker.Visible = false;
             this.XuRasFileMaker.Click += new System.EventHandler(this.XuRasFileMaker_Click);
             // 
+            // XU_ArkName
+            // 
+            this.XU_ArkName.Location = new System.Drawing.Point(22, 399);
+            this.XU_ArkName.Name = "XU_ArkName";
+            this.XU_ArkName.Size = new System.Drawing.Size(171, 20);
+            this.XU_ArkName.TabIndex = 23;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(200, 405);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(54, 13);
+            this.label1.TabIndex = 24;
+            this.label1.Text = "Ark Name";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // XuFilterKey
+            // 
+            this.XuFilterKey.Location = new System.Drawing.Point(467, 54);
+            this.XuFilterKey.Name = "XuFilterKey";
+            this.XuFilterKey.Size = new System.Drawing.Size(92, 20);
+            this.XuFilterKey.TabIndex = 25;
+            this.XuFilterKey.TextChanged += new System.EventHandler(this.XuFilterChange);
+            // 
+            // XuLabelFilter
+            // 
+            this.XuLabelFilter.AutoSize = true;
+            this.XuLabelFilter.Location = new System.Drawing.Point(429, 57);
+            this.XuLabelFilter.Name = "XuLabelFilter";
+            this.XuLabelFilter.Size = new System.Drawing.Size(29, 13);
+            this.XuLabelFilter.TabIndex = 26;
+            this.XuLabelFilter.Text = "Filter";
+            // 
             // Form1
             // 
-            this.ClientSize = new System.Drawing.Size(1114, 613);
+            this.ClientSize = new System.Drawing.Size(1114, 930);
+            this.Controls.Add(this.XuLabelFilter);
+            this.Controls.Add(this.XuFilterKey);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.XU_ArkName);
             this.Controls.Add(this.XuRasFileMaker);
             this.Controls.Add(this.XuSplitWeigth);
             this.Controls.Add(this.XuZeroCost);
@@ -438,6 +480,10 @@
         private System.Windows.Forms.Button XuZeroCost;
         private System.Windows.Forms.Button XuSplitWeigth;
         private System.Windows.Forms.Button XuRasFileMaker;
+        private System.Windows.Forms.TextBox XU_ArkName;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox XuFilterKey;
+        private System.Windows.Forms.Label XuLabelFilter;
     }
 }
 

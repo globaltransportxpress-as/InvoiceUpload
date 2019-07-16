@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Channels;
 using System.Text;
-using nu.gtx.DbMain.Standard.PM;
+
 using UploadDHL.DataUploadWeb;
 
 namespace UploadDHL

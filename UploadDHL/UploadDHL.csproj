@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config.cs" />
+    <Compile Include="ErrorHandler.cs" />
     <Compile Include="FedexHandler .cs" />
     <Compile Include="DHLHandler.cs" />
     <Compile Include="FedexRecord.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="GridData.cs" />
     <Compile Include="GLSHandler.cs" />
     <Compile Include="GTXRecord.cs" />
+    <Compile Include="InvoiceShipmentLoad.cs" />
     <Compile Include="Service References\DataUploadWeb\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

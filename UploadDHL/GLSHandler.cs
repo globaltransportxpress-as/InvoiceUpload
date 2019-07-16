@@ -119,6 +119,20 @@ namespace UploadDHL
                 }
 
             }
+            else
+            {
+
+
+                if (glsRecord.Vægt == 0)
+                {
+
+                    Error = "Weight zerro";
+
+                    return null;
+
+                }
+
+            }
 
 
 

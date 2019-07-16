@@ -17,7 +17,7 @@ namespace UploadDHL
         private string zCustomerNumber;
         private DateTime zFacturaDate;
 
-        private List<string> awbs = new List<string>();
+       
         public string Error { get; set; }
         public string ErrorWeight { get; set; }
         public int DropLines { get; set; }
@@ -31,8 +31,12 @@ namespace UploadDHL
         {
             get { return zFacturaDate; }
         }
+
         public Dictionary<string, int> Dic;
         public List<PDKrecord> Records = new List<PDKrecord>();
+        public ErrorHandler ErrorHandler { get; set; }
+       
+
         private Translation zTranslation = new Translation(Config.TranslationFilePDK);
 
         private static string zfixhead =
@@ -43,6 +47,8 @@ namespace UploadDHL
             Error = zTranslation.Error;
             ErrorWeight = "";
         }
+
+
         public PDKrecord SetData(string[] da)
 
 
@@ -68,8 +74,18 @@ namespace UploadDHL
             if (da[0] == "Fakturadato:")
             {
 
+                try
+                {
+                    zFacturaDate = DateTime.Parse(da[2]);
 
-                zFacturaDate = DateTime.Parse(da[2]);
+
+
+                }
+                catch (Exception )
+                {
+                    ErrorHandler.Add("Date convert error ", "Factura date error", "SetData");
+                }
+               
                 return null;
 
             }
@@ -103,7 +119,7 @@ namespace UploadDHL
             pdkRec.CustomerNumber = zCustomerNumber;
             pdkRec.Services = new List<Service>();
             pdkRec.AWB = CheckDigits(da[Dic["Stregkode"]]);
-            pdkRec.Price = SafeDecimal(da[Dic["Grundpris"]]);
+            pdkRec.Price = SafeDecimal(da,"Grundpris");
             pdkRec.Material = ReplaceList(da[Dic["Materiale"]].Trim().ToUpper(), " 12345678908()-.,");
             if (!zTranslation.TranDictionary.ContainsKey(pdkRec.Material))
             {
@@ -121,43 +137,43 @@ namespace UploadDHL
             }
 
 
-            pdkRec.Date = DateTime.Parse(da[Dic["Dato"]]);
+            pdkRec.Date = DateConvert(da,"Dato");
             pdkRec.Order = da[Dic["Ordre"]];
             pdkRec.OrderLine = da[Dic["Ordrepos."]];
 
             pdkRec.Frankering = da[Dic["Frankering"]];
             pdkRec.Vat = SafeLookUp(da, "Momsbelagt", "").Equals("X");
-            pdkRec.Price = SafeDecimal(da[Dic["Grundpris"]]);
-            pdkRec.PriceVat = SafeDecimal(da[Dic["Ialt(excl.moms)"]]);
+           
+            pdkRec.PriceVat = SafeDecimal(da, "Ialt(excl.moms)");
             pdkRec.FromZip = da[Dic["Frapostnr"]];
             pdkRec.ToZip = da[Dic["Tilpostnr"]];
             pdkRec.SenderCountry = da[Dic["Fra-land"]];
             pdkRec.ReceiverCountry = da[Dic["Til-land"]];
-            pdkRec.Weight = SafeDecimal(da[Dic["Vægt"]]);
+            pdkRec.Weight = SafeDecimal(da, "Vægt");
 
            
 
 
-            pdkRec.VolWeight = SafeDecimal(da[Dic["Volumenvægt"]]);
-            pdkRec.BillWeight = SafeDecimal(da[Dic["Faktureretvægt"]]);
+            pdkRec.VolWeight = SafeDecimal(da,"Volumenvægt");
+            pdkRec.BillWeight = SafeDecimal(da,"Faktureretvægt");
             if (pdkRec.BillWeight == 0)
             {
 
-
+                ErrorHandler.Add("Weight zerro", string.Join(";", da), "SetData");
                 ErrorWeight = ErrorWeight + "," + pdkRec.AWB;
                 return null;
 
             }
-            pdkRec.Length = SafeDecimal(da[Dic["Længde"]]);
-            pdkRec.Width = SafeDecimal(da[Dic["Bredde"]]);
-            pdkRec.Height = SafeDecimal(da[Dic["Højde"]]);
+            pdkRec.Length = SafeDecimal(da,"Længde");
+            pdkRec.Width = SafeDecimal(da,"Bredde");
+            pdkRec.Height = SafeDecimal(da,"Højde");
             pdkRec.Name = SafeLookUp(da, "Navn1", "No name");
             pdkRec.Address = SafeLookUp(da, "Adresse", "No address");
 
             foreach (var k in Dic.Keys)
             {
 
-                if (!zfixhead.Contains(k + ";") && SafeDecimal(da[Dic[k]]) > 0)
+                if (!zfixhead.Contains(k + ";") && SafeDecimal(da,k) > 0)
                 {
                     var trans = zTranslation.TranDictionary[k];
                     if (trans.KeyType == "GEBYR")
@@ -165,7 +181,7 @@ namespace UploadDHL
                         var sv = new Service();
                         sv.OrigalName = k;
                         sv.GTXCode = trans.GTXName;
-                        sv.Price = SafeDecimal(da[Dic[k]]);
+                        sv.Price = SafeDecimal(da,k);
 
                         pdkRec.Services.Add(sv);
                     }
@@ -275,19 +291,47 @@ namespace UploadDHL
             return def;
 
         }
-        private decimal SafeDecimal(string data)
+
+
+        private DateTime DateConvert(string[] da, string fieldname)
+        {
+            DateTime dd;
+            if (DateTime.TryParse(SafeLookUp(da,fieldname,""), out dd))
+            {
+                return dd;
+            }
+
+            Error = "Convert error date ";
+            ErrorHandler.Add("Date error", string.Format("Field name : {0} Data : {1}", fieldname, string.Join(";", da)), "DateConvert");
+            return DateTime.Now;
+
+        }
+
+
+
+        private decimal SafeDecimal(string[] da, string fieldname)
         {
             decimal dec;
-            if (data == "")
+            var lookup = SafeLookUp(da, fieldname, "err");
+            if (lookup == "err")
+            {
+                ErrorHandler.Add("Field not exist", string.Format("Field name : {0} Data : {1}", fieldname, string.Join(";",da)),"SafeDecimal");
+                return 0;
+
+            }
+           
+            if (lookup == "")
             {
                 return 0;
             }
 
-            if (decimal.TryParse(data, NumberStyles.Any, CultureInfo.GetCultureInfo("da-DK"), out dec))
+            if (decimal.TryParse(lookup, NumberStyles.Any, CultureInfo.GetCultureInfo("da-DK"), out dec))
             {
                 return dec;
             }
-
+           
+                ErrorHandler.Add("Decimal Error", string.Format("Fieldname : {0} Data : {1}",fieldname , lookup), "SafeDecimal");
+          
             return 0;
         }
 

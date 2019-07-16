@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Channels;
 using System.Text;
-using nu.gtx.DbMain.Standard.PM;
 using UploadDHL.DataUploadWeb;
 
 
@@ -18,6 +17,7 @@ namespace UploadDHL
         private Translation zTranslation;
         private DHLXML zDhlXml;
         private int zCount;
+        private ErrorHandler zErrorhandler ;
         public bool Error { get; set; }
         public bool TranslationError { get; set; }
         public bool FormatError { get; set; }
@@ -71,17 +71,17 @@ namespace UploadDHL
 
         public DateTime Invoice_Date
         {
-            get { return SafeDate(zCSVdata[7]); }
+            get { return SafeDate(zCSVdata[7], "Invoice_Date"); }
         }
 
         public DateTime Payment_Terms
         {
-            get { return SafeDate(zCSVdata[8]); }
+            get { return SafeDate(zCSVdata[8], "Payment_Terms"); }
         }
 
         public DateTime Due_Date
         {
-            get { return SafeDate(zCSVdata[9]); }
+            get { return SafeDate(zCSVdata[9], "Due_Date"); }
         }
 
         public string Parent_Account
@@ -156,7 +156,7 @@ namespace UploadDHL
 
         public DateTime Shipment_Date
         {
-            get { return SafeDate(zCSVdata[24]); }
+            get { return SafeDate(zCSVdata[24], "Shipment_Date"); }
         }
 
         public string Country_Specific_Label
@@ -351,22 +351,22 @@ namespace UploadDHL
 
         public decimal Cust_Scale_Weight_A
         {
-            get { return SafeDecimal(zCSVdata[63]); }
+            get { return SafeDecimal(zCSVdata[63], "Cust_Scale_Weight_A"); }
         }
 
         public decimal DHL_Scale_Weight_B
         {
-            get { return SafeDecimal(zCSVdata[64]); }
+            get { return SafeDecimal(zCSVdata[64], "DHL_Scale_Weight_B"); }
         }
 
         public decimal Cust_Vol_Weight_V
         {
-            get { return SafeDecimal(zCSVdata[65]); }
+            get { return SafeDecimal(zCSVdata[65], "Cust_Vol_Weight_V"); }
         }
 
         public decimal DHL_Vol_Weight_W
         {
-            get { return SafeDecimal(zCSVdata[66]); }
+            get { return SafeDecimal(zCSVdata[66], "DHL_Vol_Weight_W"); }
         }
 
         public string Weight_Flag
@@ -376,7 +376,7 @@ namespace UploadDHL
 
         public decimal Weight_kg
         {
-            get { return SafeDecimal(zCSVdata[68]); }
+            get { return SafeDecimal(zCSVdata[68], "Weight_kg"); }
         }
 
         public string Currency
@@ -386,12 +386,12 @@ namespace UploadDHL
 
         public decimal Total_amount_excl_VAT
         {
-            get { return SafeDecimal(zCSVdata[70]); }
+            get { return SafeDecimal(zCSVdata[70], "Total_amount_excl_VAT"); }
         }
 
         public decimal Total_amount_incl_VAT
         {
-            get { return SafeDecimal(zCSVdata[71]); }
+            get { return SafeDecimal(zCSVdata[71], "Total_amount_incl_VAT"); }
         }
 
         public string Tax_Code
@@ -401,12 +401,12 @@ namespace UploadDHL
 
         public decimal Total_Tax
         {
-            get { return SafeDecimal(zCSVdata[73]); }
+            get { return SafeDecimal(zCSVdata[73], "Total_Tax"); }
         }
 
         public decimal Tax_Adjustment
         {
-            get { return SafeDecimal(zCSVdata[74]); }
+            get { return SafeDecimal(zCSVdata[74], "Tax_Adjustment"); }
         }
 
         public string Invoice_Fee
@@ -416,12 +416,12 @@ namespace UploadDHL
 
         public decimal Weight_Charge
         {
-            get { return SafeDecimal(zCSVdata[76]); }
+            get { return SafeDecimal(zCSVdata[76], "Weight_Charge"); }
         }
 
         public decimal Weight_Tax_VAT
         {
-            get { return SafeDecimal(zCSVdata[77]); }
+            get { return SafeDecimal(zCSVdata[77], "Weight_Tax_VAT"); }
         }
 
         public string Other_Charges_1
@@ -496,7 +496,7 @@ namespace UploadDHL
 
         public decimal XC1_Charge
         {
-            get { return SafeDecimal(zCSVdata[92]); }
+            get { return SafeDecimal(zCSVdata[92], "XC1_Charge"); }
         }
 
         public string XC1_Tax_Code
@@ -506,17 +506,17 @@ namespace UploadDHL
 
         public decimal XC1_Tax
         {
-            get { return SafeDecimal(zCSVdata[94]); }
+            get { return SafeDecimal(zCSVdata[94], "XC1_Tax"); }
         }
 
         public decimal XC1_Discount
         {
-            get { return SafeDecimal(zCSVdata[95]); }
+            get { return SafeDecimal(zCSVdata[95], "XC1_Discount"); }
         }
 
         public decimal XC1_Total
         {
-            get { return SafeDecimal(zCSVdata[96]); }
+            get { return SafeDecimal(zCSVdata[96], "XC1_Total"); }
         }
 
         public string XC2_Code
@@ -531,7 +531,7 @@ namespace UploadDHL
 
         public decimal XC2_Charge
         {
-            get { return SafeDecimal(zCSVdata[99]); }
+            get { return SafeDecimal(zCSVdata[99], "XC2_Charge"); }
         }
 
         public string XC2_Tax_Code
@@ -541,17 +541,17 @@ namespace UploadDHL
 
         public decimal XC2_Tax
         {
-            get { return SafeDecimal(zCSVdata[101]); }
+            get { return SafeDecimal(zCSVdata[101], "XC2_Tax"); }
         }
 
         public decimal XC2_Discount
         {
-            get { return SafeDecimal(zCSVdata[102]); }
+            get { return SafeDecimal(zCSVdata[102], "XC2_Discount"); }
         }
 
         public decimal XC2_Total
         {
-            get { return SafeDecimal(zCSVdata[103]); }
+            get { return SafeDecimal(zCSVdata[103], "XC2_Total"); }
         }
 
         public string XC3_Code
@@ -566,7 +566,7 @@ namespace UploadDHL
 
         public decimal XC3_Charge
         {
-            get { return SafeDecimal(zCSVdata[106]); }
+            get { return SafeDecimal(zCSVdata[106], "XC3_Charge"); }
         }
 
         public string XC3_Tax_Code
@@ -576,17 +576,17 @@ namespace UploadDHL
 
         public decimal XC3_Tax
         {
-            get { return SafeDecimal(zCSVdata[108]); }
+            get { return SafeDecimal(zCSVdata[108], "XC3_Tax"); }
         }
 
         public decimal XC3_Discount
         {
-            get { return SafeDecimal(zCSVdata[109]); }
+            get { return SafeDecimal(zCSVdata[109], "XC3_Discount"); }
         }
 
         public decimal XC3_Total
         {
-            get { return SafeDecimal(zCSVdata[110]); }
+            get { return SafeDecimal(zCSVdata[110], "XC3_Total"); }
         }
 
         public string XC4_Code
@@ -601,7 +601,7 @@ namespace UploadDHL
 
         public decimal XC4_Charge
         {
-            get { return SafeDecimal(zCSVdata[113]); }
+            get { return SafeDecimal(zCSVdata[113], "XC4_Charge"); }
         }
 
         public string XC4_Tax_Code
@@ -611,17 +611,17 @@ namespace UploadDHL
 
         public decimal XC4_Tax
         {
-            get { return SafeDecimal(zCSVdata[115]); }
+            get { return SafeDecimal(zCSVdata[115], "XC4_Tax"); }
         }
 
         public decimal XC4_Discount
         {
-            get { return SafeDecimal(zCSVdata[116]); }
+            get { return SafeDecimal(zCSVdata[116], "XC4_Discount"); }
         }
 
         public decimal XC4_Total
         {
-            get { return SafeDecimal(zCSVdata[117]); }
+            get { return SafeDecimal(zCSVdata[117], "XC4_Total"); }
         }
 
         public string XC5_Code
@@ -636,7 +636,7 @@ namespace UploadDHL
 
         public decimal XC5_Charge
         {
-            get { return SafeDecimal(zCSVdata[120]); }
+            get { return SafeDecimal(zCSVdata[120], "XC5_Charge"); }
         }
 
         public string XC5_Tax_Code
@@ -646,17 +646,17 @@ namespace UploadDHL
 
         public decimal XC5_Tax
         {
-            get { return SafeDecimal(zCSVdata[122]); }
+            get { return SafeDecimal(zCSVdata[122], "XC5_Tax"); }
         }
 
         public decimal XC5_Discount
         {
-            get { return SafeDecimal(zCSVdata[123]); }
+            get { return SafeDecimal(zCSVdata[123], "XC5_Discount"); }
         }
 
         public decimal XC5_Total
         {
-            get { return SafeDecimal(zCSVdata[124]); }
+            get { return SafeDecimal(zCSVdata[124], "XC5_Total"); }
         }
 
         public string XC6_Code
@@ -671,7 +671,7 @@ namespace UploadDHL
 
         public decimal XC6_Charge
         {
-            get { return SafeDecimal(zCSVdata[127]); }
+            get { return SafeDecimal(zCSVdata[127], "XC6_Charge"); }
         }
 
         public string XC6_Tax_Code
@@ -681,17 +681,17 @@ namespace UploadDHL
 
         public decimal XC6_Tax
         {
-            get { return SafeDecimal(zCSVdata[129]); }
+            get { return SafeDecimal(zCSVdata[129], "XC6_Tax"); }
         }
 
         public decimal XC6_Discount
         {
-            get { return SafeDecimal(zCSVdata[130]); }
+            get { return SafeDecimal(zCSVdata[130], "XC6_Discount"); }
         }
 
         public decimal XC6_Total
         {
-            get { return SafeDecimal(zCSVdata[131]); }
+            get { return SafeDecimal(zCSVdata[131], "XC6_Total"); }
         }
 
         public string XC7_Code
@@ -706,7 +706,7 @@ namespace UploadDHL
 
         public decimal XC7_Charge
         {
-            get { return SafeDecimal(zCSVdata[134]); }
+            get { return SafeDecimal(zCSVdata[134], "XC7_Charge"); }
         }
 
         public string XC7_Tax_Code
@@ -716,17 +716,17 @@ namespace UploadDHL
 
         public decimal XC7_Tax
         {
-            get { return SafeDecimal(zCSVdata[136]); }
+            get { return SafeDecimal(zCSVdata[136], "XC7_Tax"); }
         }
 
         public decimal XC7_Discount
         {
-            get { return SafeDecimal(zCSVdata[137]); }
+            get { return SafeDecimal(zCSVdata[137], "XC7_Discount"); }
         }
 
         public decimal XC7_Total
         {
-            get { return SafeDecimal(zCSVdata[138]); }
+            get { return SafeDecimal(zCSVdata[138], "XC7_Total"); }
         }
 
         public string XC8_Code
@@ -741,7 +741,7 @@ namespace UploadDHL
 
         public decimal XC8_Charge
         {
-            get { return SafeDecimal(zCSVdata[141]); }
+            get { return SafeDecimal(zCSVdata[141], "XC8_Charge"); }
         }
 
         public string XC8_Tax_Code
@@ -751,17 +751,17 @@ namespace UploadDHL
 
         public decimal XC8_Tax
         {
-            get { return SafeDecimal(zCSVdata[143]); }
+            get { return SafeDecimal(zCSVdata[143], "XC8_Tax"); }
         }
 
         public decimal XC8_Discount
         {
-            get { return SafeDecimal(zCSVdata[144]); }
+            get { return SafeDecimal(zCSVdata[144],"XC8_Discount"); }
         }
 
         public decimal XC8_Total
         {
-            get { return SafeDecimal(zCSVdata[145]); }
+            get { return SafeDecimal(zCSVdata[145], "XC8_Total"); }
         }
 
         public string XC9_Code
@@ -776,7 +776,7 @@ namespace UploadDHL
 
         public decimal XC9_Charge
         {
-            get { return SafeDecimal(zCSVdata[148]); }
+            get { return SafeDecimal(zCSVdata[148], "XC9_Charge"); }
         }
 
         public string XC9_Tax_Code
@@ -786,17 +786,17 @@ namespace UploadDHL
 
         public decimal XC9_Tax
         {
-            get { return SafeDecimal(zCSVdata[150]); }
+            get { return SafeDecimal(zCSVdata[150], "XC9_Tax"); }
         }
 
         public decimal XC9_Discount
         {
-            get { return SafeDecimal(zCSVdata[151]); }
+            get { return SafeDecimal(zCSVdata[151], "XC9_Discount"); }
         }
 
         public decimal XC9_Total
         {
-            get { return SafeDecimal(zCSVdata[152]); }
+            get { return SafeDecimal(zCSVdata[152], "XC9_Total"); }
         }
 
         public TranslationRecord GTXTranslate { get; set; }
@@ -984,8 +984,9 @@ namespace UploadDHL
 
 
         }
-        public DHLRecord(string line, StringBuilder sb, Translation translation)
+        public DHLRecord(string line, StringBuilder sb, Translation translation, ErrorHandler erh)
         {
+            zErrorhandler = erh;
             zCurrentLine = line;
             zReasonError = sb;
             zCSVdata = line.Replace("\",\"", "|").Split('|');
@@ -1141,7 +1142,7 @@ namespace UploadDHL
 
         }
 
-        private DateTime SafeDate(string data)
+        private DateTime SafeDate(string data, string field)
         {
 
 
@@ -1151,6 +1152,7 @@ namespace UploadDHL
             {
                 return dd;
             }
+            zErrorhandler.Add("DateTimeFormat error", String.Format("Field:{0} - Value:{1} - Line :{2}", field, data, zCurrentLine), "SafeDate");
             zReasonError.AppendLine("DateTimeFormat error line " + zCurrentLine);
             FormatError = true;
             return new DateTime();
@@ -1168,7 +1170,7 @@ namespace UploadDHL
             return data;
         }
 
-        private decimal SafeDecimal(string data)
+        private decimal SafeDecimal(string data, string field )
         {
             decimal dec;
             if (data == "")
@@ -1180,6 +1182,7 @@ namespace UploadDHL
             {
                 return dec;
             }
+            zErrorhandler.Add("DecimalFormat error", String.Format("Field:{0} - Value:{1} - Line :{2}",field,data, zCurrentLine), "SafeDecimal");
 
             zReasonError.AppendLine("DecimalFormat error line " + zCurrentLine);
             FormatError = true;

@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.Office.Interop.Excel;
-using nu.gtx.DbMain.Standard.PM;
+
 using UploadDHL.DataUploadWeb;
 
 namespace UploadDHL
@@ -83,7 +83,9 @@ namespace UploadDHL
             {
                 TranslationError = true;
                 Error = true;
+
             }
+           
             if (!Error)
             {
                 bool add = true;
@@ -113,6 +115,16 @@ namespace UploadDHL
                         //});
 
                     }
+                    else
+                    {
+                        if (record.Bill_Wt == 0)
+                        {
+
+                            ReasonError.AppendLine("Weight zerro on " + record.Tracking_Number);
+                            Error = true;
+
+                        }
+                    }
                 }
 
 
@@ -131,16 +143,14 @@ namespace UploadDHL
         {
             decimal oil = 0;
             FedexRecord privrec = null;
-            var context = new DbMainStandard();
+     
           
             var sb = new StringBuilder();
             var wfList = new List<WeightFileRecord>();
+           var invoiceShipmentLoad = new InvoiceShipmentLoad();
             foreach (var record in FedexRecords.OrderBy(x=>x.Invoice_Number).ToList())
             {
-                if (privrec == null || privrec.Invoice_Number != record.Invoice_Number)
-                {
-                    context.InvoiceShipment.RemoveRange(context.InvoiceShipment.Where(x => x.Invoice == record.Invoice_Number && x.InvoiceDate == record.Invoice_Date));
-                }
+                
                 if (privrec != null && privrec.Invoice_Number != record.Invoice_Number)
                 {
                    
@@ -174,20 +184,25 @@ namespace UploadDHL
                 wfList.Add(record.Convert());
                 privrec = record;
                
-                var listInvShip = new List<InvoiceShipmentHolder>();
+               
 
 
                 if (record.GTXTranslate.KeyType == "FRAGT")
                 {
 
-                    listInvShip.Add(record.StdConvert());
+                    invoiceShipmentLoad.AddShipment(record.StdConvert());
                 }
 
-                
 
-                var _service = new InvoiceUploadSoapClient("InvoiceUploadSoap");
-                var res = _service.ShipmentUpload(listInvShip.ToArray());
+
+               
+               
+
             }
+            invoiceShipmentLoad.Run(); 
+       
+
+           
             if (privrec != null)
             {
                 WriteXmlFile(privrec, oil, sb.ToString());

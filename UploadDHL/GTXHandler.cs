@@ -5,7 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.Office.Interop.Excel;
-using nu.gtx.DbMain.Standard.PM;
+
+using UploadDHL.DataUploadWeb;
 
 namespace UploadDHL
 {
@@ -131,6 +132,16 @@ namespace UploadDHL
             }
             else
             {
+                if (gtxRecord.Weight == 0)
+                {
+
+                    Error = "Weight zerro";
+                   
+                    return null;
+
+                }
+
+
                 Records.Add(gtxRecord);
             }
 
@@ -205,7 +216,7 @@ namespace UploadDHL
 
         private void WriteXMLToFile(DHLXML dhlXml, GTXrecord privrec, string shipments)
         {
-            var context = new DbMainStandard();
+            var invoiceShipmentLoad = new InvoiceShipmentLoad();
             var sumfragt = Records.Where(x => x.INVOICEID == privrec.INVOICEID).Sum(x => x.Amount);
                 var tillæg = Records.Where(x => x.INVOICEID == privrec.INVOICEID).Sum(x => x.Services.Sum(y => y.Price));
                 var oil = Records.Where(x => x.INVOICEID == privrec.INVOICEID).Sum(x => x.OilAmount);
@@ -221,17 +232,29 @@ namespace UploadDHL
                     xmlout.Write(xml);
                 }
 
+         
 
-          context.InvoiceShipment.RemoveRange(context.InvoiceShipment.Where(x => x.Invoice == privrec.INVOICEID && x.InvoiceDate == privrec.INVOICEDATE));
-           
-            foreach (var records in Records.Where(x => x.INVOICEID == privrec.INVOICEID && x.GTXTranslate.KeyType=="FRAGT"))
+
+
+
+            foreach (var record in Records.Where(x => x.INVOICEID == privrec.INVOICEID && x.GTXTranslate.KeyType == "FRAGT"))
             {
-                var da = records.StdConvert();
-                context.InvoiceShipment.Add(da);
-              
+
+
+                invoiceShipmentLoad.AddShipment(record.StdConvert());
+
             }
 
-            context.SaveChanges();
+
+            if (invoiceShipmentLoad.Run() != "OK")
+            {
+                Error = "Failed web service missing shipment";
+            }
+
+
+
+
+           
         }
       
     }
