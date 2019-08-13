@@ -55,10 +55,15 @@ namespace UploadDHL
 
 
         {   var glsRecord = new GLSrecord(da, zTranslation);
-           
-         
 
-         if(glsRecord.GTXTranslate==null)
+            if (glsRecord.Awb == "")
+            {
+                DropLines = DropLines + 1;
+                return null;
+            }
+
+
+            if (glsRecord.GTXTranslate==null)
            {
                 
 
@@ -74,12 +79,7 @@ namespace UploadDHL
             
                return null;
            }
-            if (glsRecord.Awb=="")
-            {
-                DropLines = DropLines + 1;
-                return null;
-            }
-
+          
 
 
 

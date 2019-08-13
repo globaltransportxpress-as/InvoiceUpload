@@ -35,20 +35,9 @@
             this.FileDone = new System.Windows.Forms.Label();
             this.XuPdk = new System.Windows.Forms.Button();
             this.XuMsgGrid = new System.Windows.Forms.DataGridView();
-            this.statusDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.filenameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.commentDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.jumpLinesDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.gridDataBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.XuEditTranslation = new System.Windows.Forms.Button();
             this.XuSaveTranslatioon = new System.Windows.Forms.Button();
             this.XuEditTranslationGrid = new System.Windows.Forms.DataGridView();
-            this.keyDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.keyTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.gTXNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.gTXTranspDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.gTXProductDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.translationRecordBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.XuFedex = new System.Windows.Forms.Button();
             this.XuEditTransFedex = new System.Windows.Forms.Button();
             this.XuEditTransGLS = new System.Windows.Forms.Button();
@@ -65,10 +54,22 @@
             this.label1 = new System.Windows.Forms.Label();
             this.XuFilterKey = new System.Windows.Forms.TextBox();
             this.XuLabelFilter = new System.Windows.Forms.Label();
+            this.keyDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.keyTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gTXNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gTXTranspDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gTXProductDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.translationRecordBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.statusDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.filenameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.commentDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.jumpLinesDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gridDataBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.XuPalleData = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.XuMsgGrid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridDataBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.XuEditTranslationGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.translationRecordBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridDataBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // XuDHL
@@ -138,41 +139,6 @@
             this.XuMsgGrid.TabIndex = 6;
             this.XuMsgGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.XuMsgGrid_CellContentClick);
             // 
-            // statusDataGridViewTextBoxColumn
-            // 
-            this.statusDataGridViewTextBoxColumn.DataPropertyName = "Status";
-            this.statusDataGridViewTextBoxColumn.HeaderText = "Status";
-            this.statusDataGridViewTextBoxColumn.Name = "statusDataGridViewTextBoxColumn";
-            this.statusDataGridViewTextBoxColumn.ReadOnly = true;
-            this.statusDataGridViewTextBoxColumn.Width = 62;
-            // 
-            // filenameDataGridViewTextBoxColumn
-            // 
-            this.filenameDataGridViewTextBoxColumn.DataPropertyName = "Filename";
-            this.filenameDataGridViewTextBoxColumn.HeaderText = "Filename";
-            this.filenameDataGridViewTextBoxColumn.Name = "filenameDataGridViewTextBoxColumn";
-            this.filenameDataGridViewTextBoxColumn.Width = 74;
-            // 
-            // commentDataGridViewTextBoxColumn
-            // 
-            this.commentDataGridViewTextBoxColumn.DataPropertyName = "Comment";
-            this.commentDataGridViewTextBoxColumn.HeaderText = "Comment";
-            this.commentDataGridViewTextBoxColumn.Name = "commentDataGridViewTextBoxColumn";
-            this.commentDataGridViewTextBoxColumn.ReadOnly = true;
-            this.commentDataGridViewTextBoxColumn.Width = 76;
-            // 
-            // jumpLinesDataGridViewTextBoxColumn
-            // 
-            this.jumpLinesDataGridViewTextBoxColumn.DataPropertyName = "JumpLines";
-            this.jumpLinesDataGridViewTextBoxColumn.HeaderText = "JumpLines";
-            this.jumpLinesDataGridViewTextBoxColumn.Name = "jumpLinesDataGridViewTextBoxColumn";
-            this.jumpLinesDataGridViewTextBoxColumn.ReadOnly = true;
-            this.jumpLinesDataGridViewTextBoxColumn.Width = 82;
-            // 
-            // gridDataBindingSource
-            // 
-            this.gridDataBindingSource.DataSource = typeof(UploadDHL.GridData);
-            // 
             // XuEditTranslation
             // 
             this.XuEditTranslation.Location = new System.Drawing.Point(217, 150);
@@ -211,46 +177,6 @@
             this.XuEditTranslationGrid.Name = "XuEditTranslationGrid";
             this.XuEditTranslationGrid.Size = new System.Drawing.Size(658, 772);
             this.XuEditTranslationGrid.TabIndex = 9;
-            // 
-            // keyDataGridViewTextBoxColumn
-            // 
-            this.keyDataGridViewTextBoxColumn.DataPropertyName = "Key";
-            this.keyDataGridViewTextBoxColumn.HeaderText = "Key";
-            this.keyDataGridViewTextBoxColumn.Name = "keyDataGridViewTextBoxColumn";
-            this.keyDataGridViewTextBoxColumn.ReadOnly = true;
-            this.keyDataGridViewTextBoxColumn.Width = 50;
-            // 
-            // keyTypeDataGridViewTextBoxColumn
-            // 
-            this.keyTypeDataGridViewTextBoxColumn.DataPropertyName = "KeyType";
-            this.keyTypeDataGridViewTextBoxColumn.HeaderText = "KeyType";
-            this.keyTypeDataGridViewTextBoxColumn.Name = "keyTypeDataGridViewTextBoxColumn";
-            this.keyTypeDataGridViewTextBoxColumn.Width = 74;
-            // 
-            // gTXNameDataGridViewTextBoxColumn
-            // 
-            this.gTXNameDataGridViewTextBoxColumn.DataPropertyName = "GTXName";
-            this.gTXNameDataGridViewTextBoxColumn.HeaderText = "GTXName";
-            this.gTXNameDataGridViewTextBoxColumn.Name = "gTXNameDataGridViewTextBoxColumn";
-            this.gTXNameDataGridViewTextBoxColumn.Width = 82;
-            // 
-            // gTXTranspDataGridViewTextBoxColumn
-            // 
-            this.gTXTranspDataGridViewTextBoxColumn.DataPropertyName = "GTXTransp";
-            this.gTXTranspDataGridViewTextBoxColumn.HeaderText = "GTXTransp";
-            this.gTXTranspDataGridViewTextBoxColumn.Name = "gTXTranspDataGridViewTextBoxColumn";
-            this.gTXTranspDataGridViewTextBoxColumn.Width = 87;
-            // 
-            // gTXProductDataGridViewTextBoxColumn
-            // 
-            this.gTXProductDataGridViewTextBoxColumn.DataPropertyName = "GTXProduct";
-            this.gTXProductDataGridViewTextBoxColumn.HeaderText = "GTXProduct";
-            this.gTXProductDataGridViewTextBoxColumn.Name = "gTXProductDataGridViewTextBoxColumn";
-            this.gTXProductDataGridViewTextBoxColumn.Width = 91;
-            // 
-            // translationRecordBindingSource
-            // 
-            this.translationRecordBindingSource.DataSource = typeof(UploadDHL.TranslationRecord);
             // 
             // XuFedex
             // 
@@ -406,9 +332,95 @@
             this.XuLabelFilter.TabIndex = 26;
             this.XuLabelFilter.Text = "Filter";
             // 
+            // keyDataGridViewTextBoxColumn
+            // 
+            this.keyDataGridViewTextBoxColumn.DataPropertyName = "Key";
+            this.keyDataGridViewTextBoxColumn.HeaderText = "Key";
+            this.keyDataGridViewTextBoxColumn.Name = "keyDataGridViewTextBoxColumn";
+            this.keyDataGridViewTextBoxColumn.ReadOnly = true;
+            this.keyDataGridViewTextBoxColumn.Width = 50;
+            // 
+            // keyTypeDataGridViewTextBoxColumn
+            // 
+            this.keyTypeDataGridViewTextBoxColumn.DataPropertyName = "KeyType";
+            this.keyTypeDataGridViewTextBoxColumn.HeaderText = "KeyType";
+            this.keyTypeDataGridViewTextBoxColumn.Name = "keyTypeDataGridViewTextBoxColumn";
+            this.keyTypeDataGridViewTextBoxColumn.Width = 74;
+            // 
+            // gTXNameDataGridViewTextBoxColumn
+            // 
+            this.gTXNameDataGridViewTextBoxColumn.DataPropertyName = "GTXName";
+            this.gTXNameDataGridViewTextBoxColumn.HeaderText = "GTXName";
+            this.gTXNameDataGridViewTextBoxColumn.Name = "gTXNameDataGridViewTextBoxColumn";
+            this.gTXNameDataGridViewTextBoxColumn.Width = 82;
+            // 
+            // gTXTranspDataGridViewTextBoxColumn
+            // 
+            this.gTXTranspDataGridViewTextBoxColumn.DataPropertyName = "GTXTransp";
+            this.gTXTranspDataGridViewTextBoxColumn.HeaderText = "GTXTransp";
+            this.gTXTranspDataGridViewTextBoxColumn.Name = "gTXTranspDataGridViewTextBoxColumn";
+            this.gTXTranspDataGridViewTextBoxColumn.Width = 87;
+            // 
+            // gTXProductDataGridViewTextBoxColumn
+            // 
+            this.gTXProductDataGridViewTextBoxColumn.DataPropertyName = "GTXProduct";
+            this.gTXProductDataGridViewTextBoxColumn.HeaderText = "GTXProduct";
+            this.gTXProductDataGridViewTextBoxColumn.Name = "gTXProductDataGridViewTextBoxColumn";
+            this.gTXProductDataGridViewTextBoxColumn.Width = 91;
+            // 
+            // translationRecordBindingSource
+            // 
+            this.translationRecordBindingSource.DataSource = typeof(UploadDHL.TranslationRecord);
+            // 
+            // statusDataGridViewTextBoxColumn
+            // 
+            this.statusDataGridViewTextBoxColumn.DataPropertyName = "Status";
+            this.statusDataGridViewTextBoxColumn.HeaderText = "Status";
+            this.statusDataGridViewTextBoxColumn.Name = "statusDataGridViewTextBoxColumn";
+            this.statusDataGridViewTextBoxColumn.ReadOnly = true;
+            this.statusDataGridViewTextBoxColumn.Width = 62;
+            // 
+            // filenameDataGridViewTextBoxColumn
+            // 
+            this.filenameDataGridViewTextBoxColumn.DataPropertyName = "Filename";
+            this.filenameDataGridViewTextBoxColumn.HeaderText = "Filename";
+            this.filenameDataGridViewTextBoxColumn.Name = "filenameDataGridViewTextBoxColumn";
+            this.filenameDataGridViewTextBoxColumn.Width = 74;
+            // 
+            // commentDataGridViewTextBoxColumn
+            // 
+            this.commentDataGridViewTextBoxColumn.DataPropertyName = "Comment";
+            this.commentDataGridViewTextBoxColumn.HeaderText = "Comment";
+            this.commentDataGridViewTextBoxColumn.Name = "commentDataGridViewTextBoxColumn";
+            this.commentDataGridViewTextBoxColumn.ReadOnly = true;
+            this.commentDataGridViewTextBoxColumn.Width = 76;
+            // 
+            // jumpLinesDataGridViewTextBoxColumn
+            // 
+            this.jumpLinesDataGridViewTextBoxColumn.DataPropertyName = "JumpLines";
+            this.jumpLinesDataGridViewTextBoxColumn.HeaderText = "JumpLines";
+            this.jumpLinesDataGridViewTextBoxColumn.Name = "jumpLinesDataGridViewTextBoxColumn";
+            this.jumpLinesDataGridViewTextBoxColumn.ReadOnly = true;
+            this.jumpLinesDataGridViewTextBoxColumn.Width = 82;
+            // 
+            // gridDataBindingSource
+            // 
+            this.gridDataBindingSource.DataSource = typeof(UploadDHL.GridData);
+            // 
+            // XuPalleData
+            // 
+            this.XuPalleData.Location = new System.Drawing.Point(22, 607);
+            this.XuPalleData.Name = "XuPalleData";
+            this.XuPalleData.Size = new System.Drawing.Size(290, 23);
+            this.XuPalleData.TabIndex = 27;
+            this.XuPalleData.Text = "PalleData";
+            this.XuPalleData.UseVisualStyleBackColor = true;
+            this.XuPalleData.Click += new System.EventHandler(this.XuPalleData_Click);
+            // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(1114, 930);
+            this.Controls.Add(this.XuPalleData);
             this.Controls.Add(this.XuLabelFilter);
             this.Controls.Add(this.XuFilterKey);
             this.Controls.Add(this.label1);
@@ -436,9 +448,9 @@
             this.Controls.Add(this.XuDHL);
             this.Name = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.XuMsgGrid)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridDataBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.XuEditTranslationGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.translationRecordBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridDataBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -484,6 +496,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox XuFilterKey;
         private System.Windows.Forms.Label XuLabelFilter;
+        private System.Windows.Forms.Button XuPalleData;
     }
 }
 

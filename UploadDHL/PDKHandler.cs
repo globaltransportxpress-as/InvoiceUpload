@@ -114,12 +114,6 @@ namespace UploadDHL
 
 
             var pdkRec = new PDKrecord();
-            pdkRec.Factura = zFactura;
-            pdkRec.FacturaDate = zFacturaDate;
-            pdkRec.CustomerNumber = zCustomerNumber;
-            pdkRec.Services = new List<Service>();
-            pdkRec.AWB = CheckDigits(da[Dic["Stregkode"]]);
-            pdkRec.Price = SafeDecimal(da,"Grundpris");
             pdkRec.Material = ReplaceList(da[Dic["Materiale"]].Trim().ToUpper(), " 12345678908()-.,");
             if (!zTranslation.TranDictionary.ContainsKey(pdkRec.Material))
             {
@@ -135,6 +129,14 @@ namespace UploadDHL
                 DropLines = DropLines + 1;
                 return null;
             }
+            pdkRec.Factura = zFactura;
+            pdkRec.FacturaDate = zFacturaDate;
+            pdkRec.CustomerNumber = zCustomerNumber;
+            pdkRec.Services = new List<Service>();
+            pdkRec.AWB = CheckDigits(da[Dic["Stregkode"]], pdkRec.GTXTranslate.GTXProduct);
+            pdkRec.Price = SafeDecimal(da,"Grundpris");
+          
+           
 
 
             pdkRec.Date = DateConvert(da,"Dato");
@@ -234,9 +236,9 @@ namespace UploadDHL
         }
 
 
-        private static string CheckDigits(string awb)
+        private static string CheckDigits(string awb, int prod)
         {
-            if (awb.StartsWith("050050"))
+            if (awb.StartsWith("050050")|| ((prod ==110 || prod == 76) && awb.StartsWith("050")))
             {
 
                 int CheckD = 36;

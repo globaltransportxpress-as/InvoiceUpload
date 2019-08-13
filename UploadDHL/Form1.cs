@@ -30,7 +30,7 @@ namespace UploadDHL
         private Excel.Application excel = new Excel.Application();
         private InvoiceShipmentLoad invoiceShipmentLoad = new InvoiceShipmentLoad();
         private ErrorHandler zErrorHandler = new ErrorHandler();
-        private List<TranslationRecord> zTranlationListFull; 
+        private List<TranslationRecord> zTranlationListFull;
         public Form1()
         {
             InitializeComponent();
@@ -151,11 +151,11 @@ namespace UploadDHL
 
                         }
                         oks++;
-                       
+
                     }
                     catch (Exception ex)
                     {
-                        zErrorHandler.Add("FileRead",ex.Message, "XuDHL_Click");
+                        zErrorHandler.Add("FileRead", ex.Message, "XuDHL_Click");
                         griddata.Status = "Error";
                         griddata.Comment = ex.Message;
                     }
@@ -173,8 +173,8 @@ namespace UploadDHL
 
                 }
                 FileDone.Text = "Done " + oks + " files";
-             
-               
+
+
                 logFile.Flush();
                 logFile.Close();
 
@@ -211,7 +211,7 @@ namespace UploadDHL
                 list.Add(new TranslationRecord(arr));
             }
 
-            zTranlationListFull= list.OrderBy(x => x.KeyType).ThenBy(x => x.GTXName).ToList();
+            zTranlationListFull = list.OrderBy(x => x.KeyType).ThenBy(x => x.GTXName).ToList();
             XuEditTranslationGrid.DataSource = zTranlationListFull;
         }
 
@@ -229,7 +229,7 @@ namespace UploadDHL
             var cok = 0;
 
 
-           
+
 
             var path = Config.PDKRootFileDir + "\\In\\";
             var listfile = Directory.EnumerateFiles(path, "*.xlsx");
@@ -267,96 +267,97 @@ namespace UploadDHL
 
 
 
-              
+
                 if (pdkHandler.ErrorWeight != "")
                 {
-                   
+
                     Message.Text = pdkHandler.ErrorWeight;
                     griddata.Status = "Weight Zerro";
                 }
-                else {
-                if (pdkHandler.Error != "")
-                {
-                    Message.Text = "Translation missing ";
-                    griddata.Status = "TRANSLATION";
-
-
-                }
                 else
                 {
-                    if (pdkHandler.Records.Count == 0)
+                    if (pdkHandler.Error != "")
                     {
-                        if (pdkHandler.Dic == null)
-                        {
-                            Message.Text = "Translation missing ";
-                            griddata.Status = "ERROR";
-                            griddata.Comment = "Header not found";
+                        Message.Text = "Translation missing ";
+                        griddata.Status = "TRANSLATION";
 
-                        }
-                        else
-                        {
-                            griddata.Status = "ERROR";
-                            griddata.Comment = "No data records found";
-
-                            Message.Text = "Data have wrong format";
-
-                        }
 
                     }
                     else
                     {
-                        WeightFileObj.CreateFile(Config.PDKRootFileDir,
-                            pdkHandler.Records.Select(x => x.Convert()).ToList(), pdkHandler.Factura);
-                        pdkHandler.MakeXML2();
-                        var listInvShip = new List<InvoiceShipmentHolder>();
-                        var ccount = 0;
-                        var errorlist = new List<string>();
-                        foreach (var record in pdkHandler.Records.Where(x => x.Price > 0).ToList())
+                        if (pdkHandler.Records.Count == 0)
                         {
-
-                           
-                           invoiceShipmentLoad.AddShipment(record.StdConvert());
-
-                        }
-                       
-                       
-                        if (invoiceShipmentLoad.Run()=="OK")
-                        {
-
-                            MoveFiles(Config.PDKRootFileDir + "\\XML\\", "PDK");
-                            griddata.Status = "OK";
-                            griddata.Comment = "Success";
-                            griddata.JumpLines = pdkHandler.DropLines;
-
-
-
-                            try
+                            if (pdkHandler.Dic == null)
                             {
+                                Message.Text = "Translation missing ";
+                                griddata.Status = "ERROR";
+                                griddata.Comment = "Header not found";
 
-                                File.Move(file, file.Replace("\\In\\", "\\Done\\"));
                             }
-                            catch (Exception ex)
+                            else
                             {
+                                griddata.Status = "ERROR";
+                                griddata.Comment = "No data records found";
 
-                                File.Move(file, file.Replace("\\In\\", "\\Done\\" + DateTime.Now.ToString("ddHHmm")));
+                                Message.Text = "Data have wrong format";
+
                             }
-
 
                         }
                         else
                         {
-                            griddata.Status = "Error";
-                            griddata.Comment = "Upload data to web error";
-                            }
-                       
+                            WeightFileObj.CreateFile(Config.PDKRootFileDir,
+                                pdkHandler.Records.Select(x => x.Convert()).ToList(), pdkHandler.Factura);
+                            pdkHandler.MakeXML2();
+                            var listInvShip = new List<InvoiceShipmentHolder>();
+                            var ccount = 0;
+                            var errorlist = new List<string>();
+                            foreach (var record in pdkHandler.Records.Where(x => x.Price > 0).ToList())
+                            {
 
-                      
+
+                                invoiceShipmentLoad.AddShipment(record.StdConvert());
+
+                            }
+
+
+                            if (invoiceShipmentLoad.Run() == "OK")
+                            {
+
+                                MoveFiles(Config.PDKRootFileDir + "\\XML\\", "PDK");
+                                griddata.Status = "OK";
+                                griddata.Comment = "Success";
+                                griddata.JumpLines = pdkHandler.DropLines;
+
+
+
+                                try
+                                {
+
+                                    File.Move(file, file.Replace("\\In\\", "\\Done\\"));
+                                }
+                                catch (Exception ex)
+                                {
+
+                                    File.Move(file, file.Replace("\\In\\", "\\Done\\" + DateTime.Now.ToString("ddHHmm")));
+                                }
+
+
+                            }
+                            else
+                            {
+                                griddata.Status = "Error";
+                                griddata.Comment = "Upload data to web error";
+                            }
+
+
+
+
+
+                        }
 
 
                     }
-
-
-                }
                 }
                 msglist.Add(griddata);
 
@@ -364,7 +365,7 @@ namespace UploadDHL
                 cok++;
 
             }
-          
+
             FileDone.Text = "Done ..." + cok + " files";
 
             XuMsgGrid.DataSource = msglist;
@@ -401,7 +402,7 @@ namespace UploadDHL
         {
             var translation = new Translation(actualTransFile);
 
-            translation.SaveAll((List<TranslationRecord>) XuEditTranslationGrid.DataSource);
+            translation.SaveAll((List<TranslationRecord>)XuEditTranslationGrid.DataSource);
 
             EditMode(false);
 
@@ -409,12 +410,12 @@ namespace UploadDHL
 
         private void XuMsgGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            var senderGrid = (DataGridView) sender;
+            var senderGrid = (DataGridView)sender;
 
             if (
                 e.RowIndex >= 0)
             {
-                var gd = (List<GridData>) XuMsgGrid.DataSource;
+                var gd = (List<GridData>)XuMsgGrid.DataSource;
                 XuJumpLines.Text = string.Join(Environment.NewLine, gd[e.RowIndex].JumpLineData);
                 XuJumpLines.Visible = true;
                 XuClose.Visible = true;
@@ -479,53 +480,53 @@ namespace UploadDHL
         }
 
 
-        private void MoveFiles(string from , string carrier)
+        private void MoveFiles(string from, string carrier)
         {
 
-            
-
-                
-                string destPath = Config.EndDir(carrier);
 
 
-           
+
+            string destPath = Config.EndDir(carrier);
 
 
-                if (System.IO.Directory.Exists(destPath))
+
+
+
+            if (System.IO.Directory.Exists(destPath))
+            {
+                string[] files = System.IO.Directory.GetFiles(from);
+
+
+                foreach (string s in files)
                 {
-                    string[] files = System.IO.Directory.GetFiles(from );
 
-
-                    foreach (string s in files)
+                    try
                     {
-
-                        try
-                        {
-                            // Use static Path methods to extract only the file name from the path.
-                            var fileName = System.IO.Path.GetFileName(s);
-                            var destFile = System.IO.Path.Combine(destPath, fileName);
-                            System.IO.File.Move(s, destFile);
-
-
-                        }
-                        catch (Exception)
-                        {
-
-
-
-                        }
+                        // Use static Path methods to extract only the file name from the path.
+                        var fileName = System.IO.Path.GetFileName(s);
+                        var destFile = System.IO.Path.Combine(destPath, fileName);
+                        System.IO.File.Move(s, destFile);
 
 
                     }
-                }
-                else
-                {
+                    catch (Exception)
+                    {
 
-                    FileDone.Text = "Destination path does not exist!";
-               
+
+
+                    }
+
+
                 }
-            
-            
+            }
+            else
+            {
+
+                FileDone.Text = "Destination path does not exist!";
+
+            }
+
+
 
 
         }
@@ -565,6 +566,7 @@ namespace UploadDHL
                         {
 
                             string header = fileStream.ReadLine();
+                           
 
                             fedexHandler.Start(header);
 
@@ -585,7 +587,7 @@ namespace UploadDHL
                             {
                                 fedexHandler.MakeXmlAndWeightfile(griddata.Filename.Replace(".csv", ""));
                             }
-                            
+
 
 
                         }
@@ -598,16 +600,18 @@ namespace UploadDHL
                             {
 
                                 griddata.Status = "TRANSLATION";
+                                griddata.Comment = string.Join("|", fedexHandler.MissingTranslation().ToArray());
 
                             }
                             if (fedexHandler.FormatError)
                             {
 
                                 griddata.Status = "FORMAT";
+                                griddata.Comment = fedexHandler.ReasonError.ToString();
 
                             }
 
-                            griddata.Comment = fedexHandler.ReasonError.ToString();
+                           
                         }
                         else
                         {
@@ -642,7 +646,7 @@ namespace UploadDHL
 
                 }
 
-               
+
                 FileDone.Text = "Done " + oks + " files";
                 logFile.Flush();
                 logFile.Close();
@@ -738,11 +742,11 @@ namespace UploadDHL
                         WeightFileObj.CreateFile(Config.GLSRootFileDir,
                             glsHandler.Records.Select(x => x.Convert()).ToList(), glsHandler.Factura);
                         glsHandler.MakeXML2();
-                        
 
-                      
-                      
-                       
+
+
+
+
                         foreach (var record in glsHandler.Records
                             .Where(x => x.Beløb > 0 && x.GTXTranslate.KeyType == "FRAGT").ToList())
                         {
@@ -796,7 +800,7 @@ namespace UploadDHL
             FileDone.Text = "Done ..." + cok + " files";
 
 
-           
+
 
 
             XuMsgGrid.DataSource = msglist;
@@ -893,16 +897,16 @@ namespace UploadDHL
                 if (string.IsNullOrWhiteSpace(griddata.Status))
                 {
 
-                   var invoces = gtxHandler.Records.Select(x=>x.INVOICEID).Distinct().ToList();
+                    var invoces = gtxHandler.Records.Select(x => x.INVOICEID).Distinct().ToList();
                     foreach (var inv in invoces)
                     {
 
                         WeightFileObj.CreateFile(Config.GTXRootFileDir,
-                            gtxHandler.Records.Where(x=>x.INVOICEID==inv).Select(x => x.Convert()).ToList(), inv);
+                            gtxHandler.Records.Where(x => x.INVOICEID == inv).Select(x => x.Convert()).ToList(), inv);
 
 
                     }
-                   
+
                     gtxHandler.MakeXML2();
 
 
@@ -935,7 +939,7 @@ namespace UploadDHL
 
 
 
-           
+
 
             FileDone.Text = "Done ..." + cok + " files";
 
@@ -954,9 +958,9 @@ namespace UploadDHL
 
         private void button2_Click(object sender, EventArgs e)
         {
-            
 
-            var path = Config.ConvertFolder+"\\";
+
+            var path = Config.ConvertFolder + "\\";
             var listfile = Directory.EnumerateFiles(path, "*.xlsx");
             foreach (string file in listfile.Where(x => !x.Contains("~")))
             {
@@ -964,7 +968,7 @@ namespace UploadDHL
                 var nfile = ImportExceltoDatatable(file, "Ark1");
                 nfile.DefaultView.Sort = "INVOICEID";
                 string priv = "";
-                var datatb  = nfile.Clone();
+                var datatb = nfile.Clone();
                 var tblst = new List<DataTable>();
                 var outfile = "";
                 var rowcount = 0;
@@ -972,9 +976,9 @@ namespace UploadDHL
                 {
                     if (priv != "" && priv != row["INVOICEID"].ToString())
                     {
-                         tblst = new List<DataTable>();
+                        tblst = new List<DataTable>();
                         tblst.Add(datatb);
-                         outfile = Config.ConvertFolder + "Done\\" + priv + "_" + DateTime.Now.ToString("yyyy-MM-dd");
+                        outfile = Config.ConvertFolder + "Done\\" + priv + "_" + DateTime.Now.ToString("yyyy-MM-dd");
                         if (rowcount > 146)
                         {
                             Export(outfile,
@@ -997,9 +1001,9 @@ namespace UploadDHL
 
 
                 }
-                 tblst = new List<DataTable>();
+                tblst = new List<DataTable>();
                 tblst.Add(datatb);
-                 outfile = Config.ConvertFolder + "Done\\" + priv + "_" + DateTime.Now.ToString("yyyy-MM-dd");
+                outfile = Config.ConvertFolder + "Done\\" + priv + "_" + DateTime.Now.ToString("yyyy-MM-dd");
                 if (rowcount > 146)
                 {
                     Export(outfile,
@@ -1012,7 +1016,7 @@ namespace UploadDHL
                     ExportToExcel(datatb, outfile + ".xlsx", true);
                 }
             }
-            FileDone.Text = "Done ..." ;
+            FileDone.Text = "Done ...";
 
 
 
@@ -1037,56 +1041,56 @@ namespace UploadDHL
             Workbook workbook = workbooks.Add(Type.Missing);
 
             // Count of data tables provided.
-            
-           
-                Sheets worksheets = workbook.Sheets;
-                Worksheet worksheet = (Worksheet) worksheets[ 1];
-                worksheet.Name = excelWorksheetName;
 
-                int rows = dt.Rows.Count;
-                int columns = dt.Columns.Count;
-                // Add the +1 to allow room for column headers.
-                var data = new object[rows + 1, columns];
 
-                // Insert column headers.
+            Sheets worksheets = workbook.Sheets;
+            Worksheet worksheet = (Worksheet)worksheets[1];
+            worksheet.Name = excelWorksheetName;
+
+            int rows = dt.Rows.Count;
+            int columns = dt.Columns.Count;
+            // Add the +1 to allow room for column headers.
+            var data = new object[rows + 1, columns];
+
+            // Insert column headers.
+            for (var column = 0; column < columns; column++)
+            {
+                data[0, column] = dt.Columns[column].ColumnName;
+            }
+
+            // Insert the provided records.
+            for (var row = 0; row < rows; row++)
+            {
                 for (var column = 0; column < columns; column++)
                 {
-                    data[0, column] = dt.Columns[column].ColumnName;
+                    data[row + 1, column] = dt.Rows[row][column];
                 }
+            }
 
-                // Insert the provided records.
-                for (var row = 0; row < rows; row++)
-                {
-                    for (var column = 0; column < columns; column++)
-                    {
-                        data[row + 1, column] = dt.Rows[row][column];
-                    }
-                }
+            // Write this data to the excel worksheet.
+            Range beginWrite = (Range)worksheet.Cells[1, 1];
+            Range endWrite = (Range)worksheet.Cells[rows + 1, columns];
+            Range sheetData = worksheet.Range[beginWrite, endWrite];
+            sheetData.Value2 = data;
 
-                // Write this data to the excel worksheet.
-                Range beginWrite = (Range) worksheet.Cells[1, 1];
-                Range endWrite = (Range) worksheet.Cells[rows + 1, columns];
-                Range sheetData = worksheet.Range[beginWrite, endWrite];
-                sheetData.Value2 = data;
+            // Additional row, column and table formatting.
+            worksheet.Select();
+            sheetData.Worksheet.ListObjects.Add(XlListObjectSourceType.xlSrcRange,
+                sheetData,
+                System.Type.Missing,
+                XlYesNoGuess.xlYes,
+                System.Type.Missing).Name = excelWorksheetName;
+            sheetData.Select();
+            //   sheetData.Worksheet.ListObjects[excelWorksheetName[i]].TableStyle = tableStyle;
+            excel.Application.Range["2:2"].Select();
+            excel.ActiveWindow.FreezePanes = true;
+            excel.ActiveWindow.DisplayGridlines = false;
+            excel.Application.Cells.EntireColumn.AutoFit();
+            excel.Application.Cells.EntireRow.AutoFit();
 
-                // Additional row, column and table formatting.
-                worksheet.Select();
-                sheetData.Worksheet.ListObjects.Add(XlListObjectSourceType.xlSrcRange,
-                    sheetData,
-                    System.Type.Missing,
-                    XlYesNoGuess.xlYes,
-                    System.Type.Missing).Name = excelWorksheetName;
-                sheetData.Select();
-                //   sheetData.Worksheet.ListObjects[excelWorksheetName[i]].TableStyle = tableStyle;
-                excel.Application.Range["2:2"].Select();
-                excel.ActiveWindow.FreezePanes = true;
-                excel.ActiveWindow.DisplayGridlines = false;
-                excel.Application.Cells.EntireColumn.AutoFit();
-                excel.Application.Cells.EntireRow.AutoFit();
+            // Select the first cell in the worksheet.
+            excel.Application.Range["$A$2"].Select();
 
-                // Select the first cell in the worksheet.
-                excel.Application.Range["$A$2"].Select();
-           
 
             // Turn off alerts to prevent asking for 'overwrite existing' and 'save changes' messages.
             excel.DisplayAlerts = false;
@@ -1170,13 +1174,14 @@ namespace UploadDHL
                     {
                         var ntp = line.Split(';')[2];
                         if (tp != ntp || count > 500)
-                       
+
                         {
                             if (count < 100)
                             {
                                 tp = ntp;
                             }
-                            else {
+                            else
+                            {
                                 string pno = fno.ToString();
                                 if (fno == 0)
                                 {
@@ -1197,8 +1202,8 @@ namespace UploadDHL
                                 tp = ntp;
                                 count = 0;
                             }
-                            
-                            
+
+
 
 
 
@@ -1206,11 +1211,11 @@ namespace UploadDHL
 
                         datalist.Add(line);
                         count++;
-                        
+
 
                         line = fileStream.ReadLine();
                     }
-                  
+
 
 
                 }
@@ -1219,35 +1224,35 @@ namespace UploadDHL
         }
 
 
-      public static void ExportToExcel( DataTable dataTable, String filePath, bool overwiteFile = true)
-            {
+        public static void ExportToExcel(DataTable dataTable, String filePath, bool overwiteFile = true)
+        {
             // If using Professional version, put your serial key below.
-                SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
+            SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
 
-                var workbook = new ExcelFile();
-                var worksheet = workbook.Worksheets.Add("Fakturadata");
+            var workbook = new ExcelFile();
+            var worksheet = workbook.Worksheets.Add("Fakturadata");
 
-             
 
-                // Insert DataTable to an Excel worksheet.
-                worksheet.InsertDataTable(dataTable,
-                    new InsertDataTableOptions()
-                    {
-                        ColumnHeaders = true,
-                        StartRow = 0
-                    });
 
-                workbook.Save(filePath);
+            // Insert DataTable to an Excel worksheet.
+            worksheet.InsertDataTable(dataTable,
+                new InsertDataTableOptions()
+                {
+                    ColumnHeaders = true,
+                    StartRow = 0
+                });
+
+            workbook.Save(filePath);
 
         }
 
 
-        
+
 
 
         private void XuRasFileMaker_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -1265,9 +1270,155 @@ namespace UploadDHL
                 var tr = zTranlationListFull[i];
                 XuEditTranslationGrid.Rows[i].Visible = string.IsNullOrEmpty(XuFilterKey.Text) || tr.Key.ToLower().Contains(XuFilterKey.Text.ToLower()) || tr.GTXName.ToLower().Contains(XuFilterKey.Text.ToLower());
             }
-                    
-                   
-            
+
+
+
+        }
+
+        private void XuPalleData_Click(object sender, EventArgs e)
+        {
+            EditMode(false);
+            FileDone.Text = "Start...........>>>>";
+            zErrorHandler = new ErrorHandler();
+            var msglist = new List<GridData>();
+            var cok = 0;
+
+            var con = new DFEEntities();
+
+
+            var path = Config.PDKRootFileDir + "\\Pallet\\Report";
+            var listfile = Directory.EnumerateFiles(path, "*.xls");
+            foreach (string file in listfile.Where(x => !x.Contains("~")))
+            {
+                zErrorHandler.File = file;
+                var nfile = ImportExceltoDatatable(file, "Results");
+                var palletHandler = new PalletHandler();
+                palletHandler.Error = "";
+                palletHandler.ErrorHandler = zErrorHandler;
+                var griddata = new GridData();
+                griddata.Filename = file.Replace(path, "");
+                griddata.JumpLineData = new List<string>();
+                FileDone.Text = "Execution..." + griddata.Filename;
+                this.Refresh();
+                System.Windows.Forms.Application.DoEvents();
+                string[] columnNames = nfile.Columns.Cast<DataColumn>()
+                    .Select(x => x.ColumnName)
+                    .ToArray();
+               
+
+
+                foreach (DataRow row in nfile.Rows)
+                {
+                    string[] fields = row.ItemArray.Select(field => field.ToString()).ToArray();
+                    var record = palletHandler.SetData(fields);
+
+                    var ex = con.PDKPalletReport.Where(x => x.Fakturanummer == record.Fakturanummer && x.Forsendelsenummer == record.Forsendelsenummer);
+                    con.PDKPalletReport.RemoveRange(ex);
+                    con.PDKPalletReport.Add(record.Convert());
+                }
+                con.SaveChanges();
+                try
+                {
+
+                    File.Move(file, file.Replace("\\Pallet\\Report", "\\Done\\"));
+                }
+                catch (Exception ex)
+                {
+
+                    File.Move(file, file.Replace("\\Pallet\\Report", "\\Done\\" + DateTime.Now.ToString("ddHHmm")));
+                }
+            }
+            FileDone.Text = "Done Reports" ;
+            this.Refresh();
+            path = Config.PDKRootFileDir + "\\Pallet\\Factura";
+            listfile = Directory.EnumerateFiles(path, "*.xls");
+            foreach (string file in listfile.Where(x => !x.Contains("~")))
+            {
+                zErrorHandler.File = file;
+                var nfile = ImportExceltoDatatable(file, "faktura");
+
+                FileDone.Text = "Execution..." + file.Replace(path, "");
+                this.Refresh();
+                System.Windows.Forms.Application.DoEvents();
+
+               
+
+                string factura = "";
+                bool okhead = false;
+                foreach (DataRow row in nfile.Rows)
+                {
+                    string[] fields = row.ItemArray.Select(field => field.ToString()).ToArray();
+                    var record = new PalletRecord(fields, factura, okhead);
+                    factura = record.Factura;
+                    if (okhead && !string.IsNullOrWhiteSpace(record.Afsender))
+                    {
+                        var ex = con.PDKPalletrecord.Where(x => x.Factura == record.Factura && x.Sendingsnummer == record.Sendingsnummer);
+                        con.PDKPalletrecord.RemoveRange(ex);
+                        con.PDKPalletrecord.Add(record.Convert());
+
+                    }
+                    okhead = record.HeaderOK;
+                }
+                con.SaveChanges();
+                try
+                {
+
+                    File.Move(file, file.Replace("\\Pallet\\Factura", "\\Done\\"));
+                }
+                catch (Exception ex)
+                {
+
+                    File.Move(file, file.Replace("\\Pallet\\Factura", "\\Done\\" + DateTime.Now.ToString("ddHHmm")));
+                }
+
+
+
+            }
+            FileDone.Text = "Done Factura";
+            this.Refresh();
+            path = Config.PDKRootFileDir + "\\Pallet\\Colli";
+            listfile = Directory.EnumerateFiles(path, "*.xls");
+            foreach (string file in listfile.Where(x => !x.Contains("~")))
+            {
+                zErrorHandler.File = file;
+                var nfile = ImportExceltoDatatable(file, "faktura");
+
+                FileDone.Text = "Execution..." + file.Replace(path, "");
+                this.Refresh();
+                System.Windows.Forms.Application.DoEvents();
+
+               
+
+                string factura = "";
+                bool okhead = false;
+                foreach (DataRow row in nfile.Rows)
+                {
+                    string[] fields = row.ItemArray.Select(field => field.ToString()).ToArray();
+                    var record = new PalletColliRecord(fields, factura, okhead);
+                    factura = record.Factura;
+                    if (okhead && !string.IsNullOrWhiteSpace(record.Afsender))
+                    {
+                        var ex = con.PDKPalletCollirecord.Where(x => x.Factura == record.Factura && x.Sendingsnummer == record.Sendingsnummer);
+                        con.PDKPalletCollirecord.RemoveRange(ex);
+                        con.PDKPalletCollirecord.Add(record.Convert());
+
+                    }
+                    okhead = record.HeaderOK;
+                }
+                con.SaveChanges();
+                try
+                {
+
+                    File.Move(file, file.Replace("\\Pallet\\Colli", "\\Done\\"));
+                }
+                catch (Exception ex)
+                {
+
+                    File.Move(file, file.Replace("\\Pallet\\Colli", "\\Done\\" + DateTime.Now.ToString("ddHHmm")));
+                }
+            }
+            FileDone.Text = "Finish";
+            this.Refresh();
         }
     }
 }

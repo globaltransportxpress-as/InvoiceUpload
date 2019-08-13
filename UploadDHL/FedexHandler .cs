@@ -29,11 +29,14 @@ namespace UploadDHL
         private decimal zTotalWeight;
         private decimal zTotalTax;
         private decimal zTotalFee;
+        
        
-
+       
         public bool Start(string header)
         {
             FormatError = false;
+           
+            zTranslation.AddList = new List<string>();
             if (CheckHeader(header))
             {
                 TranslationError = false;
@@ -48,6 +51,11 @@ namespace UploadDHL
             FedexRecords = new List<FedexRecord>();
 
             return Error;
+        }
+
+        public List<string> MissingTranslation()
+        {
+            return zTranslation.AddList;
         }
 
         private bool CheckHeader(String data)
@@ -83,6 +91,7 @@ namespace UploadDHL
             {
                 TranslationError = true;
                 Error = true;
+               
 
             }
            

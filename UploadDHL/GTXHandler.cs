@@ -76,8 +76,14 @@ namespace UploadDHL
                 Error = "Date problem";
                 return null;
             }
+            if (gtxRecord.PURCHORDERFORMNUM == "")
+            {
+                DropLines = DropLines + 1;
+                return null;
+            }
 
-         if(gtxRecord.GTXTranslate==null)
+
+            if (gtxRecord.GTXTranslate==null)
            {
                 
 
@@ -93,11 +99,7 @@ namespace UploadDHL
             
                return null;
            }
-            if (gtxRecord.PURCHORDERFORMNUM=="")
-            {
-                DropLines = DropLines + 1;
-                return null;
-            }
+           
 
 
 

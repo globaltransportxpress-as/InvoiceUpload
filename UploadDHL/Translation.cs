@@ -98,13 +98,9 @@ namespace UploadDHL
         {
             if (!AddList.Contains(key + ";" + keytype))
             {
-                var f = new System.IO.FileInfo(zDBFile);
-                var fs = f.Open(FileMode.Append,FileAccess.Write);
-                using (StreamWriter outputFile = new StreamWriter(fs))
-                {
-                    outputFile.WriteLine(key + ";" + keytype);
-                    AddList.Add(key + ";" + keytype);
-                }
+               
+                AddList.Add(key + ";" + keytype);
+               
             }
             // Append text to an existing file named "WriteLines.txt".
             

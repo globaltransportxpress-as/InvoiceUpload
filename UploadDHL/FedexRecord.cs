@@ -21,7 +21,7 @@ namespace UploadDHL
         public bool TranslationError { get; set; }
         public bool FormatError { get; set; }
         public StringBuilder zReasonError;
-
+        
 
 
 
@@ -34,7 +34,10 @@ namespace UploadDHL
         private string[] zCSVdata;
 
         public TranslationRecord GTXTranslate { get; set; }
-
+        public List<string> GetMissing()
+        {
+            return zTranslation.AddList;
+        }
 
         public List<Service> Services = new List<Service>();
 

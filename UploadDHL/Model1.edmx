@@ -1,0 +1,417 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DFEModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="PDKPalletCollirecord">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Factura" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Sendingsnummer" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Kollinummer" Type="nvarchar" MaxLength="55" />
+          <Property Name="Indleveringsdato" Type="smalldatetime" Nullable="false" />
+          <Property Name="Fragtbetaler" Type="nvarchar" MaxLength="55" />
+          <Property Name="Afsender" Type="nvarchar" MaxLength="55" />
+          <Property Name="Afsender_landekode" Type="nvarchar" MaxLength="55" />
+          <Property Name="Afsender_postnummer" Type="nvarchar" MaxLength="55" />
+          <Property Name="Afsender_stednavn" Type="nvarchar" MaxLength="55" />
+          <Property Name="Modtager" Type="nvarchar" MaxLength="55" />
+          <Property Name="Modtager_Landekode" Type="nvarchar" MaxLength="55" />
+          <Property Name="Modtager_Postnummer" Type="nvarchar" MaxLength="55" />
+          <Property Name="Modtager_Stednavn" Type="nvarchar" MaxLength="55" />
+          <Property Name="FRBvægt" Type="nvarchar" MaxLength="55" />
+          <Property Name="Afsenders_ref" Type="nvarchar" MaxLength="55" />
+          <Property Name="Partiref" Type="nvarchar" MaxLength="55" />
+          <Property Name="Modtagers_ref" Type="nvarchar" MaxLength="55" />
+          <Property Name="Produkt" Type="nvarchar" MaxLength="55" />
+          <Property Name="Vægt" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Volum_dm3" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Palletype" Type="nvarchar" MaxLength="55" />
+          <Property Name="Længde" Type="int" />
+          <Property Name="Bredde" Type="int" />
+          <Property Name="Højde" Type="int" />
+          <Property Name="Total_aft_Pris" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Valuta" Type="nvarchar" MaxLength="55" />
+        </EntityType>
+        <EntityType Name="PDKPalletrecord">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Factura" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Sendingsnummer" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Indleveringsdato" Type="smalldatetime" Nullable="false" />
+          <Property Name="Fragtbetaler" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Afsender" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Afsenderlandekode" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Afsenderpostnummer" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Afsenderstednavn" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Modtager" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="ModtagerLandekode" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="ModtagerPostnummer" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="ModtagerStednavn" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Antalkolli" Type="int" Nullable="false" />
+          <Property Name="FRBvægt" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Afsendersref" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Partiref" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Modtagersref" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Produkt" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Vægt" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Volum" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Ladmeter" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Fragtgrundlag" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Tillægsydelse" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Valuta" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Kurs" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Normalpris" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Tillægaftalepris" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Energitillægaftalepris" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Miljøtillægavtpris" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Kapacitetstillæg" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Hentetillægaftalepris" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Aftalepris" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="TotalaftPris" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Afsenderidpåmodtager" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Sendingsindhold" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Godstype" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Fritekst" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Postnummer" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PDKPalletReport">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Indlev_dato" Type="smalldatetime" Nullable="false" />
+          <Property Name="Afsenders_kundenummer" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Afsenders_land" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Afsender" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Afsenders_postnummer" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Forsendelsenummer" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Afsenders_reference" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Sidste_status" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Antal_kolli_sidste_status" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Status_tid" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Afsenders_id_på_modtager" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Retur_forsendelsesnummer" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Modtagers_kundenummer" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Modtager" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Modtagers_landekode" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Modtagers_postnummer" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Modtagers_Sted" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="PostNord_afdelingsnavn" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Servicepartner_navn" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Servicepartner_postnummer" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Servicepartner_stednavn" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Fragtbetaler" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Produkt" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Varestrøm" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Transport_enhed" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Ant_kolli_totalt" Type="int" Nullable="false" />
+          <Property Name="Fragtvægt" Type="int" Nullable="false" />
+          <Property Name="Vægt_kg" Type="int" Nullable="false" />
+          <Property Name="Volumen" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="FragtbetalerCode" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Beregnet_levert" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Fakturanummer" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Energitillæg" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Fragt" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Miljøtillæg" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Total_til_betaling" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Gebyr_modtager_betaler" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Konverteringsgebyr" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Genudbringning" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="DFEModelStoreContainer">
+          <EntitySet Name="PDKPalletCollirecord" EntityType="Self.PDKPalletCollirecord" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PDKPalletrecord" EntityType="Self.PDKPalletrecord" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PDKPalletReport" EntityType="Self.PDKPalletReport" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DFEModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="PDKPalletReport">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Indlev_dato" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Afsenders_kundenummer" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Afsenders_land" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Afsender" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Afsenders_postnummer" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Forsendelsenummer" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Afsenders_reference" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Sidste_status" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Antal_kolli_sidste_status" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Status_tid" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Afsenders_id_på_modtager" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Retur_forsendelsesnummer" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Modtagers_kundenummer" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Modtager" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Modtagers_landekode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Modtagers_postnummer" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Modtagers_Sted" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PostNord_afdelingsnavn" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Servicepartner_navn" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Servicepartner_postnummer" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Servicepartner_stednavn" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Fragtbetaler" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Produkt" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Varestrøm" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Transport_enhed" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Ant_kolli_totalt" Type="Int32" Nullable="false" />
+          <Property Name="Fragtvægt" Type="Int32" Nullable="false" />
+          <Property Name="Vægt_kg" Type="Int32" Nullable="false" />
+          <Property Name="Volumen" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FragtbetalerCode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Beregnet_levert" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Fakturanummer" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Energitillæg" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Fragt" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Miljøtillæg" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Total_til_betaling" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Gebyr_modtager_betaler" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Konverteringsgebyr" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Genudbringning" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="DFEEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="PDKPalletReport" EntityType="Self.PDKPalletReport" />
+          <EntitySet Name="PDKPalletrecord" EntityType="DFEModel.PDKPalletrecord" />
+          <EntitySet Name="PDKPalletCollirecord" EntityType="DFEModel.PDKPalletCollirecord" />
+        </EntityContainer>
+        <EntityType Name="PDKPalletrecord">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Factura" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Sendingsnummer" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Indleveringsdato" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Fragtbetaler" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Afsender" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Afsenderlandekode" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Afsenderpostnummer" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Afsenderstednavn" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Modtager" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ModtagerLandekode" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ModtagerPostnummer" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ModtagerStednavn" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Antalkolli" Type="Int32" Nullable="false" />
+          <Property Name="FRBvægt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Afsendersref" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Partiref" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Modtagersref" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Produkt" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Vægt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Volum" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Ladmeter" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Fragtgrundlag" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Tillægsydelse" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Valuta" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Kurs" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Normalpris" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Tillægaftalepris" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Energitillægaftalepris" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Miljøtillægavtpris" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Kapacitetstillæg" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Hentetillægaftalepris" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Aftalepris" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalaftPris" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Afsenderidpåmodtager" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Sendingsindhold" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Godstype" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Fritekst" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Postnummer" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="PDKPalletCollirecord">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Factura" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Sendingsnummer" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Kollinummer" Type="String" MaxLength="55" FixedLength="false" Unicode="true" />
+          <Property Name="Indleveringsdato" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Fragtbetaler" Type="String" MaxLength="55" FixedLength="false" Unicode="true" />
+          <Property Name="Afsender" Type="String" MaxLength="55" FixedLength="false" Unicode="true" />
+          <Property Name="Afsender_landekode" Type="String" MaxLength="55" FixedLength="false" Unicode="true" />
+          <Property Name="Afsender_postnummer" Type="String" MaxLength="55" FixedLength="false" Unicode="true" />
+          <Property Name="Afsender_stednavn" Type="String" MaxLength="55" FixedLength="false" Unicode="true" />
+          <Property Name="Modtager" Type="String" MaxLength="55" FixedLength="false" Unicode="true" />
+          <Property Name="Modtager_Landekode" Type="String" MaxLength="55" FixedLength="false" Unicode="true" />
+          <Property Name="Modtager_Postnummer" Type="String" MaxLength="55" FixedLength="false" Unicode="true" />
+          <Property Name="Modtager_Stednavn" Type="String" MaxLength="55" FixedLength="false" Unicode="true" />
+          <Property Name="FRBvægt" Type="String" MaxLength="55" FixedLength="false" Unicode="true" />
+          <Property Name="Afsenders_ref" Type="String" MaxLength="55" FixedLength="false" Unicode="true" />
+          <Property Name="Partiref" Type="String" MaxLength="55" FixedLength="false" Unicode="true" />
+          <Property Name="Modtagers_ref" Type="String" MaxLength="55" FixedLength="false" Unicode="true" />
+          <Property Name="Produkt" Type="String" MaxLength="55" FixedLength="false" Unicode="true" />
+          <Property Name="Vægt" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Volum_dm3" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Palletype" Type="String" MaxLength="55" FixedLength="false" Unicode="true" />
+          <Property Name="Længde" Type="Int32" />
+          <Property Name="Bredde" Type="Int32" />
+          <Property Name="Højde" Type="Int32" />
+          <Property Name="Total_aft_Pris" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Valuta" Type="String" MaxLength="55" FixedLength="false" Unicode="true" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DFEModelStoreContainer" CdmEntityContainer="DFEEntities">
+          <EntitySetMapping Name="PDKPalletReport">
+            <EntityTypeMapping TypeName="DFEModel.PDKPalletReport">
+              <MappingFragment StoreEntitySet="PDKPalletReport">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Indlev_dato" ColumnName="Indlev_dato" />
+                <ScalarProperty Name="Afsenders_kundenummer" ColumnName="Afsenders_kundenummer" />
+                <ScalarProperty Name="Afsenders_land" ColumnName="Afsenders_land" />
+                <ScalarProperty Name="Afsender" ColumnName="Afsender" />
+                <ScalarProperty Name="Afsenders_postnummer" ColumnName="Afsenders_postnummer" />
+                <ScalarProperty Name="Forsendelsenummer" ColumnName="Forsendelsenummer" />
+                <ScalarProperty Name="Afsenders_reference" ColumnName="Afsenders_reference" />
+                <ScalarProperty Name="Sidste_status" ColumnName="Sidste_status" />
+                <ScalarProperty Name="Antal_kolli_sidste_status" ColumnName="Antal_kolli_sidste_status" />
+                <ScalarProperty Name="Status_tid" ColumnName="Status_tid" />
+                <ScalarProperty Name="Afsenders_id_på_modtager" ColumnName="Afsenders_id_på_modtager" />
+                <ScalarProperty Name="Retur_forsendelsesnummer" ColumnName="Retur_forsendelsesnummer" />
+                <ScalarProperty Name="Modtagers_kundenummer" ColumnName="Modtagers_kundenummer" />
+                <ScalarProperty Name="Modtager" ColumnName="Modtager" />
+                <ScalarProperty Name="Modtagers_landekode" ColumnName="Modtagers_landekode" />
+                <ScalarProperty Name="Modtagers_postnummer" ColumnName="Modtagers_postnummer" />
+                <ScalarProperty Name="Modtagers_Sted" ColumnName="Modtagers_Sted" />
+                <ScalarProperty Name="PostNord_afdelingsnavn" ColumnName="PostNord_afdelingsnavn" />
+                <ScalarProperty Name="Servicepartner_navn" ColumnName="Servicepartner_navn" />
+                <ScalarProperty Name="Servicepartner_postnummer" ColumnName="Servicepartner_postnummer" />
+                <ScalarProperty Name="Servicepartner_stednavn" ColumnName="Servicepartner_stednavn" />
+                <ScalarProperty Name="Fragtbetaler" ColumnName="Fragtbetaler" />
+                <ScalarProperty Name="Produkt" ColumnName="Produkt" />
+                <ScalarProperty Name="Varestrøm" ColumnName="Varestrøm" />
+                <ScalarProperty Name="Transport_enhed" ColumnName="Transport_enhed" />
+                <ScalarProperty Name="Ant_kolli_totalt" ColumnName="Ant_kolli_totalt" />
+                <ScalarProperty Name="Fragtvægt" ColumnName="Fragtvægt" />
+                <ScalarProperty Name="Vægt_kg" ColumnName="Vægt_kg" />
+                <ScalarProperty Name="Volumen" ColumnName="Volumen" />
+                <ScalarProperty Name="FragtbetalerCode" ColumnName="FragtbetalerCode" />
+                <ScalarProperty Name="Beregnet_levert" ColumnName="Beregnet_levert" />
+                <ScalarProperty Name="Fakturanummer" ColumnName="Fakturanummer" />
+                <ScalarProperty Name="Energitillæg" ColumnName="Energitillæg" />
+                <ScalarProperty Name="Fragt" ColumnName="Fragt" />
+                <ScalarProperty Name="Miljøtillæg" ColumnName="Miljøtillæg" />
+                <ScalarProperty Name="Total_til_betaling" ColumnName="Total_til_betaling" />
+                <ScalarProperty Name="Gebyr_modtager_betaler" ColumnName="Gebyr_modtager_betaler" />
+                <ScalarProperty Name="Konverteringsgebyr" ColumnName="Konverteringsgebyr" />
+                <ScalarProperty Name="Genudbringning" ColumnName="Genudbringning" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PDKPalletrecord">
+            <EntityTypeMapping TypeName="DFEModel.PDKPalletrecord">
+              <MappingFragment StoreEntitySet="PDKPalletrecord">
+                <ScalarProperty Name="Postnummer" ColumnName="Postnummer" />
+                <ScalarProperty Name="Fritekst" ColumnName="Fritekst" />
+                <ScalarProperty Name="Godstype" ColumnName="Godstype" />
+                <ScalarProperty Name="Sendingsindhold" ColumnName="Sendingsindhold" />
+                <ScalarProperty Name="Afsenderidpåmodtager" ColumnName="Afsenderidpåmodtager" />
+                <ScalarProperty Name="TotalaftPris" ColumnName="TotalaftPris" />
+                <ScalarProperty Name="Aftalepris" ColumnName="Aftalepris" />
+                <ScalarProperty Name="Hentetillægaftalepris" ColumnName="Hentetillægaftalepris" />
+                <ScalarProperty Name="Kapacitetstillæg" ColumnName="Kapacitetstillæg" />
+                <ScalarProperty Name="Miljøtillægavtpris" ColumnName="Miljøtillægavtpris" />
+                <ScalarProperty Name="Energitillægaftalepris" ColumnName="Energitillægaftalepris" />
+                <ScalarProperty Name="Tillægaftalepris" ColumnName="Tillægaftalepris" />
+                <ScalarProperty Name="Normalpris" ColumnName="Normalpris" />
+                <ScalarProperty Name="Kurs" ColumnName="Kurs" />
+                <ScalarProperty Name="Valuta" ColumnName="Valuta" />
+                <ScalarProperty Name="Tillægsydelse" ColumnName="Tillægsydelse" />
+                <ScalarProperty Name="Fragtgrundlag" ColumnName="Fragtgrundlag" />
+                <ScalarProperty Name="Ladmeter" ColumnName="Ladmeter" />
+                <ScalarProperty Name="Volum" ColumnName="Volum" />
+                <ScalarProperty Name="Vægt" ColumnName="Vægt" />
+                <ScalarProperty Name="Produkt" ColumnName="Produkt" />
+                <ScalarProperty Name="Modtagersref" ColumnName="Modtagersref" />
+                <ScalarProperty Name="Partiref" ColumnName="Partiref" />
+                <ScalarProperty Name="Afsendersref" ColumnName="Afsendersref" />
+                <ScalarProperty Name="FRBvægt" ColumnName="FRBvægt" />
+                <ScalarProperty Name="Antalkolli" ColumnName="Antalkolli" />
+                <ScalarProperty Name="ModtagerStednavn" ColumnName="ModtagerStednavn" />
+                <ScalarProperty Name="ModtagerPostnummer" ColumnName="ModtagerPostnummer" />
+                <ScalarProperty Name="ModtagerLandekode" ColumnName="ModtagerLandekode" />
+                <ScalarProperty Name="Modtager" ColumnName="Modtager" />
+                <ScalarProperty Name="Afsenderstednavn" ColumnName="Afsenderstednavn" />
+                <ScalarProperty Name="Afsenderpostnummer" ColumnName="Afsenderpostnummer" />
+                <ScalarProperty Name="Afsenderlandekode" ColumnName="Afsenderlandekode" />
+                <ScalarProperty Name="Afsender" ColumnName="Afsender" />
+                <ScalarProperty Name="Fragtbetaler" ColumnName="Fragtbetaler" />
+                <ScalarProperty Name="Indleveringsdato" ColumnName="Indleveringsdato" />
+                <ScalarProperty Name="Sendingsnummer" ColumnName="Sendingsnummer" />
+                <ScalarProperty Name="Factura" ColumnName="Factura" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PDKPalletCollirecord">
+            <EntityTypeMapping TypeName="DFEModel.PDKPalletCollirecord">
+              <MappingFragment StoreEntitySet="PDKPalletCollirecord">
+                <ScalarProperty Name="Valuta" ColumnName="Valuta" />
+                <ScalarProperty Name="Total_aft_Pris" ColumnName="Total_aft_Pris" />
+                <ScalarProperty Name="Højde" ColumnName="Højde" />
+                <ScalarProperty Name="Bredde" ColumnName="Bredde" />
+                <ScalarProperty Name="Længde" ColumnName="Længde" />
+                <ScalarProperty Name="Palletype" ColumnName="Palletype" />
+                <ScalarProperty Name="Volum_dm3" ColumnName="Volum_dm3" />
+                <ScalarProperty Name="Vægt" ColumnName="Vægt" />
+                <ScalarProperty Name="Produkt" ColumnName="Produkt" />
+                <ScalarProperty Name="Modtagers_ref" ColumnName="Modtagers_ref" />
+                <ScalarProperty Name="Partiref" ColumnName="Partiref" />
+                <ScalarProperty Name="Afsenders_ref" ColumnName="Afsenders_ref" />
+                <ScalarProperty Name="FRBvægt" ColumnName="FRBvægt" />
+                <ScalarProperty Name="Modtager_Stednavn" ColumnName="Modtager_Stednavn" />
+                <ScalarProperty Name="Modtager_Postnummer" ColumnName="Modtager_Postnummer" />
+                <ScalarProperty Name="Modtager_Landekode" ColumnName="Modtager_Landekode" />
+                <ScalarProperty Name="Modtager" ColumnName="Modtager" />
+                <ScalarProperty Name="Afsender_stednavn" ColumnName="Afsender_stednavn" />
+                <ScalarProperty Name="Afsender_postnummer" ColumnName="Afsender_postnummer" />
+                <ScalarProperty Name="Afsender_landekode" ColumnName="Afsender_landekode" />
+                <ScalarProperty Name="Afsender" ColumnName="Afsender" />
+                <ScalarProperty Name="Fragtbetaler" ColumnName="Fragtbetaler" />
+                <ScalarProperty Name="Indleveringsdato" ColumnName="Indleveringsdato" />
+                <ScalarProperty Name="Kollinummer" ColumnName="Kollinummer" />
+                <ScalarProperty Name="Sendingsnummer" ColumnName="Sendingsnummer" />
+                <ScalarProperty Name="Factura" ColumnName="Factura" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
