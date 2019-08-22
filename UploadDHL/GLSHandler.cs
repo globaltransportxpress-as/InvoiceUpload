@@ -32,6 +32,7 @@ namespace UploadDHL
         }
         public Dictionary<string, int> Dic;
         public List<GLSrecord> Records = new List<GLSrecord>();
+        
         private Translation zTranslation = new Translation(Config.TranslationFileGLS);
         
         private static string zfixhead =
@@ -46,6 +47,11 @@ namespace UploadDHL
 
        }
 
+        public string Reason()
+        {
+            return string.Join(", ", zTranslation.AddList.ToArray());
+        }
+
         public bool Header(string head)
         {
             return (head == zfixhead.Replace(".","").Replace(" ",""));
@@ -56,7 +62,7 @@ namespace UploadDHL
 
         {   var glsRecord = new GLSrecord(da, zTranslation);
 
-            if (glsRecord.Awb == "")
+            if (glsRecord.Awb == "" )
             {
                 DropLines = DropLines + 1;
                 return null;
@@ -85,42 +91,45 @@ namespace UploadDHL
 
             var overw = glsRecord.GTXTranslate.Key.Contains("003099") ||
                         glsRecord.GTXTranslate.Key.Contains("053099");
-           
 
 
-            if (glsRecord.GTXTranslate.KeyType == "GEBYR" ||overw)
-              {
-                var record = Records.FirstOrDefault(x => x.Awb == glsRecord.Awb && x.GTXTranslate.KeyType=="FRAGT");
-                  if (record == null)
-                  {
+
+            if (glsRecord.GTXTranslate.KeyType == "GEBYR" || overw)
+            {
+                var record = Records.FirstOrDefault(x => x.Awb == glsRecord.Awb && x.GTXTranslate.KeyType == "FRAGT");
+                if (record == null)
+                {
 
 
-                      record = glsRecord;
-                  }
-                  else
-                  {
-                      if (overw)
-                      {
+                    record = glsRecord;
+                    Records.Add(glsRecord);
+                }
+                else
+                {
+                    if (overw)
+                    {
                         record.AddWeight(glsRecord.Antal);
                         record.AddPrice(glsRecord.Beløb);
                     }
-                  }
-                  if (!overw) { 
+                }
+                if (!overw)
+                {
                     var sv = new Service
-                  {
-                      OrigalName = glsRecord.GTXTranslate.Key,
-                      GTXCode = glsRecord.GTXTranslate.GTXName,
-                      Price = glsRecord.Beløb
+                    {
+                        OrigalName = glsRecord.GTXTranslate.Key,
+                        GTXCode = glsRecord.GTXTranslate.GTXName,
+                        Price = glsRecord.Beløb
 
 
-                  };
+                    };
 
-                  record.Services.Add(sv);
+                    record.Services.Add(sv);
                 }
 
+                return record;
+
             }
-            else
-            {
+           
 
 
                 if (glsRecord.Vægt == 0)
@@ -132,18 +141,27 @@ namespace UploadDHL
 
                 }
 
-            }
 
 
+                if (glsRecord.FormatError)
+                {
 
-            if (string.IsNullOrEmpty(zFactura))
-            {
-                zFactura = glsRecord.Fakturanr;
-                zFacturaDate = glsRecord.Dato;
-            }
+                    Error = "Date error";
+
+                    return null;
+
+                }
+
+
+                if (string.IsNullOrEmpty(zFactura))
+                {
+                    zFactura = glsRecord.Fakturanr;
+                    zFacturaDate = glsRecord.Dato;
+                }
+
+
+                Records.Add(glsRecord);
             
-
-             Records.Add(glsRecord);
             return glsRecord;
 
 

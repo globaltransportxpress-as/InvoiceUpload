@@ -720,6 +720,7 @@ namespace UploadDHL
                 {
                     Message.Text = "Translation missing ";
                     griddata.Status = "TRANSLATION";
+                    griddata.Comment = glsHandler.Reason();
 
 
                 }
@@ -871,6 +872,7 @@ namespace UploadDHL
                     {
                         griddata.Status = "TRANSLATION";
                         griddata.Comment = "Translation missing";
+                        
                     }
                     else
                     {

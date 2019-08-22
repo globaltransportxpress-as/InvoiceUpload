@@ -39,7 +39,7 @@ namespace UploadDHL
             {
 
 
-                ErrorList.Add(_service.ShipmentUpload(l.ToArray()));
+              //  ErrorList.Add(_service.ShipmentUpload(l.ToArray()));
 
 
 

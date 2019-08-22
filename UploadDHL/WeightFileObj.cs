@@ -76,7 +76,7 @@ namespace UploadDHL
             if (wlist.Count>0)
             {
                 var service = new InvoiceUploadSoapClient("InvoiceUploadSoap");
-                service.WeighFileUpload(wlist.ToArray(), factura);
+               // service.WeighFileUpload(wlist.ToArray(), factura);
             }
          
 

@@ -96,14 +96,21 @@ namespace UploadDHL
 
         public void AddMissing(string key, string keytype)
         {
-            if (!AddList.Contains(key + ";" + keytype))
+            if (!AddList.Contains(key + ";" + keytype) && key!="")
             {
-               
-                AddList.Add(key + ";" + keytype);
-               
+
+                var f = new System.IO.FileInfo(zDBFile);
+                var fs = f.Open(FileMode.Append, FileAccess.Write);
+                using (StreamWriter outputFile = new StreamWriter(fs))
+                {
+                    outputFile.WriteLine(key + ";" + keytype);
+                    AddList.Add(key + ";" + keytype);
+                }
+
             }
+           
             // Append text to an existing file named "WriteLines.txt".
-            
+
         }
 
 
