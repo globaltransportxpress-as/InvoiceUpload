@@ -7,7 +7,7 @@ using System.Text;
 
 namespace UploadDHL
 {
-    class Translation
+    public class Translation
     {
         public Dictionary<string, TranslationRecord> TranDictionary { get; set; }
         public List<string> AddList = new List<string>();
@@ -15,44 +15,53 @@ namespace UploadDHL
         public string Error { get; set; }
         public Translation(string dbFile)
         {
-            TranDictionary = new Dictionary<string, TranslationRecord>();
-            zDBFile = dbFile; 
-            using (StreamReader fileStream = new StreamReader(dbFile))
+            Error = "";
+            try
             {
-
-
-
-
-                string line = fileStream.ReadLine();
-                while (line != null)
+                TranDictionary = new Dictionary<string, TranslationRecord>();
+                zDBFile = dbFile;
+                using (StreamReader fileStream = new StreamReader(dbFile))
                 {
 
-                    if (false == string.IsNullOrEmpty(line.Replace(";", "")))
+
+
+
+                    string line = fileStream.ReadLine();
+                    while (line != null)
                     {
-                        var da = line.Split(';');
-                        if (da.Length > 2 && da[2] != "")
+
+                        if (false == string.IsNullOrEmpty(line.Replace(";", "")))
                         {
-                            try
+                            var da = line.Split(';');
+                            if (da.Length > 2 && da[2] != "")
                             {
-                                TranDictionary.Add(da[0], new TranslationRecord(da));
+                                try
+                                {
+                                    TranDictionary.Add(da[0], new TranslationRecord(da));
+
+                                }
+                                catch (Exception)
+                                {
+                                    Error = "Dublicate keys in translatefile";
+                                }
+
 
                             }
-                            catch (Exception)
+                            else
                             {
-                                Error = "Dublicate keys in translatefile";
+                                AddList.Add(da[0] + ";" + da[1]);
                             }
-                          
 
                         }
-                        else
-                        {
-                            AddList.Add(da[0] + ";" + da[1]);
-                        }
+                        line = fileStream.ReadLine();
 
                     }
-                    line = fileStream.ReadLine();
-
                 }
+            }
+            catch (Exception ex)
+            {
+
+                Error = "Cannot open translatefile";
             }
 
         }
@@ -89,7 +98,23 @@ namespace UploadDHL
                 return TranDictionary[key];
             }
             AddMissing(key, keyType);
-            return null;
+            return TranslationError();
+
+
+        }
+
+        public TranslationRecord TranslationError()
+        {
+            return new TranslationRecord
+            {
+                KeyType = VendorHandler.E_TRANS,
+                GTXName = "ERROR"
+
+
+
+            };
+
+
 
 
         }

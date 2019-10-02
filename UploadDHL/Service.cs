@@ -5,13 +5,18 @@ using System.Text;
 
 namespace UploadDHL
 {
-    class Service
+    public class Service
     {
 
         public string  OrigalName { get; set; }
         public string GTXCode { get; set; }
         public decimal Price { get; set; }
+
+        public decimal Tax { get; set; }
         public bool HasOil { get; set; }
+
+        public int InvoiceLineNumber { get; set; }
+
     }
    
 

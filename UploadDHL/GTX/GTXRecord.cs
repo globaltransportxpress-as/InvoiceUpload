@@ -9,14 +9,13 @@ using UploadDHL.DataUploadWeb;
 
 namespace UploadDHL
 {
-    class GTXrecord
+    class GTXrecord:DataRecord
     {
         // "Fakturanr.;Linjenr.;Dato;Varenr.;Beskrivelse;Land;Pakkenr.;Vægt;Antal;Salgspris;Beløb;Beløb inkl. moms;Reference;Modtagernavn;Kundenr.;Kundenavn;Kundenavn2;Modtagerpostnr.;Modtagerby;Modtageradresse";
         private string[] zCSVdata;
-        public bool Error { get; set; }
-        public bool TranslationError { get; set; }
+      
         public bool FormatError { get; set; }
-        public StringBuilder zReasonError;
+      
 
         public string PURCHORDERFORMNUM
         {
@@ -28,7 +27,7 @@ namespace UploadDHL
         }
         public decimal Weight
         {
-            get { return SafeDecimal(zCSVdata[2]); }
+            get { return SafeDecimal(zCSVdata[2], "Weight"); }
         }
         public string LNO
         {
@@ -36,11 +35,11 @@ namespace UploadDHL
         }
         public decimal Amount
         {
-            get { return SafeDecimal( zCSVdata[4]); }
+            get { return SafeDecimal( zCSVdata[4], "Amount"); }
         }
         public DateTime RECEIPTDATECONFIRMED
         {
-            get { return SafeDate(zCSVdata[5]); }
+            get { return SafeGTXDate(zCSVdata[5], "RECEIPTDATECONFIRMED"); }
         }
         public string PICKUPNAME
         {
@@ -104,7 +103,7 @@ namespace UploadDHL
         }
         public DateTime INVOICEDATE
         {
-            get { return SafeDate(zCSVdata[21]); }
+            get { return SafeDate(zCSVdata[21], "INVOICEDATE"); }
         }
         public string LINENUM
         {
@@ -112,7 +111,7 @@ namespace UploadDHL
         }
         public decimal OilAmount
         {
-            get { return SafeDecimal(zCSVdata[23]); }
+            get { return SafeDecimal(zCSVdata[23], "OilAmount"); }
         }
         public string TXT
         {
@@ -163,117 +162,90 @@ namespace UploadDHL
             get { return zCSVdata[35]; }
         }
 
-        public GTXrecord(string[] fields, Translation translationhandler)
+        public GTXrecord(string[] fields, Translation translationhandler, int lineno)
         {
 
-
+            RecordStatus = VendorHandler.E_INI;
             zCSVdata = fields;
+            InvLineNumber = lineno;
             GTXTranslate = translationhandler.DoTranslate(DIMENSION + "_" + LNO + "_" + DIMENSION2_ + "_" + DIMENSION3_ + "_" + VARENUMMER, "FRAGT");
 
-            if (GTXTranslate != null && !GTXTranslate.KeyType.StartsWith("X") )
-            {
-                var e = 2;
-            }
+            RecordStatus = GTXTranslate.KeyType;
 
+
+            XmlRecord = MakeXmlRecord();
 
 
         }
-        public List<Service> Services = new List<Service>();
+       
 
-        public TranslationRecord GTXTranslate { get; set; }
+       
 
         
 
-        public WeightFileRecord Convert()
+
+        private XMLRecord MakeXmlRecord()
         {
-            var awbn = PURCHORDERFORMNUM;
-            if (GTXTranslate.KeyType == "GEBYR")
+            return new XMLRecord
             {
-                awbn = "#" + PURCHORDERFORMNUM;
-            }
-            else
-            {
-                awbn = PURCHORDERFORMNUM;
-            }
-            var wf = new WeightFileRecord();
-            wf.Services = Services;
-            wf.AWB = awbn;
-            wf.BillWeight = Weight;
-            wf.CreditorAccount = INVOICEID;
-            wf.SalesProduct = GTXTranslate.GTXProduct;
-            wf.TransportProduct = GTXTranslate.GTXTransp;
-            wf.Price = Amount;
-           
-            return wf;
+                Awb = PURCHORDERFORMNUM,
+                InvoiceNumber = INVOICEID,
+                InvoiceDate = INVOICEDATE,
+                Due_Date = INVOICEDATE.AddDays(30),
+                Price = this.Amount,
+                Vat = 0,
+
+              
+                Services = this.Services,
+                VendorAccount = ACCOUNTNUM,
+                CarrierService = GTXTranslate.Key,
+                GTXName = this.GTXTranslate.GTXName,
+                KeyType = this.GTXTranslate.KeyType,
+                Product = GTXTranslate.GTXProduct,
+                Transport = (byte)GTXTranslate.GTXTransp,
+                Shipdate = RECEIPTDATECONFIRMED,
+
+                CompanyName = PICKUPNAME,
+                Address1 = SafeAddr(PU_ADRESS, 0),
+                Address2 = SafeAddr(PU_ADRESS, 1),
+                City = PU_CITY,
+                State = "",
+                Zip = PU_ZIP,
+                Country_Iata = PICKUPCOUNTRY,
+                Reciever_CompanyName = DELIVERYNAME,
+                Reciever_Address1 = SafeAddr(DL_ADRESS, 0),
+                Reciever_Address2 = SafeAddr(DL_ADRESS, 1),
+                Reciever_City = DL_CITY,
+                Reciever_State = "",
+                Reciever_Zip = DL_ZIP,
+                Reciever_Country = DELIVERYCOUNTRYREGIONID,
+                Reciever_Country_Iata = DELIVERYCOUNTRYREGIONID,
+                Reciever_Phone = "00",
+                Reciever_Fax = "00",
+                Reciever_Email = "upload@gtx.nu",
+                Reciever_Reference = CUSTOMERREF,
+                NumberofCollies = (byte)Pieces,
+                Reference = CUSTOMERREF,
+                Total_Weight = Weight,
+                Length = 0,
+                Width = 0,
+                Height = 0,
+                Vol_Weight = Weight,
+                BilledWeight = Weight,
+                Customevalue = 0,
+                PackValue = 0,
+                PackValuta = "",
+                Description = "",
+                Costprice = Amount,
+
+            };
         }
-        public InvoiceShipmentHolder StdConvert()
-        {
-
-
-
-            if (GTXTranslate.KeyType == "FRAGT")
-            {
-
-                var wf = new InvoiceShipmentHolder
-                {
-
-                    Status = 1,
-                    Invoice = INVOICEID,
-                    InvoiceDate = DateTime.Now,
-                    VendorAccount = ACCOUNTNUM,
-
-                    AWB = PURCHORDERFORMNUM,
-                    Product = GTXTranslate.GTXProduct,
-                    Transport = (byte)GTXTranslate.GTXTransp,
-                    Shipdate = RECEIPTDATECONFIRMED,
-                    CustomerNumber = INVOICEACCOUNT,
-                    CompanyName = PICKUPNAME,
-                    Address1 = SafeAddr(PU_ADRESS,0),
-                    Address2 = SafeAddr(PU_ADRESS, 1),
-                    City = PU_CITY,
-                    State = "",
-                    Zip = PU_ZIP,
-                    Country_Iata = PICKUPCOUNTRY,
-                    Reciever_CompanyName = DELIVERYNAME,
-                    Reciever_Address1 = SafeAddr(DL_ADRESS,0),
-                    Reciever_Address2 = SafeAddr(DL_ADRESS, 1),
-                    Reciever_City = DL_CITY,
-                    Reciever_State = "",
-                    Reciever_Zip =DL_ZIP,
-                    Reciever_Country = DELIVERYCOUNTRYREGIONID,
-                    Reciever_Country_Iata = DELIVERYCOUNTRYREGIONID,
-                    Reciever_Phone = "00",
-                    Reciever_Fax = "00",
-                    Reciever_Email = "upload@gtx.nu",
-                    Reciever_Reference = CUSTOMERREF,
-                    NumberofCollies = (byte)Pieces,
-                    Reference = CUSTOMERREF,
-                    Total_Weight = Weight,
-                    Length = null,
-                    Width = null,
-                    Height = null,
-                    Vol_Weight = Weight,
-                    BilledWeight = Weight,
-                    Customevalue = null,
-                    PackValue = null,
-                    PackValuta = null,
-                    Description = "",
-                    Costprice = Amount,
-                    Saleprice = null,
-                    Oli = OilAmount
 
 
 
 
-                };
 
-                return wf;
-            }
-
-
-            return null;
-
-        }
+       
         private string SafeZip(string zip)
         {
             if (string.IsNullOrWhiteSpace(zip))
@@ -283,6 +255,7 @@ namespace UploadDHL
             }
             return zip;
         }
+
         private string SafeAddr(string addr,int ix)
         {
             if (addr.Length > 50)
@@ -315,27 +288,9 @@ namespace UploadDHL
 
 
 
-        private int SafeInt(string no)
-        {
-            int o = 0;
-            if (int.TryParse(no, out o))
-            {
-                return o;
-            }
-            return o;
-        }
-        private string SafeString(string data)
-        {
-
-            if (data == "" || data == "0")
-            {
-                return "";
-            }
-
-
-            return data;
-        }
-        private DateTime SafeDate(string data)
+       
+        
+        private DateTime SafeGTXDate(string data, string field)
         {
 
             try
@@ -353,36 +308,20 @@ namespace UploadDHL
 
                     return DateTime.FromOADate(d);
                 }
-                
 
-              
+           
+
                 //zReasonError.AppendLine("DateTimeFormat error line " + zCurrentLine);
             }
             catch (Exception)
             {
-                FormatError = true;
-               
+                RecordStatus = VendorHandler.E_DATE;
+                ErrorHelper.Add(VendorHandler.E_DATE + "->" + field);
+
             }
             return new DateTime();
 
         }
-        private decimal SafeDecimal(string data)
-        {
-            decimal dec;
-            if (data == "")
-            {
-                return 0;
-            }
-
-            if (decimal.TryParse(data, NumberStyles.Any, CultureInfo.CurrentCulture, out dec))
-            {
-                return dec;
-            }
-
-
-            //zReasonError.AppendLine("DecimalFormat error line " + zCurrentLine);
-            FormatError = true;
-            return 0;
-        }
+       
     }
 }

@@ -302,29 +302,7 @@ namespace UploadDHL
 
 
         }
-        public string MakeLine( int count ,PDKrecord pdkRecord, string name, decimal charge, decimal tax)
-        {
-           
-            return string.Format(CultureInfo.InvariantCulture, zInvoiceLine,
-               count,
-                pdkRecord.AWB,
-                pdkRecord.Weight,
-                pdkRecord.BillWeight,
-                pdkRecord.Date,
-                pdkRecord.Address,
-                pdkRecord.Name,
-                "ZIPCODE",
-                pdkRecord.ToZip,
-                tax,
-                charge,
-                0,
-                "",
-                name
-
-            );
-
-
-        }
+      
 
         private string zInvoiceLine = "<cac:InvoiceLine>" +
                                       "<cbc:ID>{0}</cbc:ID>" + //count

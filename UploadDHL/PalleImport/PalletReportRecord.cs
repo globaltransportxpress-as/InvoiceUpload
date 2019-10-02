@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using Microsoft.Office.Interop.Excel;
-
+using UploadDHL.DataConnections;
 using UploadDHL.DataUploadWeb;
 
 namespace UploadDHL
@@ -163,17 +163,7 @@ namespace UploadDHL
             }
             return o;
         }
-        private string SafeString(string data)
-        {
-
-            if (data == "" || data == "0")
-            {
-                return "";
-            }
-
-
-            return data;
-        }
+     
         private DateTime SafeDate(string data)
         {
 

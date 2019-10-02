@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="iHH31ilbDpzY6JcGhlTqSW/jgN8=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="Hb6rVJDNDeU397+4L+eQjL53+tY=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="InvoiceUploadSoap">
       <properties>
@@ -263,10 +263,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="InvoiceUploadSoap" contract="DataUploadWeb.InvoiceUploadSoap" bindingType="basicHttpBinding" address="http://localhost:55240/Services/Accounting/V4/InvoiceUpload.asmx" bindingConfiguration="InvoiceUploadSoap">
+    <endpoint name="InvoiceUploadSoap" contract="DataUploadWeb.InvoiceUploadSoap" bindingType="basicHttpBinding" address="http://localhost:55235/Services/Accounting/V4/InvoiceUpload.asmx" bindingConfiguration="InvoiceUploadSoap">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://localhost:55240/Services/Accounting/V4/InvoiceUpload.asmx</serializedValue>
+          <serializedValue>http://localhost:55235/Services/Accounting/V4/InvoiceUpload.asmx</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -348,10 +348,10 @@
         </property>
       </properties>
     </endpoint>
-    <endpoint name="InvoiceUploadSoap12" contract="DataUploadWeb.InvoiceUploadSoap" bindingType="customBinding" address="http://localhost:55240/Services/Accounting/V4/InvoiceUpload.asmx" bindingConfiguration="InvoiceUploadSoap12">
+    <endpoint name="InvoiceUploadSoap12" contract="DataUploadWeb.InvoiceUploadSoap" bindingType="customBinding" address="http://localhost:55235/Services/Accounting/V4/InvoiceUpload.asmx" bindingConfiguration="InvoiceUploadSoap12">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://localhost:55240/Services/Accounting/V4/InvoiceUpload.asmx</serializedValue>
+          <serializedValue>http://localhost:55235/Services/Accounting/V4/InvoiceUpload.asmx</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

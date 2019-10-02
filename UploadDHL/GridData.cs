@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UploadDHL.DataConnections;
 
 namespace UploadDHL
 {
-    class GridData
+    public class GridData
     {
         public string Status { get; set; }
         public string Filename { get; set; }
@@ -14,6 +15,8 @@ namespace UploadDHL
 
         public int JumpLines { get; set; }
         public List<string> JumpLineData { get; set; }
+        public List<InvoiceLine> ErrorLines { get; set; }
+
     }
     
 }

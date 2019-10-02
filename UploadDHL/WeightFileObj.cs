@@ -76,14 +76,14 @@ namespace UploadDHL
             if (wlist.Count>0)
             {
                 var service = new InvoiceUploadSoapClient("InvoiceUploadSoap");
-               // service.WeighFileUpload(wlist.ToArray(), factura);
+              //  service.WeighFileUpload(wlist.ToArray(), factura);
             }
          
 
         }
 
 
-        private static string ServicePart(WeightFileRecord rec)
+        public static string ServicePart(WeightFileRecord rec)
         {
             var s = rec.Services.Select(x => x.GTXCode + ":" + x.Price.ToString(CultureInfo.GetCultureInfo("da-DK"))).ToArray();
             return string.Join("|", s);

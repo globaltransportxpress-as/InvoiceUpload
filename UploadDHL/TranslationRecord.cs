@@ -5,7 +5,7 @@ using System.Text;
 
 namespace UploadDHL
 {
-    class TranslationRecord
+    public class TranslationRecord
     {
         public string Key { get; set; }
         public string KeyType { get; set; }
@@ -16,6 +16,9 @@ namespace UploadDHL
 
         public int GTXProduct { get; set; }
 
+        public TranslationRecord()
+        {
+        }
 
         public TranslationRecord(string[] data)
         {

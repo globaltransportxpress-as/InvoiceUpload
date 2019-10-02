@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
 using UploadDHL.DataUploadWeb;
 
 namespace UploadDHL
@@ -29,7 +30,13 @@ namespace UploadDHL
         public string Run()
         {
             ErrorList = new List<string>();
-          
+          //  var con = new DbMainStandard();
+          //  var awbs = invList.Select(x => x.AWB).ToList();
+           // var olddate = invList.Min(x => x.InvoiceDate).AddDays(30);
+           // var existlist=con.ship_Shipments.Where(y => awbs.Contains(y.ship_AWB) && y.ship_date > olddate).Select(x=>x.ship_AWB).ToList();
+
+           // var missing = invList.Where(x => !existlist.Contains(x.AWB));
+            
             var lst = invList.Select((x, i) => new {Index = i, Value = x})
                 .GroupBy(x => x.Index / 500)
                 .Select(x => x.Select(v => v.Value).ToList())
@@ -39,7 +46,7 @@ namespace UploadDHL
             {
 
 
-              //  ErrorList.Add(_service.ShipmentUpload(l.ToArray()));
+               ErrorList.Add(_service.ShipmentUpload(l.ToArray()));
 
 
 
@@ -52,7 +59,7 @@ namespace UploadDHL
                 return "OK";
             }
 
-            return "Invoice shipment error ";
+            return "Upload Invoice shipment error ";
 
 
 

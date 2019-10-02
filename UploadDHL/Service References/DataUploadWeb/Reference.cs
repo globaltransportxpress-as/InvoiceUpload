@@ -124,6 +124,8 @@ namespace UploadDHL.DataUploadWeb {
         
         private System.Nullable<decimal> oliField;
         
+        private string serviceListField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
         public long ID {
@@ -649,6 +651,18 @@ namespace UploadDHL.DataUploadWeb {
             set {
                 this.oliField = value;
                 this.RaisePropertyChanged("Oli");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=44)]
+        public string ServiceList {
+            get {
+                return this.serviceListField;
+            }
+            set {
+                this.serviceListField = value;
+                this.RaisePropertyChanged("ServiceList");
             }
         }
         

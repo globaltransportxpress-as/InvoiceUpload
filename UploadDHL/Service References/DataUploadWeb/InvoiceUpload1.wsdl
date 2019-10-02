@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+                  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/"
+                  xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"
+                  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+                  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:types>
     <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
       <s:element name="HelloWorld">
@@ -21,7 +28,8 @@
       </s:element>
       <s:complexType name="ArrayOfInvoiceShipmentHolder">
         <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="InvoiceShipmentHolder" nillable="true" type="tns:InvoiceShipmentHolder" />
+          <s:element minOccurs="0" maxOccurs="unbounded" name="InvoiceShipmentHolder" nillable="true"
+                     type="tns:InvoiceShipmentHolder" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="InvoiceShipmentHolder">
@@ -70,6 +78,7 @@
           <s:element minOccurs="1" maxOccurs="1" name="Costprice" nillable="true" type="s:decimal" />
           <s:element minOccurs="1" maxOccurs="1" name="Saleprice" nillable="true" type="s:decimal" />
           <s:element minOccurs="1" maxOccurs="1" name="Oli" nillable="true" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="ServiceList" type="s:string" />
         </s:sequence>
       </s:complexType>
       <s:element name="ShipmentUploadResponse">
@@ -240,16 +249,16 @@
   </wsdl:binding>
   <wsdl:service name="InvoiceUpload">
     <wsdl:port name="InvoiceUploadSoap" binding="tns:InvoiceUploadSoap">
-      <soap:address location="http://localhost:55240/Services/Accounting/V4/InvoiceUpload.asmx" />
+      <soap:address location="http://localhost:55235/Services/Accounting/V4/InvoiceUpload.asmx" />
     </wsdl:port>
     <wsdl:port name="InvoiceUploadSoap12" binding="tns:InvoiceUploadSoap12">
-      <soap12:address location="http://localhost:55240/Services/Accounting/V4/InvoiceUpload.asmx" />
+      <soap12:address location="http://localhost:55235/Services/Accounting/V4/InvoiceUpload.asmx" />
     </wsdl:port>
     <wsdl:port name="InvoiceUploadHttpGet" binding="tns:InvoiceUploadHttpGet">
-      <http:address location="http://localhost:55240/Services/Accounting/V4/InvoiceUpload.asmx" />
+      <http:address location="http://localhost:55235/Services/Accounting/V4/InvoiceUpload.asmx" />
     </wsdl:port>
     <wsdl:port name="InvoiceUploadHttpPost" binding="tns:InvoiceUploadHttpPost">
-      <http:address location="http://localhost:55240/Services/Accounting/V4/InvoiceUpload.asmx" />
+      <http:address location="http://localhost:55235/Services/Accounting/V4/InvoiceUpload.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

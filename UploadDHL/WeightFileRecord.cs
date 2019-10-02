@@ -5,7 +5,7 @@ using System.Text;
 
 namespace UploadDHL
 {
-    class WeightFileRecord
+    public class WeightFileRecord
     {
 
 

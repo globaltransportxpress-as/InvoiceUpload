@@ -5,7 +5,7 @@ using System.Text;
 
 namespace UploadDHL
 {
-    class ErrorHandler
+    public class ErrorHandler
     {
         public string Location { get; set; }
         public string File { get; set; }

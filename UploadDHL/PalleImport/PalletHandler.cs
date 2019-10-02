@@ -8,7 +8,7 @@ using System.Text;
 
 namespace UploadDHL
 {
-    class PalletHandler
+    class PalletHandler:VendorHandler
 
     {
 
@@ -18,9 +18,7 @@ namespace UploadDHL
         private DateTime zFacturaDate;
 
        
-        public string Error { get; set; }
-        public string ErrorWeight { get; set; }
-        public int DropLines { get; set; }
+      
 
         public string Factura
         {
@@ -33,8 +31,8 @@ namespace UploadDHL
         }
 
         public Dictionary<string, int> Dic;
-        public List<PalletReportRecord> Records = new List<PalletReportRecord>();
-        public ErrorHandler ErrorHandler { get; set; }
+       
+   
        
 
         private Translation zTranslation = new Translation(Config.TranslationFilePDK);

@@ -18,11 +18,11 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:55240/Services/Accounting/V4/InvoiceUpload.asmx" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://localhost:55235/Services/Accounting/V4/InvoiceUpload.asmx" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="InvoiceUpload.disco" MetadataType="Disco" ID="467b6830-a813-4607-81d9-10dfb68812d4" SourceId="1" SourceUrl="http://localhost:55240/Services/Accounting/V4/InvoiceUpload.asmx?disco" />
-    <MetadataFile FileName="InvoiceUpload.wsdl" MetadataType="Wsdl" ID="08820b9c-4ab3-48f0-b22a-3fc0634aca82" SourceId="1" SourceUrl="http://localhost:55240/Services/Accounting/V4/InvoiceUpload.asmx?wsdl" />
+    <MetadataFile FileName="InvoiceUpload1.wsdl" MetadataType="Wsdl" ID="989edc82-b0df-4a9e-8992-ebd9781c726b" SourceId="1" SourceUrl="http://localhost:55235/Services/Accounting/V4/InvoiceUpload.asmx?wsdl" />
+    <MetadataFile FileName="InvoiceUpload1.disco" MetadataType="Disco" ID="2b4a3d7c-df32-4c44-9535-effbc3568467" SourceId="1" SourceUrl="http://localhost:55235/Services/Accounting/V4/InvoiceUpload.asmx?disco" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

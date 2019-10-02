@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace UploadDHL
+namespace UploadDHL.DataConnections
 {
     using System;
     using System.Collections.Generic;
