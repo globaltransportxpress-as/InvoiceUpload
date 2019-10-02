@@ -718,9 +718,9 @@ namespace UploadDHL
 
                 if (glsHandler.Error != "")
                 {
-                    Message.Text = "Translation missing ";
+                    Message.Text = glsHandler.Error;
                     griddata.Status = "TRANSLATION";
-                    griddata.Comment = glsHandler.Reason();
+                    griddata.Comment = glsHandler.Error;
 
 
                 }
