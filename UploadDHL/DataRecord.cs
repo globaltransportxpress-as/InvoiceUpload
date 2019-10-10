@@ -84,15 +84,26 @@ namespace UploadDHL
         public decimal SafeDecimal(string data, string field )
         {
             decimal dec;
+
             if (data == "")
             {
                 return 0;
             }
-
-            if (decimal.TryParse(data, NumberStyles.Any, CultureInfo.InvariantCulture, out dec))
+            if (data.Contains(","))
             {
-                return dec;
+                if (decimal.TryParse(data, NumberStyles.Any, CultureInfo.CurrentCulture, out dec))
+                {
+                    return dec;
+                }
             }
+            else
+            {
+                if (decimal.TryParse(data, NumberStyles.Any, CultureInfo.InvariantCulture, out dec))
+                {
+                    return dec;
+                }
+            }
+           
 
             ErrorHelper.Add(VendorHandler.E_DECIMAL+"->"+field);
 
