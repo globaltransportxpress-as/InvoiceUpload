@@ -283,7 +283,7 @@ namespace UploadDHL
 
         private void XuEditTransGLS_Click(object sender, EventArgs e)
         {
-            EditTransFile(Config.TranslationFileGLS);
+            EditTransFile(Config.TranslationFilePickupGLS);
         }
 
         private void XuGTXTrans_Click(object sender, EventArgs e)

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="GetId">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="awb" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="carrier" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="date" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetIdResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GetIdResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetForwarderList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="carrier" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="sdate" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="edate" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetForwarderListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetForwarderListResult" type="tns:ArrayOfForwObj" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfForwObj">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ForwObj" nillable="true" type="tns:ForwObj" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ForwObj">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Id" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="CompanyName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Street" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Zip" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="City" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AlertReason" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="NoteInternal" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OperatorFeedback" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ParcelCount" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="PickupDate" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="PickupOperator" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PickupReference" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PickupType" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="PricePurchase" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="PriceSelling" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="SpecialTreatment" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="TotalWeight" type="s:decimal" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="int" type="s:int" />
+      <s:element name="ArrayOfForwObj" nillable="true" type="tns:ArrayOfForwObj" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetIdSoapIn">
+    <wsdl:part name="parameters" element="tns:GetId" />
+  </wsdl:message>
+  <wsdl:message name="GetIdSoapOut">
+    <wsdl:part name="parameters" element="tns:GetIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetForwarderListSoapIn">
+    <wsdl:part name="parameters" element="tns:GetForwarderList" />
+  </wsdl:message>
+  <wsdl:message name="GetForwarderListSoapOut">
+    <wsdl:part name="parameters" element="tns:GetForwarderListResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetIdHttpGetIn">
+    <wsdl:part name="awb" type="s:string" />
+    <wsdl:part name="name" type="s:string" />
+    <wsdl:part name="carrier" type="s:string" />
+    <wsdl:part name="date" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetIdHttpGetOut">
+    <wsdl:part name="Body" element="tns:int" />
+  </wsdl:message>
+  <wsdl:message name="GetForwarderListHttpGetIn">
+    <wsdl:part name="carrier" type="s:string" />
+    <wsdl:part name="sdate" type="s:string" />
+    <wsdl:part name="edate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetForwarderListHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfForwObj" />
+  </wsdl:message>
+  <wsdl:message name="GetIdHttpPostIn">
+    <wsdl:part name="awb" type="s:string" />
+    <wsdl:part name="name" type="s:string" />
+    <wsdl:part name="carrier" type="s:string" />
+    <wsdl:part name="date" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetIdHttpPostOut">
+    <wsdl:part name="Body" element="tns:int" />
+  </wsdl:message>
+  <wsdl:message name="GetForwarderListHttpPostIn">
+    <wsdl:part name="carrier" type="s:string" />
+    <wsdl:part name="sdate" type="s:string" />
+    <wsdl:part name="edate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetForwarderListHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfForwObj" />
+  </wsdl:message>
+  <wsdl:portType name="GetForwarderIdSoap">
+    <wsdl:operation name="GetId">
+      <wsdl:input message="tns:GetIdSoapIn" />
+      <wsdl:output message="tns:GetIdSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetForwarderList">
+      <wsdl:input message="tns:GetForwarderListSoapIn" />
+      <wsdl:output message="tns:GetForwarderListSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="GetForwarderIdHttpGet">
+    <wsdl:operation name="GetId">
+      <wsdl:input message="tns:GetIdHttpGetIn" />
+      <wsdl:output message="tns:GetIdHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetForwarderList">
+      <wsdl:input message="tns:GetForwarderListHttpGetIn" />
+      <wsdl:output message="tns:GetForwarderListHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="GetForwarderIdHttpPost">
+    <wsdl:operation name="GetId">
+      <wsdl:input message="tns:GetIdHttpPostIn" />
+      <wsdl:output message="tns:GetIdHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetForwarderList">
+      <wsdl:input message="tns:GetForwarderListHttpPostIn" />
+      <wsdl:output message="tns:GetForwarderListHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="GetForwarderIdSoap" type="tns:GetForwarderIdSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetId">
+      <soap:operation soapAction="http://tempuri.org/GetId" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetForwarderList">
+      <soap:operation soapAction="http://tempuri.org/GetForwarderList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="GetForwarderIdSoap12" type="tns:GetForwarderIdSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetId">
+      <soap12:operation soapAction="http://tempuri.org/GetId" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetForwarderList">
+      <soap12:operation soapAction="http://tempuri.org/GetForwarderList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="GetForwarderIdHttpGet" type="tns:GetForwarderIdHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="GetId">
+      <http:operation location="/GetId" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetForwarderList">
+      <http:operation location="/GetForwarderList" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="GetForwarderIdHttpPost" type="tns:GetForwarderIdHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="GetId">
+      <http:operation location="/GetId" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetForwarderList">
+      <http:operation location="/GetForwarderList" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="GetForwarderId">
+    <wsdl:port name="GetForwarderIdSoap" binding="tns:GetForwarderIdSoap">
+      <soap:address location="http://localhost:55235/Services/Accounting/V4/GetForwarderId.asmx" />
+    </wsdl:port>
+    <wsdl:port name="GetForwarderIdSoap12" binding="tns:GetForwarderIdSoap12">
+      <soap12:address location="http://localhost:55235/Services/Accounting/V4/GetForwarderId.asmx" />
+    </wsdl:port>
+    <wsdl:port name="GetForwarderIdHttpGet" binding="tns:GetForwarderIdHttpGet">
+      <http:address location="http://localhost:55235/Services/Accounting/V4/GetForwarderId.asmx" />
+    </wsdl:port>
+    <wsdl:port name="GetForwarderIdHttpPost" binding="tns:GetForwarderIdHttpPost">
+      <http:address location="http://localhost:55235/Services/Accounting/V4/GetForwarderId.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

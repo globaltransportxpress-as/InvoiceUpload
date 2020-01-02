@@ -51,12 +51,12 @@ namespace UploadDHL
                 return ConfigurationManager.AppSettings["TranslationFileGtx"];
             }
         }
-        public static String TranslationFileGLS
+        public static String TranslationFilePickupGLS
         {
             get
             {
 
-                return ConfigurationManager.AppSettings["TranslationFileGLS"];
+                return ConfigurationManager.AppSettings["TranslationFilePickupGLS"];
             }
         }
         public static String PDKRootFileDir

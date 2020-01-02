@@ -109,6 +109,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Matchup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Matchup.Designer.cs">
+      <DependentUpon>Matchup.cs</DependentUpon>
+    </Compile>
     <Compile Include="PalleImport\PalletRecord.cs" />
     <Compile Include="PalleImport\PalletReportRecord.cs" />
     <Compile Include="PalleImport\PalletHandler.cs" />
@@ -142,6 +148,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SharedModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Service References\GetForwarderId\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="VendorHandler.cs" />
     <Compile Include="WeightFileObj.cs" />
     <Compile Include="PDK\PDKHandler.cs" />
@@ -155,6 +166,9 @@
     <Compile Include="XMLRecord.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Matchup.resx">
+      <DependentUpon>Matchup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -194,6 +208,10 @@
     <None Include="DataConnections\SharedModel.edmx.diagram">
       <DependentUpon>SharedModel.edmx</DependentUpon>
     </None>
+    <None Include="Service References\GetForwarderId\GetForwarderId.wsdl" />
+    <None Include="Service References\GetForwarderId\UploadDHL.GetForwarderId.ForwObj.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\DataUploadWeb\configuration91.svcinfo" />
@@ -227,6 +245,13 @@
     </Content>
     <None Include="Service References\DataUploadWeb\InvoiceUpload1.disco">
       <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\GetForwarderId\GetForwarderId.disco" />
+    <None Include="Service References\GetForwarderId\configuration91.svcinfo" />
+    <None Include="Service References\GetForwarderId\configuration.svcinfo" />
+    <None Include="Service References\GetForwarderId\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
     <Content Include="XMLFile1.xml">
       <SubType>Designer</SubType>
@@ -266,6 +291,7 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\DataUploadWeb\" />
+    <WCFMetadataStorage Include="Service References\GetForwarderId\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

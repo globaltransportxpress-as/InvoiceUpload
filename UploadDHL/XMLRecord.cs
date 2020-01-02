@@ -3,33 +3,32 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Microsoft.SqlServer.Server;
 using UploadDHL.DataUploadWeb;
+
 
 namespace UploadDHL
 {
     public class XMLRecord
     {
-
-
         public string Awb { get; set; }
-        public string InvoiceNumber { get; set; }
+        public DateTime Shipdate { get; set; }
+        public string CompanyName { get; set; }
 
-        public int InvoiceLineNo { get; set; }
-        public DateTime InvoiceDate { get; set; }
-        public DateTime Due_Date { get; set; }
+        /// <remarks/>
+        public string Address1 { get; set; }
 
-        public decimal Price { get; set; }
-        public decimal Vat { get; set; }
+        public string City { get; set; }
 
-
-
+       
+        public string Zip { get; set; }
 
 
-        public string CarrierService { get; set; }
         public string KeyType { get; set; }
         public string GTXName { get; set; }
 
-        
+        public decimal Price { get; set; }
+        public decimal Vat { get; set; }
         public List<Service> Services { get; set; }
 
 
@@ -41,30 +40,37 @@ namespace UploadDHL
 
         /// <remarks/>
         public byte Transport { get; set; }
+        public GetForwarderId.ForwObj ForwarderObj{ get; set; }
+
+       
+        public string InvoiceNumber { get; set; }
+
+        public int InvoiceLineNo { get; set; }
+        public DateTime InvoiceDate { get; set; }
+        public DateTime Due_Date { get; set; }
+
+       
+
+
+
+        public string CarrierCode { get; set; }
+
+        public string CarrierService { get; set; }
+       
 
         /// <remarks/>
-        public DateTime Shipdate { get; set; }
+      
 
         /// <remarks/>
         public string CustomerNumber { get; set; }
 
         /// <remarks/>
-        public string CompanyName { get; set; }
-
-        /// <remarks/>
-        public string Address1 { get; set; }
-
+        
         /// <remarks/>
         public string Address2 { get; set; }
 
         /// <remarks/>
-        public string City { get; set; }
-
-        /// <remarks/>
         public string State { get; set; }
-
-        /// <remarks/>
-        public string Zip { get; set; }
 
         /// <remarks/>
         public string Country_Iata { get; set; }
@@ -182,6 +188,25 @@ namespace UploadDHL
 
 
         }
+
+        public int ForwarderId()
+        {
+            if (ForwarderObj != null)
+            {
+                return ForwarderObj.Id;
+            }
+            return 0;
+        }
+
+        public string ToStringRec() {
+            
+                var sep = ";";
+           
+                return CarrierCode +sep+ForwarderId() + sep + Awb + sep + InvoiceNumber + sep + InvoiceDate + sep + Price + sep + Vat +
+                       sep + CarrierService + sep + GTXName + sep + KeyType + sep + Product + sep + Transport + sep +
+                       Shipdate + sep + CompanyName + sep + Address1 + sep + City + sep + Zip + sep + Reference + sep +
+                       Description + sep + Costprice;
+            } 
 
         public InvoiceShipmentHolder StdConvert()
         {

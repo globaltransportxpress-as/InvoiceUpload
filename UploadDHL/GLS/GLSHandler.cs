@@ -38,11 +38,12 @@ namespace UploadDHL
         public Dictionary<string, int> Dic;
        
         
-        private Translation zTranslation = new Translation(Config.TranslationFileGLS);
+        private Translation zTranslation = new Translation(Config.TranslationFilePickupGLS);
         
         private static string zfixhead =
-                "Fakturanr.;Linjenr.;Dato;Varenr.;Beskrivelse;Land;Pakkenr.;Vægt;Antal;Salgspris;Beløb;Beløb inkl. moms;Reference;Modtagernavn;Kundenr.;Kundenavn;Kundenavn2;Modtagerpostnr.;Modtagerby;Modtageradresse";
-            
+                "Fakturanr;Fakturadato;Linjenr;Dato;Varenr;Beskrivelse;Antal;Valutakode;Salgspris;Beløb;Beløbinklmoms;Land;Pakkenr/bookingnr;Eksternreference;Vægt;Navn;Adresse;Postnr;By;Bemærkning";
+
+
         public GLSHandler()
         {
             Error = zTranslation.Error;
@@ -75,40 +76,18 @@ namespace UploadDHL
             {
                 return ;
             }
-            RegisterIvoceLine(glsRecord.XmlRecord, iLine);
+            //RegisterIvoceLine(glsRecord.XmlRecord, iLine);
 
             var rec = glsRecord.XmlRecord;
-            if (rec.KeyType == FRAGT)
-            {
+          
 
                 Records.Add(rec);
                 return ;
 
-            }
-                       var overw = rec.CarrierService.Contains("003099") ||
-                        rec.CarrierService.Contains("053099");
-      
-         
+            
+                     
 
-
-                if (overw)
-                {   var record = Records.FirstOrDefault(x => x.Awb == rec.Awb && x.KeyType == FRAGT);
-                    if (record != null)
-                    {
-                        iLine.TransKey = VendorHandler.OVERWEIGHT;
-                        record.BilledWeight = record.BilledWeight+ glsRecord.Antal;
-                        record.Price = record.Price + glsRecord.Beløb;
-                    }
-                    else
-                    {
-                        iLine.TransKey = VendorHandler.E_OW;
-
-                    }
-                    return ;
-
-                }
-
-            AddServiceToShipment(Records, rec);
+            //AddServiceToShipment(Records, rec);
 
 
 

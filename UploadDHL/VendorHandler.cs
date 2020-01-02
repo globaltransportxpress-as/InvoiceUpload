@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using UploadDHL.DataConnections;
+using UploadDHL.GetForwarderId;
+
 
 namespace UploadDHL
 {
@@ -26,7 +28,7 @@ namespace UploadDHL
         public List<InvoiceLine> InvoiceLineList { get; set; }
         private InvoiceShipmentLoad zInvoiceShipmentLoad = new InvoiceShipmentLoad();
 
-        public int  LineNumber { get; set; }
+        public int LineNumber { get; set; }
 
         public static string HEAD = "HEAD";
         public static string SUMHED = "SUMHEAD";
@@ -51,10 +53,10 @@ namespace UploadDHL
         {
 
             Error = "";
-           
+
             InvoiceLineList = new List<InvoiceLine>();
             LineNumber = 0;
-            
+
 
 
 
@@ -64,10 +66,10 @@ namespace UploadDHL
         public bool MatchHeader(string head, string refhead, string sep)
         {
 
-            
+
 
             AddInvoiceLine(head.Replace(sep, "|"), 1, HEAD);
-            if (head.Contains(refhead) )
+            if (head.Contains(refhead))
             {
                 return true;
             }
@@ -93,11 +95,11 @@ namespace UploadDHL
 
                 GridData.Status = "ERROR";
                 GridData.Comment = "Antal:" + errorList.Count + " Koder:" + string.Join("; ", errorList.Select(x => x.Status).Distinct().ToArray());
-              
+
                 return false;
 
             }
-            
+
             return true;
 
 
@@ -116,7 +118,7 @@ namespace UploadDHL
 
 
 
-                  
+
                     records.Add(rec);
 
                 }
@@ -150,7 +152,7 @@ namespace UploadDHL
 
         public void DropLines()
         {
-            GridData.JumpLines = InvoiceLineList.Count(x => x.Status==VendorHandler.DROP);
+            GridData.JumpLines = InvoiceLineList.Count(x => x.Status == VendorHandler.DROP);
         }
 
         public void Success()
@@ -172,7 +174,6 @@ namespace UploadDHL
             }
             return true;
         }
-        
 
 
 
@@ -182,12 +183,13 @@ namespace UploadDHL
 
 
 
-        
 
 
 
 
-        public bool RecordOK(DataRecord record,InvoiceLine iLine )
+
+
+        public bool RecordOK(DataRecord record, InvoiceLine iLine)
         {
             if (record.Awb == "")
             {
@@ -206,27 +208,27 @@ namespace UploadDHL
             {
                 return false;
             }
-            var chkYear = DateTime.Now.AddYears( - 2);
+            var chkYear = DateTime.Now.AddYears(-2);
             if (record.XmlRecord.Shipdate < chkYear || record.XmlRecord.InvoiceDate < chkYear)
             {
                 iLine.Status = E_DATE;
-               
+
 
             }
 
 
 
-            
-            
-            
-            if (record.GTXTranslate.KeyType == FRAGT && record.XmlRecord.BilledWeight ==0)
+
+
+
+            if (record.GTXTranslate.KeyType == FRAGT && record.XmlRecord.BilledWeight == 0)
             {
 
 
                 iLine.Status = E_WEIGHT;
 
             }
-            if ( record.XmlRecord.Price == 0)
+            if (record.XmlRecord.Costprice == 0)
             {
 
 
@@ -241,18 +243,18 @@ namespace UploadDHL
 
 
         }
-       
+
         public InvoiceLine AddInvoiceLine(string data, int lno, string status)
         {
-            LineNumber=LineNumber+lno;
+            LineNumber = LineNumber + lno;
             var line = new InvoiceLine
             {
 
 
                 Line = LineNumber,
-                Raw =data,
+                Raw = data,
                 Fixed = "",
-                Status =status
+                Status = status
 
             };
 
@@ -272,114 +274,92 @@ namespace UploadDHL
         }
         public string MakeXmlAndWeightfile(List<XMLRecord> listRecords)
         {
-            decimal oil = 0;
-            decimal sumTotal = 0;
-            decimal sumTotal_Tax = 0;
-            XMLRecord lastrecord = null;
-            var sb = new StringBuilder();
-            var wfList = new List<WeightFileRecord>();
-            var records = listRecords.Where(x => x.KeyType == VendorHandler.FRAGT || x.KeyType == VendorHandler.GEBYR).ToList();
 
 
-            foreach (var record in records)
+
+
+            try
             {
-                var sb2 = new StringBuilder();
-                sb2.AppendLine(zXml.FillServicesXml(record.GTXName, record.BilledWeight));
 
-                foreach (var service in record.Services)
+                if (listRecords.Count == 0)
                 {
-
-                    sb2.AppendLine(zXml.FillServicesXml(service.GTXCode, service.Price));
-
-                }
-                int pic = 1;
-
-                sb.AppendLine(zXml.FillShipmentXml(record.Awb, record.Reference,
-                    record.Shipdate,
-                    record.GTXName, pic, record.BilledWeight, record.Price,
-                    record.Zip, record.Country_Iata, record.Reciever_Zip,
-                    record.Reciever_Country_Iata, sb2.ToString()));
-
-
-
-
-
-                lastrecord = record;
-                wfList.Add(record.Convert());
-
-
-            }
-            oil = records.Sum(x => x.Oil());
-
-            var rec = listRecords.FirstOrDefault(x => x.KeyType == VendorHandler.HEAD);
-            var invoiceno = "";
-            var xml = "";
-            if (rec != null)
-            {
-                invoiceno = rec.InvoiceNumber;
-                xml = zXml.FillFacturaXml(rec.InvoiceNumber, rec.InvoiceDate, rec.Due_Date, rec.VendorAccount,
-                    rec.Price, oil, rec.Vat, sb.ToString());
-            }
-            else
-            {
-                if (lastrecord != null)
-                {
-                    sumTotal = records.Sum(x => x.Total_Price());
-                    sumTotal_Tax = records.Sum(x => x.Total_Vat());
-                    invoiceno = lastrecord.InvoiceNumber;
-                    xml = zXml.FillFacturaXml(lastrecord.InvoiceNumber, lastrecord.InvoiceDate,
-                        lastrecord.Due_Date, lastrecord.VendorAccount, sumTotal, oil, sumTotal_Tax,
-                        sb.ToString());
+                    return "No records";
                 }
 
 
-            }
 
-            if (xml != "")
+                var soapClient = new GetForwarderIdSoapClient("GetForwarderIdSoap");
+
+                var minDate = listRecords.Min(x => x.Shipdate);
+                var maxDate = listRecords.Max(x => x.Shipdate);
+                var d = soapClient.GetForwarderList(listRecords[0].CarrierCode, minDate, maxDate);
+                var forwList = d.ToList();
+                string oldAwb = "";
+                ForwObj fwo = null;
+                foreach (var record in listRecords.OrderBy(x => x.Awb))
+                {
+                    if (oldAwb != record.Awb)
+                    {
+                        oldAwb = record.Awb;
+                        var fw = forwList.Where(x => x.PickupDate == record.Shipdate);
+
+                        if (record.CarrierCode == "GLS")
+                        {
+                            fwo = fw.FirstOrDefault(x => x.OperatorFeedback.Contains(record.Awb));
+                            if (fwo == null)
+                            {
+                                fwo = fw.FirstOrDefault(
+                                    x => x.Street.ToUpper().Contains(record.Address1.ToUpper()) ||
+                                         record.Address1.ToUpper().Contains(x.Street.ToUpper()));
+                            }
+                            if (fwo == null)
+                            {
+                                fwo = forwList.FirstOrDefault(x => x.OperatorFeedback.Contains(record.Awb));
+                            }
+                        }
+                    }
+
+
+
+                    record.ForwarderObj = fwo;
+                }
+                var form = new Matchup();
+
+
+
+                form.Show();
+                form.InitData(listRecords, forwList);
+                form.ShowData();
+
+
+                return "Error";
+
+
+
+
+                if (listRecords.Count > 0)
+                {
+                    WeightFileObj.CreateFile(Config.GLSRootFileDir, listRecords, listRecords[0].InvoiceNumber);
+                }
+
+            }
+            catch (Exception ex)
             {
-                using (StreamWriter xmlout =
-                    new StreamWriter(
-                        RootDir + "\\Xml\\X" + invoiceno + "_" +
-                        DateTime.Now.ToString("yyyyMMddmms") + ".xml", false))
-                {
-                    xmlout.Write(xml);
-                }
+                return "Error";
             }
 
-            //if (1 != 1)
-            if (lastrecord != null)
-            {
-                WeightFileObj.CreateFile(RootDir, wfList, lastrecord.InvoiceNumber);
-
-                foreach (var record in records)
-                {
-
-                    zInvoiceShipmentLoad.AddShipment(record.StdConvert());
-
-                }
-                var status = zInvoiceShipmentLoad.Run();
-
-                if (status != "OK")
-                {
-
-
-                    return status;
-
-
-                }
-            }
 
 
             return "";
 
         }
-    
 
-    public bool MakeXmlAndWeight(string invoicename)
+
+        public bool MakeXmlAndWeight(string invoicename)
         {
 
-           
-            return MakeGridComment(MakeXmlAndWeightfile(Records.Where(x=>x.InvoiceNumber==invoicename).ToList()),
+
+            return MakeGridComment(MakeXmlAndWeightfile(Records.Where(x => x.InvoiceNumber == invoicename).ToList()),
                 "MakeXmlAndWeight");
 
 
@@ -397,10 +377,10 @@ namespace UploadDHL
         }
         public bool FileFinish(string file)
         {
-            return MakeGridComment(MoveAllFiles( file, CarrierName), "MoveFiles");
+            return MakeGridComment(MoveAllFiles(file, CarrierName), "MoveFiles");
         }
 
-        public string MoveAllFiles( string file, string carrier)
+        public string MoveAllFiles(string file, string carrier)
         {
             var fname = Path.GetFileName(file);
             try

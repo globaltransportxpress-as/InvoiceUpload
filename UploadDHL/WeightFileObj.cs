@@ -13,19 +13,18 @@ namespace UploadDHL
     class WeightFileObj
     {
       
-        public static void CreateFile(string path , List<WeightFileRecord> list, string factura)
+        public static void CreateFile(string path , List<XMLRecord> list, string factura)
         {
 
             
 
             var filename = path + "\\Weight\\W_" + factura + "_" +
                            DateTime.Now.ToString("yyyyMMddmm") + ".csv";
-            var specialfile = path + "\\Weight\\W#_" + factura + "_" +
-                           DateTime.Now.ToString("yyyyMMddmm") + ".csv";
+            
 
 
-            CreatePartFile(filename, list.Where(x => !x.AWB.StartsWith("#")).ToList(), factura);
-            CreatePartFile(specialfile, list.Where(x => x.AWB.StartsWith("#")).ToList(),"#"+factura);
+            CreatePartFile(filename,list);
+           
           
            
 
@@ -37,7 +36,7 @@ namespace UploadDHL
 
 
 
-        private static void CreatePartFile(string filename, List<WeightFileRecord> list, string factura)
+        private static void CreatePartFile(string filename, List<XMLRecord> list)
         {
            
             var wlist = new List<string>();
@@ -50,18 +49,13 @@ namespace UploadDHL
                     foreach (var rec in list)
                     {
                        
-                        if ((rec.AWB.StartsWith("#") || rec.BillWeight > 0) && rec.Price >= 0 )
-                        {
-
-                            var s = string.Format("{0};{1};{2};{3};{4};{5};{6}", rec.AWB,
-                                rec.BillWeight.ToString(CultureInfo.GetCultureInfo("da-DK")), rec.SalesProduct, rec.TransportProduct, rec.CreditorAccount,
-                                ServicePart(rec), rec.Price);
+                      
 
                           
-                            wlist.Add(s);
                            
-                            outputFile.WriteLine(s);
-                        }
+                           
+                            outputFile.WriteLine(rec.ToStringRec());
+                       
 
 
 
@@ -73,11 +67,7 @@ namespace UploadDHL
                 }
 
             }
-            if (wlist.Count>0)
-            {
-                var service = new InvoiceUploadSoapClient("InvoiceUploadSoap");
-              //  service.WeighFileUpload(wlist.ToArray(), factura);
-            }
+            
          
 
         }
