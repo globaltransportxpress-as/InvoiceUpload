@@ -1449,11 +1449,7 @@ namespace UploadDHL
                 FileDone.Text = "Execution..." + griddata.Filename;
                 this.Refresh();
                 System.Windows.Forms.Application.DoEvents();
-                string[] columnNames = nfile.Columns.Cast<DataColumn>()
-                    .Select(x => x.ColumnName)
-                    .ToArray();
-                pdkHandler.SetData(columnNames);
-
+                
 
                 foreach (DataRow row in nfile.Rows)
                 {

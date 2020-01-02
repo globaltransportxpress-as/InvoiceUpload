@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel.Description;
 using System.Text;
 
 using UploadDHL.DataUploadWeb;
@@ -30,8 +31,9 @@ namespace UploadDHL
         public int GTXTransport { get; set; }
 
 
+        public decimal FINVIR { get; set; }
+      
 
-        
        public decimal BillWeight { get; set; }
        
         public String Name { get; set; }
@@ -47,7 +49,7 @@ namespace UploadDHL
         public string[] HeaderInfo { get; set; }
         public TranslationRecord GTXTranslate { get; set; }
 
-
+        public string[] servicenames= "FINVIR|H79402|H79412|H79413|H79406|H79401|H79400|H79403|HTBD".Split('|');
 
         public Palletrecord(string[] data)
         {
@@ -61,15 +63,40 @@ namespace UploadDHL
             Material = data[7];
             Price = decimal.Parse(data[8]);
             PriceOil = decimal.Parse(data[9]);
+            Services = new List<Service>();
 
-            Ref = data[10];
-            Name = data[11];
-            SenderCity = data[12];
-            FromZip = data[13];
-            ReceiverName = data[14];
-            ReceiverCity = data[15];
-            ToZip = data[16];
-            Factura = data[17];
+            for (var i = 10; i < 19; i++)
+            {
+               var price = decimal.Parse(data[i]);
+                if (price > 0)
+                {
+                    var ser = new Service();
+                    ser.Price = price;
+                    ser.GTXCode = servicenames[i - 10];
+                    Services.Add(ser);
+
+                }
+
+
+                
+
+            }
+          
+
+
+
+
+
+
+
+        Ref = data[19];
+            Name = data[20];
+            SenderCity = data[21];
+            FromZip = data[22];
+            ReceiverName = data[23];
+            ReceiverCity = data[24];
+            ToZip = data[25];
+            Factura = data[26];
 
 
 

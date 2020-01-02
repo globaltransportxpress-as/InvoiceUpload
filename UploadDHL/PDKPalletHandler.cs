@@ -170,6 +170,12 @@ namespace UploadDHL
             var shipments = new StringBuilder();
             foreach (var pdkRecord in Records)
             {
+
+
+
+
+
+
                 var services = new StringBuilder();
                 var total = pdkRecord.Services.Sum(x => x.Price);
 
