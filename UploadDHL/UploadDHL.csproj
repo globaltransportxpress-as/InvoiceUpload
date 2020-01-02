@@ -108,6 +108,7 @@
     <Compile Include="PalleImport\PalletReportRecord.cs" />
     <Compile Include="PalleImport\PalletHandler.cs" />
     <Compile Include="PalleImport\PalletColliRecord.cs" />
+    <Compile Include="PDKPalletHandler.cs" />
     <Compile Include="PDKPalletCollirecord.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -117,6 +118,7 @@
     <Compile Include="PDKPalletReport.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Palletrecord.cs" />
     <Compile Include="Service References\DataUploadWeb\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

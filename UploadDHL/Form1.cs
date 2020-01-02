@@ -1422,5 +1422,159 @@ namespace UploadDHL
             FileDone.Text = "Finish";
             this.Refresh();
         }
+
+        private void XuPallet_Click(object sender, EventArgs e)
+        {
+            EditMode(false);
+            FileDone.Text = "Start...........>>>>";
+            zErrorHandler = new ErrorHandler();
+            var msglist = new List<GridData>();
+            var cok = 0;
+
+
+
+
+            var path = Config.PDKRootFileDir + "\\In\\";
+            var listfile = Directory.EnumerateFiles(path, "*.xlsx");
+            foreach (string file in listfile.Where(x => !x.Contains("~")))
+            {
+                zErrorHandler.File = file;
+                var nfile = ImportExceltoDatatable(file, "Ark1");
+                var pdkHandler = new PdkPalletHandler();
+                pdkHandler.Error = "";
+                pdkHandler.ErrorHandler = zErrorHandler;
+                var griddata = new GridData();
+                griddata.Filename = file.Replace(path, "");
+                griddata.JumpLineData = new List<string>();
+                FileDone.Text = "Execution..." + griddata.Filename;
+                this.Refresh();
+                System.Windows.Forms.Application.DoEvents();
+                string[] columnNames = nfile.Columns.Cast<DataColumn>()
+                    .Select(x => x.ColumnName)
+                    .ToArray();
+                pdkHandler.SetData(columnNames);
+
+
+                foreach (DataRow row in nfile.Rows)
+                {
+                    string[] fields = row.ItemArray.Select(field => field.ToString()).ToArray();
+
+                    if (pdkHandler.SetData(fields) == null)
+                    {
+                        griddata.JumpLineData.Add(string.Join(";", fields));
+                    }
+
+                }
+
+
+
+
+
+
+                if (pdkHandler.ErrorWeight != "")
+                {
+
+                    Message.Text = pdkHandler.ErrorWeight;
+                    griddata.Status = "Weight Zerro";
+                }
+                else
+                {
+                    if (pdkHandler.Error != "")
+                    {
+                        Message.Text = "Translation missing ";
+                        griddata.Status = "TRANSLATION";
+
+
+                    }
+                    else
+                    {
+                        if (pdkHandler.Records.Count == 0)
+                        {
+                            if (pdkHandler.Dic == null)
+                            {
+                                Message.Text = "Translation missing ";
+                                griddata.Status = "ERROR";
+                                griddata.Comment = "Header not found";
+
+                            }
+                            else
+                            {
+                                griddata.Status = "ERROR";
+                                griddata.Comment = "No data records found";
+
+                                Message.Text = "Data have wrong format";
+
+                            }
+
+                        }
+                        else
+                        {
+                            WeightFileObj.CreateFile(Config.PDKRootFileDir,
+                                pdkHandler.Records.Select(x => x.Convert()).ToList(), pdkHandler.Factura);
+                            pdkHandler.MakeXML2();
+                            var listInvShip = new List<InvoiceShipmentHolder>();
+                            var ccount = 0;
+                            var errorlist = new List<string>();
+                            foreach (var record in pdkHandler.Records.Where(x => x.Price > 0).ToList())
+                            {
+
+
+                                invoiceShipmentLoad.AddShipment(record.StdConvert());
+
+                            }
+
+
+                            if (invoiceShipmentLoad.Run() == "OK")
+                            {
+
+                                MoveFiles(Config.PDKRootFileDir + "\\XML\\", "PDK");
+                                griddata.Status = "OK";
+                                griddata.Comment = "Success";
+                                griddata.JumpLines = pdkHandler.DropLines;
+
+
+
+                                try
+                                {
+
+                                    File.Move(file, file.Replace("\\In\\", "\\Done\\"));
+                                }
+                                catch (Exception ex)
+                                {
+
+                                    File.Move(file, file.Replace("\\In\\", "\\Done\\" + DateTime.Now.ToString("ddHHmm")));
+                                }
+
+
+                            }
+                            else
+                            {
+                                griddata.Status = "Error";
+                                griddata.Comment = "Upload data to web error";
+                            }
+
+
+
+
+
+                        }
+
+
+                    }
+                }
+                msglist.Add(griddata);
+
+
+                cok++;
+
+            }
+
+            FileDone.Text = "Done ..." + cok + " files";
+
+            XuMsgGrid.DataSource = msglist;
+
+
+
+        }
     }
 }
