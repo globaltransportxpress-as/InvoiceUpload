@@ -77,44 +77,11 @@ namespace UploadDHL
                     return null;
                 }
 
-                pdkRec.Services = new List<Service>();
 
 
 
 
-                if (pdkRec.GTXTranslate.KeyType == "GEBYR")
-                {
-
-                    var sv = new Service();
-                    sv.OrigalName = pdkRec.GTXTranslate.Key;
-                    sv.GTXCode = pdkRec.GTXTranslate.GTXName;
-                    sv.Price = pdkRec.Price;
-
-
-                    var record = Records.FirstOrDefault(x => x.AWB == pdkRec.AWB);
-                    if (record == null)
-                    {
-
-                        pdkRec.Services.Add(sv);
-                        Records.Add(pdkRec);
-                    }
-                    else
-                    {
-                        record.Services.Add(sv);
-                    }
-
-
-
-
-                }
-                else
-                {
-                    Records.Add(pdkRec);
-                }
-
-
-
-
+                Records.Add(pdkRec);
 
 
                 return pdkRec;

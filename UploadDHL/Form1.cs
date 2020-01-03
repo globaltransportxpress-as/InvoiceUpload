@@ -1486,21 +1486,13 @@ namespace UploadDHL
                     {
                         if (pdkHandler.Records.Count == 0)
                         {
-                            if (pdkHandler.Dic == null)
-                            {
-                                Message.Text = "Translation missing ";
-                                griddata.Status = "ERROR";
-                                griddata.Comment = "Header not found";
-
-                            }
-                            else
-                            {
+                           
                                 griddata.Status = "ERROR";
                                 griddata.Comment = "No data records found";
 
                                 Message.Text = "Data have wrong format";
 
-                            }
+                         
 
                         }
                         else

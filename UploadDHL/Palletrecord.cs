@@ -73,6 +73,7 @@ namespace UploadDHL
                     var ser = new Service();
                     ser.Price = price;
                     ser.GTXCode = servicenames[i - 10];
+                     
                     Services.Add(ser);
 
                 }
