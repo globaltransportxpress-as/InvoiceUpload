@@ -19,6 +19,10 @@ namespace UploadDHL.GetForwarderId {
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         int GetId(string awb, string name, string carrier, System.DateTime date);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/CustomerName", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        string CustomerName(int account);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetForwarderList", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         UploadDHL.GetForwarderId.ForwObj[] GetForwarderList(string carrier, System.DateTime sdate, System.DateTime edate);
@@ -58,6 +62,8 @@ namespace UploadDHL.GetForwarderId {
         
         private string pickupTypeField;
         
+        private string linkField;
+        
         private decimal pricePurchaseField;
         
         private decimal priceSellingField;
@@ -65,6 +71,8 @@ namespace UploadDHL.GetForwarderId {
         private string specialTreatmentField;
         
         private decimal totalWeightField;
+        
+        private SalePriceLine[] priceListField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
@@ -224,6 +232,18 @@ namespace UploadDHL.GetForwarderId {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=13)]
+        public string Link {
+            get {
+                return this.linkField;
+            }
+            set {
+                this.linkField = value;
+                this.RaisePropertyChanged("Link");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
         public decimal PricePurchase {
             get {
                 return this.pricePurchaseField;
@@ -235,7 +255,7 @@ namespace UploadDHL.GetForwarderId {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=15)]
         public decimal PriceSelling {
             get {
                 return this.priceSellingField;
@@ -247,7 +267,7 @@ namespace UploadDHL.GetForwarderId {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=15)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=16)]
         public string SpecialTreatment {
             get {
                 return this.specialTreatmentField;
@@ -259,7 +279,7 @@ namespace UploadDHL.GetForwarderId {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=16)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=17)]
         public decimal TotalWeight {
             get {
                 return this.totalWeightField;
@@ -267,6 +287,162 @@ namespace UploadDHL.GetForwarderId {
             set {
                 this.totalWeightField = value;
                 this.RaisePropertyChanged("TotalWeight");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=18)]
+        public SalePriceLine[] PriceList {
+            get {
+                return this.priceListField;
+            }
+            set {
+                this.priceListField = value;
+                this.RaisePropertyChanged("PriceList");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
+    public partial class SalePriceLine : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private int idField;
+        
+        private int fK_ForwarderPickup_IdField;
+        
+        private int fK_Customer_IdField;
+        
+        private int fK_Account_IdField;
+        
+        private decimal priceField;
+        
+        private decimal estimatedCostField;
+        
+        private string lineNameField;
+        
+        private string logField;
+        
+        private System.DateTime timestampUpdateField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public int Id {
+            get {
+                return this.idField;
+            }
+            set {
+                this.idField = value;
+                this.RaisePropertyChanged("Id");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public int FK_ForwarderPickup_Id {
+            get {
+                return this.fK_ForwarderPickup_IdField;
+            }
+            set {
+                this.fK_ForwarderPickup_IdField = value;
+                this.RaisePropertyChanged("FK_ForwarderPickup_Id");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public int FK_Customer_Id {
+            get {
+                return this.fK_Customer_IdField;
+            }
+            set {
+                this.fK_Customer_IdField = value;
+                this.RaisePropertyChanged("FK_Customer_Id");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public int FK_Account_Id {
+            get {
+                return this.fK_Account_IdField;
+            }
+            set {
+                this.fK_Account_IdField = value;
+                this.RaisePropertyChanged("FK_Account_Id");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public decimal Price {
+            get {
+                return this.priceField;
+            }
+            set {
+                this.priceField = value;
+                this.RaisePropertyChanged("Price");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public decimal EstimatedCost {
+            get {
+                return this.estimatedCostField;
+            }
+            set {
+                this.estimatedCostField = value;
+                this.RaisePropertyChanged("EstimatedCost");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public string LineName {
+            get {
+                return this.lineNameField;
+            }
+            set {
+                this.lineNameField = value;
+                this.RaisePropertyChanged("LineName");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
+        public string Log {
+            get {
+                return this.logField;
+            }
+            set {
+                this.logField = value;
+                this.RaisePropertyChanged("Log");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
+        public System.DateTime TimestampUpdate {
+            get {
+                return this.timestampUpdateField;
+            }
+            set {
+                this.timestampUpdateField = value;
+                this.RaisePropertyChanged("TimestampUpdate");
             }
         }
         
@@ -309,6 +485,10 @@ namespace UploadDHL.GetForwarderId {
         
         public int GetId(string awb, string name, string carrier, System.DateTime date) {
             return base.Channel.GetId(awb, name, carrier, date);
+        }
+        
+        public string CustomerName(int account) {
+            return base.Channel.CustomerName(account);
         }
         
         public UploadDHL.GetForwarderId.ForwObj[] GetForwarderList(string carrier, System.DateTime sdate, System.DateTime edate) {

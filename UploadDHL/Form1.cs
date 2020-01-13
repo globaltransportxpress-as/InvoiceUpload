@@ -68,43 +68,34 @@ namespace UploadDHL
             }
 
             var path = Config.DHLRootFileDir + "\\In\\";
-            foreach (string file in Directory.EnumerateFiles(path, "*.csv"))
+            foreach (string file in Directory.EnumerateFiles(path, "*.xlsx"))
             {
 
 
+                var nfile = ImportExceltoDatatable(file, "Sheet1");
+               
+              
+                dhlHandler.GridData.Filename = file;
+                dhlHandler.InvoiceName = file.Replace(path, "").Replace(" ", "").Replace(".", "").Replace("xlsx", "");
 
-                var filename = file.Replace(path, "");
-                dhlHandler = new DHLHandler();
-                dhlHandler.GridData.Filename = filename;
-
-                ShowMessage("Execution..." + filename);
-
-
-                try
-                {
-                    var ok = false;
-                    using (StreamReader fileStream = new StreamReader(file))
-                    {
-
-                        string header = fileStream.ReadLine();
-
-                        ok = dhlHandler.CheckHeader(header);
-                        if (ok)
-                        {
-                            string line = fileStream.ReadLine();
-                            while (line != null)
-                            {
-
-                                dhlHandler.Next(line);
+                ShowMessage("Execution..." + file);
 
 
-                                line = fileStream.ReadLine();
-                            }
+                
 
-                        }
+                    foreach (DataRow row in nfile.Rows) {
+
+                        string[] fields = row.ItemArray.Select(field => field.ToString()).ToArray();
+
+                        dhlHandler.Next(fields);
+
+
+                     
+
+                      
 
                     }
-                    if (dhlHandler.DataValidation() && ok)
+                    if (dhlHandler.DataValidation())
                     {
 
                         if (dhlHandler.MakeXmlAndWeight())
@@ -120,18 +111,11 @@ namespace UploadDHL
 
                         dhlHandler.DropLines();
                     }
-
-
-                }
-                catch (Exception ex)
-                {
-                    dhlHandler.GridData.Status = VendorHandler.E_ERROR;
-                    dhlHandler.GridData.Comment = ex.Message;
-                    dhlHandler.GridData.ErrorLines = dhlHandler.InvoiceLineList;
-
-                }
+                
                 zGridDataList.Add(dhlHandler.GridData);
+
             }
+
 
             Finish();
         }
@@ -463,7 +447,7 @@ namespace UploadDHL
         private void Finish()
         {
             ShowMessage("Done ..." + zOK + " files");
-
+            
             XuMsgGrid.DataSource = zGridDataList;
 
         }

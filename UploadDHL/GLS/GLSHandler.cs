@@ -96,57 +96,7 @@ namespace UploadDHL
         
            
 
-          public void MakeXML2(List<XMLRecord> xmlRecords)
-        {
-            var dhlXml = new DHLXML();
-
-            var shipments = new StringBuilder();
-            foreach (var glsRecord in xmlRecords)
-            {
-
-                var services = new StringBuilder();
-                var total = glsRecord.Services.Sum(x => x.Price) + glsRecord.Price;
-               
-                int count = 1;
-                if (glsRecord.KeyType==FRAGT)
-                {
-
-                    services.Append(dhlXml.FillServicesXml(glsRecord.GTXName, glsRecord.Price));
-                       
-                }
-                foreach (var service in glsRecord.Services)
-                {
-                    count++;
-                    services.Append(dhlXml.FillServicesXml( service.GTXCode, service.Price));
-                }
-               
-                shipments.Append(dhlXml.FillShipmentXml(glsRecord.Awb, "",glsRecord.InvoiceDate, glsRecord.GTXName, 1,
-                    glsRecord.BilledWeight, glsRecord.Price,glsRecord.Zip, glsRecord.Country_Iata, glsRecord.Reciever_Zip,
-                    glsRecord.Reciever_Country_Iata, services.ToString()));
-             
-
-            }
-
-            var sumfragt = xmlRecords.Sum(x => x.Price);
-            var tillæg = xmlRecords.Sum(x => x.Services.Sum(y=>y.Price));
-            var tax = xmlRecords.Sum(x => x.Vat)- sumfragt;
-
-
-            var xml = dhlXml.FillFacturaXml(Factura, zFacturaDate, zFacturaDate.AddDays(30), zCustomerNumber, sumfragt,
-                tillæg, tax, shipments.ToString());
-
-
-
-
-            using (StreamWriter xmlout =
-                new StreamWriter(Config.GLSRootFileDir + "\\Xml\\X" + Factura + "_" + DateTime.Now.ToString("yyyyMMddmm") + ".xml", false))
-            {
-                xmlout.Write(xml);
-            }
-
-
-
-        }
+        
       
     }
 

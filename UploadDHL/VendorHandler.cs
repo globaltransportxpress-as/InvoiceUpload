@@ -22,7 +22,7 @@ namespace UploadDHL
         public GridData GridData = new GridData();
 
         public List<XMLRecord> Records = new List<XMLRecord>();
-        private DHLXML zXml = new DHLXML();
+       
 
         public ErrorHandler ErrorHandler { get; set; }
         public List<InvoiceLine> InvoiceLineList { get; set; }
@@ -317,6 +317,24 @@ namespace UploadDHL
                                 fwo = forwList.FirstOrDefault(x => x.OperatorFeedback.Contains(record.Awb));
                             }
                         }
+                        if (record.CarrierCode == "DHL")
+                        {
+                            var fwd = fw.Where(x => x.PickupDate == record.Shipdate);
+
+                                  fwo = fwd.FirstOrDefault(
+                                    x => x.Street.ToUpper().Contains(record.Address1.ToUpper()) ||
+                                         record.Address1.ToUpper().Contains(x.Street.ToUpper()));
+                            if (fwo == null)
+                            {
+
+                                fwo = fwd.FirstOrDefault(
+                                    x => x.CompanyName.ToUpper().Contains(record.CompanyName.ToUpper()) ||
+                                         record.CompanyName.ToUpper().Contains(x.CompanyName.ToUpper()));
+
+                            }
+                            
+                            
+                        }
                     }
 
 
@@ -345,7 +363,7 @@ namespace UploadDHL
             }
             catch (Exception ex)
             {
-                return "Error";
+                return ex.Message;
             }
 
 

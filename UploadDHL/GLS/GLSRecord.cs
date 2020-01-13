@@ -174,7 +174,7 @@ namespace UploadDHL
                 State = "",
                 Zip = Postnr,
                 Country_Iata = "DK",
-               
+                NumberofCollies =(byte) Antal,
                 
                 Reference = Reference,
                 BilledWeight = 1,
