@@ -154,7 +154,7 @@ namespace UploadDHL
                         State ="",
                         Zip = FromZip,
                         Country_Iata = SenderCountry,
-                        Reciever_CompanyName = Name,
+                        Reciever_CompanyName = ReceiverName,
                         Reciever_Address1 = ".",
                         Reciever_Address2 = ".",
                         Reciever_City = ReceiverCity,
