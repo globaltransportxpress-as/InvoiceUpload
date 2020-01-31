@@ -38,7 +38,7 @@ namespace UploadDHL
         public Dictionary<string, int> Dic;
        
         
-        private Translation zTranslation = new Translation(Config.TranslationFilePickupGLS);
+        private Translation zTranslation = new Translation(Config.TranslationFilePickupGLS,Config.AccountsGTX);
         
         private static string zfixhead =
                 "Fakturanr;Fakturadato;Linjenr;Dato;Varenr;Beskrivelse;Antal;Valutakode;Salgspris;Beløb;Beløbinklmoms;Land;Pakkenr/bookingnr;Eksternreference;Vægt;Navn;Adresse;Postnr;By;Bemærkning";
@@ -49,6 +49,7 @@ namespace UploadDHL
             Error = zTranslation.Error;
             RootDir = Config.GLSRootFileDir;
             CarrierName = "GLS";
+            Translation = zTranslation;
 
         }
 

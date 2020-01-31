@@ -10,7 +10,7 @@ using UploadDHL.DataUploadWeb;
 
 namespace UploadDHL
 {
-    class GTXHandler:VendorHandler
+    class HSHandler:VendorHandler
 
     {
 
@@ -33,17 +33,18 @@ namespace UploadDHL
         }
         public Dictionary<string, int> Dic;
    
-        private Translation zTranslation = new Translation(Config.TranslationFileGtx);
+        private Translation zTranslation = new Translation(Config.TranslationFilePickupHS, Config.AccountsGTX);
         
         private static string zfixhead =
                 "PURCHORDERFORMNUM,Pieces,Weight,LNO,Amount,RECEIPTDATECONFIRMED,PICKUPNAME,PICKUPCOUNTRY,DELIVERYNAME,DELIVERYCOUNTRYREGIONID,CUSTOMERREF,ORGNUMBER,INVOICEACCOUNT,NAME,VARENUMMER,VARENAVN,ACCOUNTNUM,ProductGroup,SALESID,INTERCOMPANYORIGINALSALESID,INVOICEID,INVOICEDATE,LINENUM,OilAmount,TXT,TAXWRITECODE,DIMENSION,DIMENSION2_,DIMENSION3_,PU_ADRESS,PU_CITY,PU_ZIP,DL_ADRESS,DL_CITY,DL_ZIP,YEAR";
 
 
-        public GTXHandler()
+        public HSHandler()
         {
             Error = zTranslation.Error;
             RootDir = Config.GTXRootFileDir;
-            CarrierName = "GTX";
+            CarrierName = "HS";
+            Translation = zTranslation;
 
 
 
@@ -62,7 +63,7 @@ namespace UploadDHL
             LineNumber++;
             var iLine = AddInvoiceLine(string.Join("|", da), 1, E_INI);
 
-            var gtxRecord = new GTXrecord(da, zTranslation,LineNumber);
+            var gtxRecord = new HSrecord(da, zTranslation,LineNumber);
 
             iLine.Status = gtxRecord.RecordStatus;
             iLine.Reason = string.Join("; ", gtxRecord.ErrorHelper.ToArray());

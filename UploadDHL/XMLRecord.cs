@@ -40,7 +40,7 @@ namespace UploadDHL
 
         /// <remarks/>
         public byte Transport { get; set; }
-        public GetForwarderId.ForwObj ForwarderObj{ get; set; }
+        public ForwarderRecord ForwarderObj{ get; set; }
 
        
         public string InvoiceNumber { get; set; }

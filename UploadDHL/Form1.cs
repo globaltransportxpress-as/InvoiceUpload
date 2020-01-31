@@ -18,6 +18,10 @@ using Excel = Microsoft.Office.Interop.Excel;
 using DataTable = System.Data.DataTable;
 
 using UploadDHL.DataUploadWeb;
+using UploadDHL.GetForwarderId;
+using UploadDHL.GTX;
+using UploadDHL.Properties.DataSources;
+using Label = System.Windows.Forms.Label;
 
 namespace UploadDHL
 {
@@ -27,9 +31,10 @@ namespace UploadDHL
         private string actualTransFile = "";
         private List<GridData> zGridDataList;
         private int zOK;
+        private List<ForwObj> zForwarderObjs;
 
-        private List<TranslationRecord> zTranlationListFull;
-
+        private List<TranslationRecord> zTranlationListFull =null;
+        private List<XMLRecord> zBillRecordsList;
 
 
         public Form1()
@@ -39,12 +44,13 @@ namespace UploadDHL
             EditMode(false);
             FileDone.Text = "Welcome...............";
 
-            var isShipx = Config.System == "ShipX";
-            XuDHL.Enabled = !isShipx;
-            XUGTX.Enabled = isShipx;
-            XuGls.Enabled = !isShipx;
-            XuFedex.Enabled = !isShipx;
-            XuPdk.Enabled = !isShipx;
+           
+            var date = DateTime.Now.AddMonths(-1);
+
+            XuMinDate.Text = new DateTime(date.Year, date.Month, 1).ToString("yyyy-MM-dd");
+            var lastDayOfMonth = DateTime.DaysInMonth(date.Year, date.Month);
+            XuMaxDate.Text  = new DateTime(date.Year, date.Month, lastDayOfMonth).ToString("yyyy-MM-dd");
+
 
         }
 
@@ -60,6 +66,16 @@ namespace UploadDHL
             // Append text to an existing file named "WriteLines.txt".
             Init();
             var dhlHandler = new DHLHandler();
+            if (XuNoInvoice.Checked)
+            {
+                
+
+                SelectFromForwarderPickup( dhlHandler, XuTranslationErrorDHL);
+                return;
+
+
+            }
+           
             if (dhlHandler.Error != "")
             {
                 FileDone.Text = dhlHandler.Error;
@@ -80,8 +96,13 @@ namespace UploadDHL
 
                 ShowMessage("Execution..." + file);
 
+                string[] columnNames = nfile.Columns.Cast<DataColumn>()
+                    .Select(x => x.ColumnName)
+                    .ToArray();
 
-                
+
+                dhlHandler.CheckHeader(string.Join(";", columnNames));
+
 
                     foreach (DataRow row in nfile.Rows) {
 
@@ -163,13 +184,17 @@ namespace UploadDHL
             {
                 XuFilterKey.Text = "";
             }
+            XuTranslationErrorGLS.Visible = false;
+            XuTranslationErrorHS.Visible = false;
+            XuTranslationErrorDHL.Visible = false;
         }
 
-        private void EditTransFile(string file)
+        private void EditTransFile(VendorHandler handler)
         {
             EditMode(true);
-            actualTransFile = file;
-            var translation = new Translation(actualTransFile);
+           
+            var translation =  handler.Translation;
+            
             var list = translation.TranDictionary.Select(x => x.Value).ToList();
             foreach (var added in translation.AddList)
             {
@@ -183,101 +208,20 @@ namespace UploadDHL
 
         private void Xu_EditDHL_Click(object sender, EventArgs e)
         {
-            EditTransFile(Config.TranslationFileDHL);
+            EditTransFile(new DHLHandler());
         }
 
-        private void XuPdk_Click(object sender, EventArgs e)
-        {
-
-
-
-            Init();
-
-            var path = Config.PDKRootFileDir + "\\In\\";
-            var listfile = Directory.EnumerateFiles(path, "*.xlsx");
-            var pdkHandler = new PdkHandler();
-            if (pdkHandler.Error != "")
-            {
-                FileDone.Text = pdkHandler.Error;
-
-                return;
-            }
-
-            foreach (string file in listfile.Where(x => !x.Contains("~")))
-            {
-
-                var nfile = ImportExceltoDatatable(file, "Fakturaspecifikation");
-                pdkHandler = new PdkHandler();
-                var filename = file.Replace(path, "");
-
-                pdkHandler.GridData.Filename = filename;
-
-                ShowMessage("Execution..." + filename);
-
-
-                string[] columnNames = nfile.Columns.Cast<DataColumn>()
-                    .Select(x => x.ColumnName)
-                    .ToArray();
-                pdkHandler.SetData(columnNames);
-
-
-                foreach (DataRow row in nfile.Rows)
-                {
-                    string[] fields = row.ItemArray.Select(field => field.ToString()).ToArray();
-
-                    pdkHandler.SetData(fields);
-
-                }
-
-                if (pdkHandler.DataValidation())
-                {
-
-                    if (pdkHandler.MakeXmlAndWeight())
-                    {
-                        if (pdkHandler.FileFinish(file))
-                        {
-                            pdkHandler.Success();
-                            zOK++;
-                        }
-                    }
-
-                    pdkHandler.DropLines();
-                }
-
-                zGridDataList.Add(pdkHandler.GridData);
-
-            }
-
-            Finish();
-
-
-
-        }
-
-        private void XuEditTranslation_Click(object sender, EventArgs e)
-        {
-
-            EditTransFile(Config.TranslationFilePDK);
-        }
-
-        private void XuEditTransFedex_Click(object sender, EventArgs e)
-        {
-            EditTransFile(Config.TranslationFileFedex);
-        }
+       
+       
 
         private void XuEditTransGLS_Click(object sender, EventArgs e)
         {
-            EditTransFile(Config.TranslationFilePickupGLS);
-        }
-
-        private void XuGTXTrans_Click(object sender, EventArgs e)
-        {
-            EditTransFile(Config.TranslationFileGtx);
+            EditTransFile(new GLSHandler());
         }
 
         private void XuSaveTranslatioon_Click(object sender, EventArgs e)
         {
-            var translation = new Translation(actualTransFile);
+            var translation = new GLSHandler().Translation;
 
             translation.SaveAll((List<TranslationRecord>)XuEditTranslationGrid.DataSource);
 
@@ -365,75 +309,7 @@ namespace UploadDHL
 
 
 
-        private void XuFedex_Click(object sender, EventArgs e)
-        {
-
-            Init();
-            var fedexHandler = new FedexHandler();
-            if (fedexHandler.Error != "")
-            {
-                FileDone.Text = fedexHandler.Error;
-
-                return;
-            }
-            var path = Config.FedexRootFileDir + "\\In\\";
-
-            foreach (string file in Directory.EnumerateFiles(path, "*.csv"))
-            {
-
-                ;
-                var filename = file.Replace(path, "");
-                fedexHandler = new FedexHandler();
-                fedexHandler.GridData.Filename = filename;
-
-                ShowMessage("Execution..." + filename);
-
-
-                try
-                {
-
-                    using (StreamReader fileStream = new StreamReader(file))
-                    {
-
-                        string header = fileStream.ReadLine();
-
-                        if (fedexHandler.CheckHeader(header))
-                        {
-                            string line = fileStream.ReadLine();
-                            while (line != null)
-                            {
-                                fedexHandler.Next(line);
-                                line = fileStream.ReadLine();
-                            }
-                        }
-                    }
-                    if (fedexHandler.DataValidation())
-                    {
-
-                        if (fedexHandler.MakeXmlAndWeight())
-                        {
-                            if (fedexHandler.FileFinish(file))
-                            {
-                                fedexHandler.Success();
-                                zOK++;
-                            }
-                        }
-
-                        fedexHandler.DropLines();
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    fedexHandler.GridData.Status = VendorHandler.E_ERROR;
-                    fedexHandler.GridData.Comment = ex.Message;
-                }
-                zGridDataList.Add(fedexHandler.GridData);
-            }
-
-            Finish();
-
-        }
+       
 
         private void Init()
         {
@@ -456,11 +332,20 @@ namespace UploadDHL
 
         private void XuGls_Click(object sender, EventArgs e)
         {
+            var glsHandler = new GLSHandler();
+            if (XuNoInvoice.Checked)
+            {
 
+
+                SelectFromForwarderPickup(glsHandler,XuTranslationErrorGLS);
+                return;
+
+
+            }
             Init();
             var path = Config.GLSRootFileDir + "\\In\\";
             var listfile = Directory.EnumerateFiles(path, "*.xlsx");
-            var glsHandler = new GLSHandler();
+           
             if (glsHandler.Error != "")
             {
                 FileDone.Text = glsHandler.Error;
@@ -523,68 +408,51 @@ namespace UploadDHL
 
         }
 
-        private void XUGTX_Click(object sender, EventArgs e)
+        private void SelectFromForwarderPickup(VendorHandler vhandler, Label errorLabel)
         {
             Init();
 
+            DateTime st;
+            DateTime en;
 
-            var path = Config.GTXRootFileDir + "\\In\\";
-            var listfile = Directory.EnumerateFiles(path, "*.xlsx");
-            foreach (string file in listfile.Where(x => !x.Contains("~")))
+
+
+
+            if (DateTime.TryParse(XuMinDate.Text, out st) && DateTime.TryParse(XuMaxDate.Text, out en))
             {
 
-                var nfile = ImportExceltoDatatable(file, "Ark1");
-                var gtxHandler = new GTXHandler();
-                gtxHandler.Error = "";
-                var griddata = new GridData();
-                griddata.Filename = file.Replace(path, "");
-                griddata.JumpLineData = new List<string>();
-                ShowMessage("Execution..." + griddata.Filename);
+                XuErrorMessage.Text = "";
 
-                string[] columnNames = nfile.Columns.Cast<DataColumn>()
-                    .Select(x => x.ColumnName)
-                    .ToArray();
-                var head = string.Join(",", columnNames).Replace(" ", "")
-                    .Replace("#", "");
-                if (gtxHandler.Header(head))
+                var lst = new List<XMLRecord>();
+                var xmlRec = new XMLRecord();
+                xmlRec.Awb = "xxxxx";
+                xmlRec.InvoiceNumber = XuInvoiceNumber.Text;
+                xmlRec.InvoiceDate = en;
+                lst.Add(xmlRec);
+
+
+
+
+                if (vhandler.MakeCompairPic(lst, st, en.Date) != "")
                 {
-                    foreach (DataRow row in nfile.Rows)
-                    {
-                        string[] fields = row.ItemArray.Select(field => field.ToString()).ToArray();
-
-                        gtxHandler.SetData(fields);
-                    }
-                    if (gtxHandler.DataValidation())
-                    {
-                        var invoces = gtxHandler.Records.Select(x => x.InvoiceNumber).Distinct().ToList();
-                        var err = false;
-                        foreach (var inv in invoces)
-                        {
-                            if (!gtxHandler.MakeXmlAndWeight(inv))
-                            {
-                                err = true;
-                            }
-
-
-                        }
-                        if (!err && gtxHandler.FileFinish(file))
-                        {
-                            gtxHandler.Success();
-                            zOK++;
-                        }
-
-                        gtxHandler.DropLines();
-                    }
+                    errorLabel.Visible = true;
                 }
-                zGridDataList.Add(gtxHandler.GridData);
 
             }
+            else
+            {
+                XuErrorMessage.Text = "Dates not legal !!!!!!!!!!";
+            }
 
-            Finish();
+            
+        }
 
+    
 
-
-
+        private void XUGTX_Click(object sender, EventArgs e)
+        {
+          
+            SelectFromForwarderPickup(new HSHandler(),XuTranslationErrorHS);
 
 
         }
@@ -598,181 +466,13 @@ namespace UploadDHL
             XuClose.Visible = false;
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-
-
-            var path = Config.ConvertFolder + "\\";
-            var listfile = Directory.EnumerateFiles(path, "*.xlsx");
-            foreach (string file in listfile.Where(x => !x.Contains("~")))
-            {
-
-                var nfile = ImportExceltoDatatable(file, "Ark1");
-                nfile.DefaultView.Sort = "INVOICEID";
-                string priv = "";
-                var datatb = nfile.Clone();
-                var tblst = new List<DataTable>();
-                var outfile = "";
-                var rowcount = 0;
-                foreach (DataRow row in nfile.Rows)
-                {
-                    if (priv != "" && priv != row["INVOICEID"].ToString())
-                    {
-                        tblst = new List<DataTable>();
-                        tblst.Add(datatb);
-                        outfile = Config.ConvertFolder + "Done\\" + priv + "_" + DateTime.Now.ToString("yyyy-MM-dd");
-                        if (rowcount > 146)
-                        {
-                            Export(outfile,
-                                "Fakturadata",
-                                "Normal",
-                                datatb);
-                        }
-                        else
-                        {
-                            ExportToExcel(datatb, outfile + ".xlsx", true);
-                        }
-
-                        rowcount = 0;
-                        datatb = nfile.Clone();
-
-                    }
-                    priv = row["INVOICEID"].ToString();
-                    datatb.Rows.Add(row.ItemArray);
-                    rowcount++;
-
-
-                }
-                tblst = new List<DataTable>();
-                tblst.Add(datatb);
-                outfile = Config.ConvertFolder + "Done\\" + priv + "_" + DateTime.Now.ToString("yyyy-MM-dd");
-                if (rowcount > 146)
-                {
-                    Export(outfile,
-                        "Fakturadata",
-                        "Normal",
-                        datatb);
-                }
-                else
-                {
-                    ExportToExcel(datatb, outfile + ".xlsx", true);
-                }
-            }
-            FileDone.Text = "Done ...";
-
-
-
-        }
+       
 
 
 
 
 
-
-        public static string Export(string excelFileName,
-            string excelWorksheetName,
-            string tableStyle,
-             System.Data.DataTable dt)
-        {
-            var excel = new Excel.Application();
-            excel.DisplayAlerts = false;
-            excel.Visible = false;
-            excel.ScreenUpdating = false;
-
-            Workbooks workbooks = excel.Workbooks;
-            Workbook workbook = workbooks.Add(Type.Missing);
-
-            // Count of data tables provided.
-
-
-            Sheets worksheets = workbook.Sheets;
-            Worksheet worksheet = (Worksheet)worksheets[1];
-            worksheet.Name = excelWorksheetName;
-
-            int rows = dt.Rows.Count;
-            int columns = dt.Columns.Count;
-            // Add the +1 to allow room for column headers.
-            var data = new object[rows + 1, columns];
-
-            // Insert column headers.
-            for (var column = 0; column < columns; column++)
-            {
-                data[0, column] = dt.Columns[column].ColumnName;
-            }
-
-            // Insert the provided records.
-            for (var row = 0; row < rows; row++)
-            {
-                for (var column = 0; column < columns; column++)
-                {
-                    data[row + 1, column] = dt.Rows[row][column];
-                }
-            }
-
-            // Write this data to the excel worksheet.
-            Range beginWrite = (Range)worksheet.Cells[1, 1];
-            Range endWrite = (Range)worksheet.Cells[rows + 1, columns];
-            Range sheetData = worksheet.Range[beginWrite, endWrite];
-            sheetData.Value2 = data;
-
-            // Additional row, column and table formatting.
-            worksheet.Select();
-            sheetData.Worksheet.ListObjects.Add(XlListObjectSourceType.xlSrcRange,
-                sheetData,
-                System.Type.Missing,
-                XlYesNoGuess.xlYes,
-                System.Type.Missing).Name = excelWorksheetName;
-            sheetData.Select();
-            //   sheetData.Worksheet.ListObjects[excelWorksheetName[i]].TableStyle = tableStyle;
-            excel.Application.Range["2:2"].Select();
-            excel.ActiveWindow.FreezePanes = true;
-            excel.ActiveWindow.DisplayGridlines = false;
-            excel.Application.Cells.EntireColumn.AutoFit();
-            excel.Application.Cells.EntireRow.AutoFit();
-
-            // Select the first cell in the worksheet.
-            excel.Application.Range["$A$2"].Select();
-
-
-            // Turn off alerts to prevent asking for 'overwrite existing' and 'save changes' messages.
-            excel.DisplayAlerts = false;
-
-            // Save our workbook and close excel.
-            string SaveFilePath = string.Format(@"{0}.xlsx", excelFileName);
-            workbook.SaveAs(SaveFilePath, XlFileFormat.xlOpenXMLWorkbook, Type.Missing, Type.Missing, Type.Missing,
-                Type.Missing, XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing,
-                Type.Missing);
-            workbook.Close(false, Type.Missing, Type.Missing);
-            excel.Quit();
-
-            // Release our resources.
-            Marshal.ReleaseComObject(workbook);
-            Marshal.ReleaseComObject(workbooks);
-            Marshal.ReleaseComObject(excel);
-            Marshal.FinalReleaseComObject(excel);
-
-            return SaveFilePath;
-        }
-
-        private void XuZeroCost_Click(object sender, EventArgs e)
-        {
-
-            var path = Config.ConvertFolder;
-            var listfile = Directory.EnumerateFiles(path, "*.xml");
-            foreach (string file in listfile.Where(x => !x.Contains("~")))
-            {
-
-                var doc = new XmlDocument();
-                doc.Load(file);
-
-                foreach (XmlNode d in doc.SelectNodes("//ShipmentList/Shipment/AXDetails/AXLine/CostPrice"))
-                {
-                    d.InnerText = "0,010";
-                }
-
-                doc.Save(file.Replace(path, path + "Done\\"));
-            }
-        }
+     
 
 
         private void WriteFile(string filename, string cap, List<string> datalist)
@@ -793,109 +493,11 @@ namespace UploadDHL
             }
         }
 
-        private void XuSplitWeigth_Click(object sender, EventArgs e)
-        {
-            var path = Config.ConvertFolder;
-            var listfile = Directory.EnumerateFiles(path, "*.csv");
-            foreach (string file in listfile.Where(x => !x.Contains("~")))
-            {
-
-
-                using (StreamReader fileStream = new StreamReader(file))
-                {
-
-                    string cap = fileStream.ReadLine();
-
-
-                    var datalist = new List<string>();
-                    string line = fileStream.ReadLine();
-                    var tp = line.Split(';')[2];
-                    var count = 0;
-                    var fno = 0;
-                    while (line != null)
-                    {
-                        var ntp = line.Split(';')[2];
-                        if (tp != ntp || count > 500)
-
-                        {
-                            if (count < 100)
-                            {
-                                tp = ntp;
-                            }
-                            else
-                            {
-                                string pno = fno.ToString();
-                                if (fno == 0)
-                                {
-                                    pno = "";
-                                }
-                                var filename = file.Replace(path, path + "Done\\").Replace(".csv", tp + "_" + pno + ".csv");
-
-                                WriteFile(filename, cap, datalist);
-                                datalist = new List<string>();
-                                if (tp == ntp)
-                                {
-                                    fno++;
-                                }
-                                else
-                                {
-                                    fno = 0;
-                                }
-                                tp = ntp;
-                                count = 0;
-                            }
+       
 
 
 
-
-
-                        }
-
-                        datalist.Add(line);
-                        count++;
-
-
-                        line = fileStream.ReadLine();
-                    }
-
-
-
-                }
-            }
-
-        }
-
-
-        public static void ExportToExcel(DataTable dataTable, String filePath, bool overwiteFile = true)
-        {
-            // If using Professional version, put your serial key below.
-            SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
-
-            var workbook = new ExcelFile();
-            var worksheet = workbook.Worksheets.Add("Fakturadata");
-
-
-
-            // Insert DataTable to an Excel worksheet.
-            worksheet.InsertDataTable(dataTable,
-                new InsertDataTableOptions()
-                {
-                    ColumnHeaders = true,
-                    StartRow = 0
-                });
-
-            workbook.Save(filePath);
-
-        }
-
-
-
-
-
-        private void XuRasFileMaker_Click(object sender, EventArgs e)
-        {
-
-        }
+       
 
         private void label1_Click(object sender, EventArgs e)
         {
@@ -917,147 +519,139 @@ namespace UploadDHL
 
         }
 
-        private void XuPalleData_Click(object sender, EventArgs e)
+        private void label4_Click(object sender, EventArgs e)
         {
-            EditMode(false);
-            FileDone.Text = "Start...........>>>>";
 
-            var msglist = new List<GridData>();
-            var cok = 0;
+        }
 
-            var con = new DFEEntities();
+        private void XuHSTranslation_Click(object sender, EventArgs e)
+        {
+            EditTransFile(new HSHandler());
+        }
 
-
-            var path = Config.PDKRootFileDir + "\\Pallet\\Report";
-            var listfile = Directory.EnumerateFiles(path, "*.xls");
-            foreach (string file in listfile.Where(x => !x.Contains("~")))
+        private void XuGetFile_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
+                openFileDialog.InitialDirectory = "c:\\";
+                openFileDialog.Filter = "csv files (*.csv)|*.csv";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
 
-                var nfile = ImportExceltoDatatable(file, "Results");
-                var palletHandler = new PalletHandler();
-                palletHandler.Error = "";
-                palletHandler.ErrorHandler.File = file;
-                var griddata = new GridData();
-                griddata.Filename = file.Replace(path, "");
-                griddata.JumpLineData = new List<string>();
-                ShowMessage("Execution..." + griddata.Filename);
-
-                string[] columnNames = nfile.Columns.Cast<DataColumn>()
-                    .Select(x => x.ColumnName)
-                    .ToArray();
-
-
-
-                foreach (DataRow row in nfile.Rows)
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    string[] fields = row.ItemArray.Select(field => field.ToString()).ToArray();
-                    var record = palletHandler.SetData(fields);
+                    //Get the path of specified file
+                    var filePath = openFileDialog.FileName;
 
-                    var ex = con.PDKPalletReport.Where(x => x.Fakturanummer == record.Fakturanummer && x.Forsendelsenummer == record.Forsendelsenummer);
-                    con.PDKPalletReport.RemoveRange(ex);
-                    con.PDKPalletReport.Add(record.Convert());
-                }
-                con.SaveChanges();
-                try
-                {
-
-                    File.Move(file, file.Replace("\\Pallet\\Report", "\\Done\\"));
-                }
-                catch (Exception ex)
-                {
-
-                    File.Move(file, file.Replace("\\Pallet\\Report", "\\Done\\" + DateTime.Now.ToString("ddHHmm")));
-                }
-            }
-            ShowMessage("Done Reports");
-            this.Refresh();
-            path = Config.PDKRootFileDir + "\\Pallet\\Factura";
-            listfile = Directory.EnumerateFiles(path, "*.xls");
-            foreach (string file in listfile.Where(x => !x.Contains("~")))
-            {
-
-                var nfile = ImportExceltoDatatable(file, "faktura");
-
-                ShowMessage("Execution..." + file.Replace(path, ""));
-
-
-
-
-                string factura = "";
-                bool okhead = false;
-                foreach (DataRow row in nfile.Rows)
-                {
-                    string[] fields = row.ItemArray.Select(field => field.ToString()).ToArray();
-                    var record = new PalletRecord(fields, factura, okhead);
-                    factura = record.Factura;
-                    if (okhead && !string.IsNullOrWhiteSpace(record.Afsender))
+                    //Read the contents of the file into a stream
+                    var fileStream = openFileDialog.OpenFile();
+                    var datalist = new List<PriceObject>();
+                    using (StreamReader reader = new StreamReader(fileStream))
                     {
-                        var ex = con.PDKPalletrecord.Where(x => x.Factura == record.Factura && x.Sendingsnummer == record.Sendingsnummer);
-                        con.PDKPalletrecord.RemoveRange(ex);
-                        con.PDKPalletrecord.Add(record.Convert());
+                        string line = reader.ReadLine();
+                        line = reader.ReadLine();
+                        while (line != null)
+                        {
+                            datalist.Add(new PriceObject(line));
+                            line = reader.ReadLine();
+
+                        }
+                    }
+                    VendorHandler vhand = null;
+                    var carrier = datalist[0].Carrier;
+                    if (carrier  == "GLS")
+                    {
+                      vhand=new GLSHandler();
+                    }
+                    if (carrier == "HS")
+                    {
+                        vhand = new HSHandler();
 
                     }
-                    okhead = record.HeaderOK;
-                }
-                con.SaveChanges();
-                try
-                {
-
-                    File.Move(file, file.Replace("\\Pallet\\Factura", "\\Done\\"));
-                }
-                catch (Exception ex)
-                {
-
-                    File.Move(file, file.Replace("\\Pallet\\Factura", "\\Done\\" + DateTime.Now.ToString("ddHHmm")));
-                }
-
-
-
-            }
-            FileDone.Text = "Done Factura";
-            this.Refresh();
-            path = Config.PDKRootFileDir + "\\Pallet\\Colli";
-            listfile = Directory.EnumerateFiles(path, "*.xls");
-            foreach (string file in listfile.Where(x => !x.Contains("~")))
-            {
-
-                var nfile = ImportExceltoDatatable(file, "faktura");
-
-                ShowMessage("Execution..." + file.Replace(path, ""));
-
-
-
-
-                string factura = "";
-                bool okhead = false;
-                foreach (DataRow row in nfile.Rows)
-                {
-                    string[] fields = row.ItemArray.Select(field => field.ToString()).ToArray();
-                    var record = new PalletColliRecord(fields, factura, okhead);
-                    factura = record.Factura;
-                    if (okhead && !string.IsNullOrWhiteSpace(record.Afsender))
+                    if (carrier == "DHL")
                     {
-                        var ex = con.PDKPalletCollirecord.Where(x => x.Factura == record.Factura && x.Sendingsnummer == record.Sendingsnummer);
-                        con.PDKPalletCollirecord.RemoveRange(ex);
-                        con.PDKPalletCollirecord.Add(record.Convert());
+                        vhand = new DHLHandler();
 
                     }
-                    okhead = record.HeaderOK;
+                    var form = new Matchup();
+                    form.zVendorHandler = vhand;
+                    form.Show();
+                    form.zOutData = datalist;
+                    form.DisplayGrid();
                 }
-                con.SaveChanges();
-                try
-                {
+                
 
-                    File.Move(file, file.Replace("\\Pallet\\Colli", "\\Done\\"));
-                }
-                catch (Exception ex)
-                {
-
-                    File.Move(file, file.Replace("\\Pallet\\Colli", "\\Done\\" + DateTime.Now.ToString("ddHHmm")));
-                }
             }
-            FileDone.Text = "Finish";
-            this.Refresh();
+        }
+
+        private void XuShipX_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = "c:\\";
+                openFileDialog.Filter = "csv files (*.csv)|*.csv";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    //Get the path of specified file
+                    var filePath = openFileDialog.FileName;
+
+                    //Read the contents of the file into a stream
+                    var fileStream = openFileDialog.OpenFile();
+                    var datalist = new List<PriceObject>();
+                    using (StreamReader reader = new StreamReader(fileStream))
+                    {
+                        string line = reader.ReadLine();
+                        line = reader.ReadLine();
+                        while (line != null)
+                        {
+                            var po = new PriceObject(line);
+                            po.Payer = "?";
+                            po.Account = "-1";
+                            po.CostPrice = po.Price;
+                            po.CostEstimated = po.Price;
+                            po.Price = -1;
+                            datalist.Add(po);
+                            line = reader.ReadLine();
+
+                        }
+                    }
+                    if (datalist.Count > 0)
+                    {
+
+                        var d = datalist.Where(x => x.ForwId > 0).Select(x => x.ForwId).ToList();
+                       var custandacc = new VendorHandler().GetCustomerAndAccount(d);
+                        var reslist = custandacc.Select(x => new AccountMatch(x));
+                        foreach (var c in reslist)
+                        {
+
+                            var found = datalist.Where(x => x.ForwId == c.ForwId);
+                            if (reslist.Count(x => x.ForwId == c.ForwId) > 1)
+                            {
+                                 found = found.Where(x=>  c.CompanyAddress.Contains(x.Customer) ).ToList();
+                            }
+                           
+                           
+                            found.ToList().ForEach(x => { x.Account = c.Account  ;
+                                x.Payer = c.Payer;
+                            });    
+   
+
+                        }
+
+                        var form = new Matchup();
+                        form.zVendorHandler = new ShipXHandler();
+                        form.Show();
+                        form.zOutData = datalist;
+                        form.DisplayGrid();
+                    }
+
+                }
+
+               
+            }
         }
     }
 }

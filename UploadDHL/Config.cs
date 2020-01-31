@@ -35,12 +35,12 @@ namespace UploadDHL
                 return ConfigurationManager.AppSettings["TranslationFileDHL"];
             }
         }
-        public static String TranslationFileFedex
+        public static String TranslationFilePickupHS
         {
             get
             {
 
-                return ConfigurationManager.AppSettings["TranslationFileFedex"];
+                return ConfigurationManager.AppSettings["TranslationFileHS"];
             }
         }
         public static String TranslationFileGtx
@@ -59,12 +59,12 @@ namespace UploadDHL
                 return ConfigurationManager.AppSettings["TranslationFilePickupGLS"];
             }
         }
-        public static String PDKRootFileDir
+        public static String ShipXRootFileDir
         {
             get
             {
 
-                return ConfigurationManager.AppSettings["PDKRootFileDir"];
+                return ConfigurationManager.AppSettings["ShipXRootFileDir"];
             }
         }
         public static String GLSRootFileDir
@@ -91,52 +91,29 @@ namespace UploadDHL
                 return ConfigurationManager.AppSettings["GTXRootFileDir"];
             }
         }
-        public static String FedexRootFileDir
-        {
-            get
-            {
-
-                return ConfigurationManager.AppSettings["FedexRootFileDir"];
-            }
-        }
-        public static String ConvertFolder
-        {
-            get
-            {
-
-                return ConfigurationManager.AppSettings["ConvertFolder"];
-            }
-        }
-        public static String LogFile
-        {
-            get
-            {
-
-                return ConfigurationManager.AppSettings["LogFile"];
-            }
-        }
-        public static String ErrorDir
-        {
-            get
-            {
-
-                return ConfigurationManager.AppSettings["ErrorDir"];
-            }
-        }
-        public static String DoneDir
-        {
-            get
-            {
-
-                return ConfigurationManager.AppSettings["DoneDir"];
-            }
-        }
-
+        
+       
         public static String EndDir(string carrier)
         {
            
                 return ConfigurationManager.AppSettings[carrier+"EndDir"];
             
+        }
+        public static String AccountsGTX
+        {
+            get
+            {
+
+                return ConfigurationManager.AppSettings["TranslationAccountGTX"];
+            }
+        }
+        public static String AccountsShipX
+        {
+            get
+            {
+
+                return ConfigurationManager.AppSettings["TranslationAccountShipx"];
+            }
         }
 
         public static String System

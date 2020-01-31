@@ -74,25 +74,45 @@
           <s:element minOccurs="1" maxOccurs="1" name="PriceSelling" type="s:decimal" />
           <s:element minOccurs="0" maxOccurs="1" name="SpecialTreatment" type="s:string" />
           <s:element minOccurs="1" maxOccurs="1" name="TotalWeight" type="s:decimal" />
-          <s:element minOccurs="0" maxOccurs="1" name="PriceList" type="tns:ArrayOfSalePriceLine" />
+          <s:element minOccurs="0" maxOccurs="1" name="PriceList" type="tns:ArrayOfPickUpPriceLine" />
         </s:sequence>
       </s:complexType>
-      <s:complexType name="ArrayOfSalePriceLine">
+      <s:complexType name="ArrayOfPickUpPriceLine">
         <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="SalePriceLine" nillable="true" type="tns:SalePriceLine" />
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PickUpPriceLine" nillable="true" type="tns:PickUpPriceLine" />
         </s:sequence>
       </s:complexType>
-      <s:complexType name="SalePriceLine">
+      <s:complexType name="PickUpPriceLine">
         <s:sequence>
-          <s:element minOccurs="1" maxOccurs="1" name="Id" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="FK_ForwarderPickup_Id" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="FK_Customer_Id" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="FK_Account_Id" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="CompanyName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AccountId" type="s:string" />
           <s:element minOccurs="1" maxOccurs="1" name="Price" type="s:decimal" />
           <s:element minOccurs="1" maxOccurs="1" name="EstimatedCost" type="s:decimal" />
           <s:element minOccurs="0" maxOccurs="1" name="LineName" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="Log" type="s:string" />
-          <s:element minOccurs="1" maxOccurs="1" name="TimestampUpdate" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetOriginalAccount">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ForwarderIdList" type="tns:ArrayOfInt" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfInt">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="int" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetOriginalAccountResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetOriginalAccountResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
         </s:sequence>
       </s:complexType>
       <s:element name="int" type="s:int" />
@@ -117,6 +137,12 @@
   </wsdl:message>
   <wsdl:message name="GetForwarderListSoapOut">
     <wsdl:part name="parameters" element="tns:GetForwarderListResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetOriginalAccountSoapIn">
+    <wsdl:part name="parameters" element="tns:GetOriginalAccount" />
+  </wsdl:message>
+  <wsdl:message name="GetOriginalAccountSoapOut">
+    <wsdl:part name="parameters" element="tns:GetOriginalAccountResponse" />
   </wsdl:message>
   <wsdl:message name="GetIdHttpGetIn">
     <wsdl:part name="awb" type="s:string" />
@@ -177,6 +203,10 @@
       <wsdl:input message="tns:GetForwarderListSoapIn" />
       <wsdl:output message="tns:GetForwarderListSoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetOriginalAccount">
+      <wsdl:input message="tns:GetOriginalAccountSoapIn" />
+      <wsdl:output message="tns:GetOriginalAccountSoapOut" />
+    </wsdl:operation>
   </wsdl:portType>
   <wsdl:portType name="GetForwarderIdHttpGet">
     <wsdl:operation name="GetId">
@@ -235,6 +265,15 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetOriginalAccount">
+      <soap:operation soapAction="http://tempuri.org/GetOriginalAccount" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:binding name="GetForwarderIdSoap12" type="tns:GetForwarderIdSoap">
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
@@ -258,6 +297,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetForwarderList">
       <soap12:operation soapAction="http://tempuri.org/GetForwarderList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOriginalAccount">
+      <soap12:operation soapAction="http://tempuri.org/GetOriginalAccount" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

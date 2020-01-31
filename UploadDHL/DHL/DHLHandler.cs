@@ -13,7 +13,7 @@ namespace UploadDHL
     {
        
         
-        private Translation zTranslation = new Translation(Config.TranslationFileDHL);
+        public Translation zTranslation = new Translation(Config.TranslationFileDHL,Config.AccountsGTX);
      
       
         
@@ -33,6 +33,7 @@ namespace UploadDHL
             Error = zTranslation.Error;
             RootDir = Config.DHLRootFileDir;
             CarrierName = "DHL";
+            Translation = zTranslation;
 
         }
 

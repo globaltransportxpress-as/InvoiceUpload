@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using nu.gtx.Common1.Constants;
+using Newtonsoft.Json.Linq;
 using UploadDHL.DataConnections;
 using UploadDHL.GetForwarderId;
+using UploadDHL.Properties.DataSources;
 
 
 namespace UploadDHL
@@ -20,6 +24,7 @@ namespace UploadDHL
         public string CarrierName { get; set; }
 
         public GridData GridData = new GridData();
+        public Translation Translation = null;
 
         public List<XMLRecord> Records = new List<XMLRecord>();
        
@@ -69,17 +74,10 @@ namespace UploadDHL
 
 
             AddInvoiceLine(head.Replace(sep, "|"), 1, HEAD);
-            if (head.Contains(refhead))
-            {
-                return true;
-            }
-            AddInvoiceLine(refhead.Replace(sep, "|"), 0, E_HEAD);
-            GridData.Status = "ERROR";
-            GridData.Comment = "Header format not matching";
-            GridData.ErrorLines = InvoiceLineList;
+           
 
 
-            return false;
+            return true;
 
 
         }
@@ -278,8 +276,8 @@ namespace UploadDHL
 
 
 
-            try
-            {
+           // try
+           // {
 
                 if (listRecords.Count == 0)
                 {
@@ -288,88 +286,165 @@ namespace UploadDHL
 
 
 
-                var soapClient = new GetForwarderIdSoapClient("GetForwarderIdSoap");
+               
 
                 var minDate = listRecords.Min(x => x.Shipdate);
                 var maxDate = listRecords.Max(x => x.Shipdate);
-                var d = soapClient.GetForwarderList(listRecords[0].CarrierCode, minDate, maxDate);
-                var forwList = d.ToList();
-                string oldAwb = "";
-                ForwObj fwo = null;
-                foreach (var record in listRecords.OrderBy(x => x.Awb))
+            return MakeCompairPic(listRecords, minDate,maxDate);
+
+        }
+
+        public List<ForwarderRecord> TranslateRecords(List<ForwObj> foreobjs)
+        {
+           
+                var forwarderRecordList = new List<ForwarderRecord>();
+                foreach (var fw in foreobjs)
                 {
-                    if (oldAwb != record.Awb)
+
+                    forwarderRecordList.Add(new ForwarderRecord(fw, Translation));
+
+
+
+
+
+                }
+                if (forwarderRecordList.Any(x => !string.IsNullOrEmpty(x.Error)))
+                {
+                    
+                    return null;
+                }
+
+            var plist = forwarderRecordList.SelectMany(x => x.PriceList).Select(x => x.AccountId + "|" + x.CompanyName)
+                .Distinct().ToList();
+
+            Translation.AddAccounts(plist);
+            return forwarderRecordList;
+
+
+
+        }
+
+        public List<ForwObj> GetForwarderList( DateTime minDate, DateTime maxDate)
+        {
+            var soapClient = new GetForwarderIdSoapClient("GetForwarderIdSoap");
+           
+                var d = soapClient.GetForwarderList(CarrierName, minDate, maxDate);
+                return  d.ToList();
+
+        }
+
+        public List<string> GetCustomerAndAccount(List<int> forwIds)
+        {
+            var soapClient = new GetForwarderIdSoapClient("GetForwarderIdSoap");
+
+            return soapClient.GetOriginalAccount(forwIds.ToArray()).ToList();
+            
+
+        }
+
+
+
+        public string MakeCompairPic(List<XMLRecord> listRecords,  DateTime minDate, DateTime maxDate)
+        {
+           
+            try
+            {
+
+                var forwlist = GetForwarderList(minDate, maxDate).Where(x=>x.PriceList!=null && x.PriceList.Length >0).ToList();
+
+
+           var forwarderList = TranslateRecords(forwlist);
+                if (forwarderList == null)
+                {
+                    return "TRANSLATIONERROR";
+                }
+  
+
+
+
+
+             var  forwList = forwarderList.Where(x => x.PriceList.Length > 0).ToList();
+               
+            string oldAwb = "";
+            ForwarderRecord fwo = null;
+            foreach (var record in listRecords.OrderBy(x => x.Awb))
+            {
+                if (oldAwb != record.Awb)
+                {
+                    oldAwb = record.Awb;
+                    var fw = forwList.Where(x => x.PickupDate == record.Shipdate);
+
+                    if (record.CarrierCode == "GLS")
                     {
-                        oldAwb = record.Awb;
-                        var fw = forwList.Where(x => x.PickupDate == record.Shipdate);
-
-                        if (record.CarrierCode == "GLS")
+                        fwo = fw.FirstOrDefault(x => x.OperatorFeedback.Contains(record.Awb) && ( x.CompanyName.ToUpper().Contains(record.CompanyName.ToUpper()) ||
+                            record.CompanyName.ToUpper().Contains(x.CompanyName.ToUpper())));
+                        if (fwo == null)
                         {
-                            fwo = fw.FirstOrDefault(x => x.OperatorFeedback.Contains(record.Awb));
-                            if (fwo == null)
-                            {
-                                fwo = fw.FirstOrDefault(
-                                    x => x.Street.ToUpper().Contains(record.Address1.ToUpper()) ||
-                                         record.Address1.ToUpper().Contains(x.Street.ToUpper()));
-                            }
-                            if (fwo == null)
-                            {
-                                fwo = forwList.FirstOrDefault(x => x.OperatorFeedback.Contains(record.Awb));
-                            }
+                            fwo = fw.FirstOrDefault(
+                                x => x.Street.ToUpper().Contains(record.Address1.ToUpper()) ||
+                                     record.Address1.ToUpper().Contains(x.Street.ToUpper()));
                         }
-                        if (record.CarrierCode == "DHL")
+                        
+                        
+                    }
+                    if (record.CarrierCode == "DHL")
+                    {
+                        var fwd = fw.Where(x => x.PickupDate == record.Shipdate);
+
+                        fwo = fwd.FirstOrDefault(
+                            x => x.Street.ToUpper().Contains(record.Address1.ToUpper()) ||
+                                 record.Address1.ToUpper().Contains(x.Street.ToUpper()));
+                        if (fwo == null)
                         {
-                            var fwd = fw.Where(x => x.PickupDate == record.Shipdate);
 
-                                  fwo = fwd.FirstOrDefault(
-                                    x => x.Street.ToUpper().Contains(record.Address1.ToUpper()) ||
-                                         record.Address1.ToUpper().Contains(x.Street.ToUpper()));
-                            if (fwo == null)
-                            {
+                            fwo = fwd.FirstOrDefault(
+                                x => x.CompanyName.ToUpper().Contains(record.CompanyName.ToUpper()) ||
+                                     record.CompanyName.ToUpper().Contains(x.CompanyName.ToUpper()));
 
-                                fwo = fwd.FirstOrDefault(
-                                    x => x.CompanyName.ToUpper().Contains(record.CompanyName.ToUpper()) ||
-                                         record.CompanyName.ToUpper().Contains(x.CompanyName.ToUpper()));
-
-                            }
-                            
-                            
                         }
+
+
+                    }
+                    if (fwo!=null && fwo.PriceList.Select(x => x.AccountId).Distinct().Count() > 1)
+                    {
+                        fwo = null;
+                    }
                     }
 
 
 
-                    record.ForwarderObj = fwo;
-                }
-                var form = new Matchup();
-
-
-
-                form.Show();
-                form.InitData(listRecords, forwList);
-                form.ShowData();
-
-
-                return "Error";
-
-
-
-
-                if (listRecords.Count > 0)
-                {
-                    WeightFileObj.CreateFile(Config.GLSRootFileDir, listRecords, listRecords[0].InvoiceNumber);
-                }
-
+                record.ForwarderObj = fwo;
             }
-            catch (Exception ex)
+            var form = new Matchup();
+
+
+            form.Carrier = CarrierName;
+            form.zVendorHandler = this;
+            form.TranslationHandler = Translation;
+            form.Show();
+            form.InitData(listRecords, forwList);
+            form.ShowData();
+
+
+            return "Error";
+
+
+
+
+            if (listRecords.Count > 0)
             {
-                return ex.Message;
+                WeightFileObj.CreateFile(Config.GLSRootFileDir, listRecords, listRecords[0].InvoiceNumber);
             }
 
+        }
+        catch (Exception ex)
+        {
+            return ex.Message;
+        }
 
 
-            return "";
 
+        return "";
         }
 
 
@@ -395,10 +470,10 @@ namespace UploadDHL
         }
         public bool FileFinish(string file)
         {
-            return MakeGridComment(MoveAllFiles(file, CarrierName), "MoveFiles");
+            return MakeGridComment(MoveAllFiles(file), "MoveFiles");
         }
 
-        public string MoveAllFiles(string file, string carrier)
+        public string MoveAllFiles(string file)
         {
             var fname = Path.GetFileName(file);
             try
@@ -412,15 +487,81 @@ namespace UploadDHL
                 File.Move(file,
                     RootDir + "\\Done\\" + DateTime.Now.ToString("ddHHmm") + fname);
             }
-            return MoveFiles(RootDir + "\\XML\\", carrier);
+            return MoveFiles(RootDir + "\\XML\\");
         }
-        private string MoveFiles(string from, string carrier)
+
+
+
+        public bool ExportData(List<PriceObject> pricelist)
+        {
+
+            var acclist = pricelist.Select(x => x.Account).Distinct().ToList();
+            var reslist = new List<JObject>();
+            foreach (var d in acclist)
+            {
+                var thisawb = "";
+                JArray thisArr = null;
+                foreach (var plst in pricelist.Where(x => x.Account == d).OrderBy(x => x.Awb))
+                {
+                    if (plst.Awb != thisawb)
+                    {
+                        var obj = plst.ToJSonHead();
+                            
+
+                        thisArr =(JArray)obj["order_lines"]  ;
+                        reslist.Add(obj);
+
+                    }
+                    thisArr.Add(plst.ToJSonLine());
+
+                }
+            }
+            using (StreamWriter outputFile =
+                new StreamWriter(new FileStream(RootDir + "\\XML\\"+ CarrierName + DateTime.Now.ToString("ddHHmmfff")+".json", FileMode.OpenOrCreate, FileAccess.Write),
+                    Encoding.UTF8))
+            {
+
+
+                foreach (var lin in reslist)
+                {
+
+                    outputFile.WriteLine(lin.ToString());
+
+                }
+
+              
+            }
+
+            using (StreamWriter outputFile =
+                new StreamWriter(new FileStream(RootDir + "\\XML\\Cost_" + CarrierName + DateTime.Now.ToString("ddHHmmfff") + ".csv", FileMode.OpenOrCreate, FileAccess.Write),
+                    Encoding.UTF8))
+            {
+                outputFile.WriteLine("Factura;Awb;Account;Product;Id;Price;Estimated");
+
+                foreach (var lin in pricelist.Select(x => string.Format("{0};{1};{2};{3};{4};{5:#.00};{6:#.00}", x.Factura,
+                    x.Awb, x.Account,
+                    x.DataType, x.TypeCostId, x.CostPrice, x.CostEstimated)))
+                {
+                    outputFile.WriteLine(lin);
+                }
+
+                
+            }
+
+            return true;
+
+
+        }
+
+
+
+        private string MoveFiles(string from)
         {
 
 
 
 
-            string destPath = Config.EndDir(carrier);
+            string destPath = Config.EndDir(CarrierName);
 
 
             if (System.IO.Directory.Exists(destPath))
